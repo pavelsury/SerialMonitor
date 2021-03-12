@@ -52,6 +52,7 @@ namespace Serial_Monitor
 
         private void ShowToolWindow(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ToolWindowPane window = this.package.FindToolWindow(typeof(SerialMonitor), 0, true);
             if ((null == window) || (null == window.Frame))
             {

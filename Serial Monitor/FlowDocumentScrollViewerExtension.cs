@@ -13,17 +13,17 @@ namespace Serial_Monitor
             flowDocumentScrollViewer.Document.Blocks.Clear();
         }
 
-        public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, int fontSize = 11)
+        public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, int fontSize, FontStyle fontStyle)
         {
-            AppendText(flowDocumentScrollViewer, data, flowDocumentScrollViewer.FindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush, fontSize);
+            AppendText(flowDocumentScrollViewer, data, flowDocumentScrollViewer.FindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush, fontSize, fontStyle);
         }
 
-        public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, SolidColorBrush brush, int fontSize)
+        public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, SolidColorBrush brush, int fontSize, FontStyle fontStyle)
         {
             TextRange range = new TextRange(flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd, flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd);
             range.Text = data.Replace(Environment.NewLine, "\r");
             range.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
-            range.ApplyPropertyValue(TextElement.FontStyleProperty, FontStyles.Oblique);
+            range.ApplyPropertyValue(TextElement.FontStyleProperty, fontStyle);
             range.ApplyPropertyValue(TextElement.FontSizeProperty, (double)fontSize);
         }
 

@@ -28,7 +28,7 @@ namespace Serial_Monitor
 
         private void PrintColorMessage(string message, SolidColorBrush brush)
         {
-            Output.AppendText(message + Environment.NewLine, brush, Settings.OutputFontSize);
+            Output.AppendText(message + Environment.NewLine, brush, Settings.OutputFontSize, Settings.OutputFontStyle);
 
             if (autoScrollEnabled == true)
             {
@@ -78,7 +78,7 @@ namespace Serial_Monitor
                     port.Read(buffer, 0, bytesToRead);
 
                     string data = Settings.Encoding.GetString(buffer);
-                    Output.AppendText(data.Replace(Settings.ReceiveNewLine, "\r"), Settings.OutputFontSize);
+                    Output.AppendText(data.Replace(Settings.ReceiveNewLine, "\r"), Settings.OutputFontSize, Settings.OutputFontStyle);
 
                     if (autoScrollEnabled == true)
                     {
@@ -95,6 +95,11 @@ namespace Serial_Monitor
                         }
                     }
                 }
+            }
+            catch (InvalidOperationException ex)
+            {
+                PrintErrorMessage(Environment.NewLine + ex.Message);
+                Disconnect();
             }
             catch (Exception ex)
             {
@@ -191,27 +196,27 @@ namespace Serial_Monitor
             try
             {
                 PrintProcessMessage(Environment.NewLine + "Closing port...");
-
-                portHandlerTimer.Stop();
-
-                port.Close();
-
-                ConnectButton.Visibility = Visibility.Visible;
-                DisconnectButton.Visibility = Visibility.Collapsed;
-                ReconnectButton.Visibility = Visibility.Collapsed;
-                ComPorts.IsEnabled = true;
-
-                MessageToSend.IsEnabled = false;
-                SendButton.IsEnabled = false;
-
-                Settings.IsEnabled = true;
-
+                Disconnect();
                 PrintSuccessMessage("Port closed!");
             }
             catch (Exception ex)
             {
                 PrintErrorMessage(ex.Message);
             }
+        }
+
+        private void Disconnect()
+        {
+            portHandlerTimer.Stop();
+            port.Close();
+
+            ConnectButton.Visibility = Visibility.Visible;
+            DisconnectButton.Visibility = Visibility.Collapsed;
+            ReconnectButton.Visibility = Visibility.Collapsed;
+            ComPorts.IsEnabled = true;
+            MessageToSend.IsEnabled = false;
+            SendButton.IsEnabled = false;
+            Settings.IsEnabled = true;
         }
 
         private void Reconnect_Click(object sender, System.Windows.RoutedEventArgs e)

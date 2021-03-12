@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Serial_Monitor
@@ -218,11 +219,33 @@ namespace Serial_Monitor
                 return values.ToArray();
             }
         }
+
+        public string[] OutputFontStyleValues
+        {
+            get
+            {
+                return new[]
+                {
+                    nameof(FontStyles.Normal),
+                    nameof(FontStyles.Italic),
+                    nameof(FontStyles.Oblique)
+                };
+            }
+        }
+        
         public string DefaultOutputFontSize
         {
             get
             {
                 return "11";
+            }
+        }
+
+        public string DefaultOutputFontStyle
+        {
+            get
+            {
+                return nameof(FontStyles.Normal);
             }
         }
         #endregion
@@ -331,6 +354,20 @@ namespace Serial_Monitor
             }
         }
 
+        public FontStyle OutputFontStyle
+        {
+            get
+            {
+                switch (OutputFontStyleComboBox.Text)
+                {
+                    case nameof(FontStyles.Normal): return FontStyles.Normal;
+                    case nameof(FontStyles.Italic): return FontStyles.Italic;
+                    case nameof(FontStyles.Oblique): return FontStyles.Oblique;
+                    default: throw new ArgumentOutOfRangeException();
+                };
+            }
+        }
+
         public bool DtrEnable
         {
             get;
@@ -406,6 +443,12 @@ namespace Serial_Monitor
             }
             OutputFontSizeComboBox.SelectedItem = DefaultOutputFontSize;
 
+            foreach (string fontStyle in OutputFontStyleValues)
+            {
+                OutputFontStyleComboBox.Items.Add(fontStyle);
+            }
+            OutputFontStyleComboBox.SelectedItem = DefaultOutputFontStyle;
+
             foreach (string handshakeValue in HandshakeMap.Keys)
             {
                 HandshakeComboBox.Items.Add(handshakeValue);
@@ -462,5 +505,13 @@ namespace Serial_Monitor
                 RecordFilePathTextBox.IsEnabled = false;
             }
         }
+
+        private void EnablePipeIpcToggle_Click(object sender, RoutedEventArgs e)
+        {
+            _enablePipeIpc = !_enablePipeIpc;
+            PipeIpcToggle.Content = _enablePipeIpc ? "Disable pipe IPC" : "Enable pipe IPC";
+        }
+
+        private bool _enablePipeIpc;
     }
 }
