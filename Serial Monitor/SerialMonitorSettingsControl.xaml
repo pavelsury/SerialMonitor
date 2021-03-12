@@ -72,8 +72,8 @@
             <Label Content="Record file path:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
             <TextBox Name="RecordFilePathTextBox" IsEnabled="False" MouseDoubleClick="RecordFilePathTextBox_MouseDoubleClick" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"/>
         </StackPanel>
-        <StackPanel Style="{StaticResource SettingsStackPanel}">
+        <!--<StackPanel Style="{StaticResource SettingsStackPanel}">
             <Button Name="PipeIpcToggle" Content="Enable pipe IPC" MinWidth="200" MaxWidth="200" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="EnablePipeIpcToggle_Click"/>
-        </StackPanel>
+        </StackPanel>-->
     </WrapPanel>
 </UserControl>
