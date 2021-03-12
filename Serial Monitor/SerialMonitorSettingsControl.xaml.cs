@@ -245,7 +245,7 @@ namespace Serial_Monitor
         {
             get
             {
-                return nameof(FontStyles.Normal);
+                return nameof(FontStyles.Oblique);
             }
         }
         #endregion
