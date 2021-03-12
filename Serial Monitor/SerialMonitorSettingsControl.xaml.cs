@@ -506,12 +506,12 @@ namespace Serial_Monitor
             }
         }
 
-        private void EnablePipeIpcToggle_Click(object sender, RoutedEventArgs e)
-        {
-            _enablePipeIpc = !_enablePipeIpc;
-            PipeIpcToggle.Content = _enablePipeIpc ? "Disable pipe IPC" : "Enable pipe IPC";
-        }
+        //private void EnablePipeIpcToggle_Click(object sender, RoutedEventArgs e)
+        //{
+        //    _enablePipeIpc = !_enablePipeIpc;
+        //    PipeIpcToggle.Content = _enablePipeIpc ? "Disable pipe IPC" : "Enable pipe IPC";
+        //}
 
-        private bool _enablePipeIpc;
+        //private bool _enablePipeIpc;
     }
 }
