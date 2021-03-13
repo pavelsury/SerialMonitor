@@ -9,7 +9,7 @@
     {
         public SerialMonitor() : base(null)
         {
-            this.Caption = "Serial Monitor";
+            this.Caption = "Serial Monitor 2";
             this.Content = new SerialMonitorControl();
         }
     }

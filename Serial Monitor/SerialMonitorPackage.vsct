@@ -8,7 +8,7 @@
             <Button guid="guidSerialMonitorPackageCmdSet" id="SerialMonitorCommandId" priority="0x0100" type="Button">
                 <Parent guid="guidSHLMainMenu" id="IDG_VS_TOOLS_EXT_TOOLS"/>
                 <Strings>
-                    <ButtonText>Serial Monitor</ButtonText>
+                    <ButtonText>Serial Monitor 2</ButtonText>
                 </Strings>
             </Button>
         </Buttons>
