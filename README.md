@@ -1,4 +1,4 @@
-# SerialMonitor
+# SerialMonitor2
 This is a fork of egorgrushko's SerialMonitor extension:
 
 This extension for Visual Studio allows you debug programs that work with serial port.

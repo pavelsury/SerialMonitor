@@ -33,7 +33,7 @@ namespace Serial_Monitor
         /// <summary>
         /// Serial_MonitorPackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "cba4853a-1853-4eae-a437-9572728a1be5";
+        public const string PackageGuidString = "2b832628-2793-480c-bdbb-a2b960bcf3b4";
 
         #region Package Members
 

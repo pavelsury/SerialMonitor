@@ -15,7 +15,7 @@
     </Commands>
 
     <Symbols>
-        <GuidSymbol name="guidSerialMonitorPackage" value="{cba4853a-1853-4eae-a437-9572728a1be5}" />
+        <GuidSymbol name="guidSerialMonitorPackage" value="{2b832628-2793-480c-bdbb-a2b960bcf3b4}" />
         <GuidSymbol name="guidSerialMonitorPackageCmdSet" value="{edf12506-fbfd-4d38-99e4-f64c7ac9d468}">
             <IDSymbol name="SerialMonitorCommandId" value="0x0100" />
         </GuidSymbol>
