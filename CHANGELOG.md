@@ -1,8 +1,8 @@
-# SerialMonitor changelog
+# SerialMonitor2 changelog
 
-All notable changes to SerialMonitor are documented in this file.
+All notable changes to SerialMonitor2 are documented in this file.
 
-## 1.2.7 (12.3.2021)
+## 1.3.0 (12.3.2021)
 
 ### Added
 
@@ -10,4 +10,4 @@ All notable changes to SerialMonitor are documented in this file.
 
 ### Changed
 
--   Support for VS2019
+-   Support for VS2017 & VS2019
