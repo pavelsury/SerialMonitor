@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 
-namespace SerialMonitor.Ui
+namespace SerialMonitor.Common.Ui
 {
     public partial class SettingsControl : UserControl
     {

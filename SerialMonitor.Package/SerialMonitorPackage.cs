@@ -2,10 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
-using SerialMonitor.Ui;
 using Task = System.Threading.Tasks.Task;
 
-namespace SerialMonitor
+namespace SerialMonitor.Package
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -28,7 +27,7 @@ namespace SerialMonitor
     [Guid(PackageGuidString)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(MainToolWindow))]
+    [ProvideToolWindow(typeof(ToolWindow))]
     public sealed class SerialMonitorPackage : AsyncPackage
     {
         /// <summary>

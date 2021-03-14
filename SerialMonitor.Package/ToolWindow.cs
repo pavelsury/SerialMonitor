@@ -1,12 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using SerialMonitor.Common.Ui;
 
-namespace SerialMonitor.Ui
+namespace SerialMonitor.Package
 {
     [Guid("decfc908-9657-44ef-beea-8eecc6efceab")]
-    public class MainToolWindow : ToolWindowPane
+    public class ToolWindow : ToolWindowPane
     {
-        public MainToolWindow() : base(null)
+        public ToolWindow() : base(null)
         {
             Caption = "Serial Monitor 2";
             Content = new SerialMonitorControl();

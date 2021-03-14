@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
-namespace SerialMonitor.Ui
+namespace SerialMonitor.Package
 {
     internal static class CommandHelper
     {
@@ -25,11 +25,11 @@ namespace SerialMonitor.Ui
             commandService.AddCommand(menuCommand);
         }
 
-        private static async Task ShowToolWindowAsync(Package package)
+        private static async Task ShowToolWindowAsync(Microsoft.VisualStudio.Shell.Package package)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             
-            var window = package.FindToolWindow(typeof(MainToolWindow), 0, true);
+            var window = package.FindToolWindow(typeof(ToolWindow), 0, true);
             if (window?.Frame == null)
             {
                 throw new NotSupportedException("Cannot create tool window");
