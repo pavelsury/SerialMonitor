@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace Serial_Monitor
+namespace SerialMonitor.Ui
 {
     public partial class SerialMonitorControl : UserControl
     {

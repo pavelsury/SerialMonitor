@@ -1,10 +1,11 @@
-﻿using Microsoft.VisualStudio.Shell;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.VisualStudio.Shell;
+using SerialMonitor.Ui;
 using Task = System.Threading.Tasks.Task;
 
-namespace Serial_Monitor
+namespace SerialMonitor
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -27,7 +28,7 @@ namespace Serial_Monitor
     [Guid(PackageGuidString)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(SerialMonitor))]
+    [ProvideToolWindow(typeof(MainToolWindow))]
     public sealed class SerialMonitorPackage : AsyncPackage
     {
         /// <summary>
@@ -49,7 +50,7 @@ namespace Serial_Monitor
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            SerialMonitorCommand.Initialize(this);
+            await CommandHelper.InitializeAsync(this);
         }
 
         #endregion

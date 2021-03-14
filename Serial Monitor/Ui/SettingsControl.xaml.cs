@@ -1,15 +1,15 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 
-namespace Serial_Monitor
+namespace SerialMonitor.Ui
 {
-    public partial class SerialMonitorSettingsControl : UserControl
+    public partial class SettingsControl : UserControl
     {
         public string[] BaudRateValues
         {
@@ -197,7 +197,7 @@ namespace Serial_Monitor
 
         public string RecordFile => !OutputToFileEnabled ? null : RecordFilePathTextBox.Text;
 
-        public SerialMonitorSettingsControl()
+        public SettingsControl()
         {
             InitializeComponent();
             Reset();

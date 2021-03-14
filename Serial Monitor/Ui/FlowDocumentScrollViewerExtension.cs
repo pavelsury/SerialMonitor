@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Serial_Monitor
+namespace SerialMonitor.Ui
 {
     public static class FlowDocumentScrollViewerExtension
     {
