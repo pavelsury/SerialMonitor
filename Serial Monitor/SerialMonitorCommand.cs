@@ -11,56 +11,37 @@ namespace Serial_Monitor
 
         public static readonly Guid CommandSet = new Guid("edf12506-fbfd-4d38-99e4-f64c7ac9d468");
 
-        private readonly Package package;
+        public static SerialMonitorCommand Instance { get; private set; }
+
+        public static void Initialize(Package package) => Instance = new SerialMonitorCommand(package);
+
+        private IServiceProvider ServiceProvider => _package;
 
         private SerialMonitorCommand(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
+            _package = package ?? throw new ArgumentNullException(nameof(package));
 
-            this.package = package;
-
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
             {
-                var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
+                var menuCommandId = new CommandID(CommandSet, CommandId);
+                var menuItem = new MenuCommand(ShowToolWindow, menuCommandId);
                 commandService.AddCommand(menuItem);
             }
-        }
-
-        public static SerialMonitorCommand Instance
-        {
-            get;
-            private set;
-        }
-
-        private IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
-        }
-
-        public static void Initialize(Package package)
-        {
-            Instance = new SerialMonitorCommand(package);
         }
 
         private void ShowToolWindow(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            ToolWindowPane window = this.package.FindToolWindow(typeof(SerialMonitor), 0, true);
-            if ((null == window) || (null == window.Frame))
+            var window = _package.FindToolWindow(typeof(SerialMonitor), 0, true);
+            if (window?.Frame == null)
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
 
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            var windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
+
+        private readonly Package _package;
     }
 }

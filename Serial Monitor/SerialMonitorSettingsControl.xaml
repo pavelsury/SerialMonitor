@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Serial_Monitor"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="600">
+
     <UserControl.Resources>
         <Style x:Key="SettingsStackPanel" TargetType="StackPanel">
             <Setter Property="Margin" Value="5 5 5 5"/>
             <Setter Property="Orientation" Value="Horizontal"/>
         </Style>
     </UserControl.Resources>
+    
     <WrapPanel Orientation="Vertical">
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Baud Rate:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
@@ -77,3 +78,4 @@
         </StackPanel>-->
     </WrapPanel>
 </UserControl>
+    

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,12 +11,11 @@ namespace Serial_Monitor
 {
     public partial class SerialMonitorSettingsControl : UserControl
     {
-        #region SettingsMapping
         public string[] BaudRateValues
         {
             get
             {
-                return new string[]
+                return new[]
                 {
                     "110",
                     "300",
@@ -40,167 +40,58 @@ namespace Serial_Monitor
                 };
             }
         }
-        public string DefaultBaudRate
-        {
-            get
-            {
-                return "9600";
-            }
-        }
+        public string DefaultBaudRate => "9600";
 
-        public Dictionary<string, string> ReceiveNewLineMap
-        {
-            get
+        public Dictionary<string, string> ReceiveNewLineMap =>
+            new Dictionary<string, string>
             {
-                return new Dictionary<string, string>()
-                {
-                    { "CR + LF", "\r\n" },
-                    { "LF", "\n" }
-                };
-            }
-        }
-        public string DefaultReceiveNewLine
-        {
-            get
-            {
-                return "CR + LF";
-            }
-        }
+                { "CR + LF", "\r\n" },
+                { "LF", "\n" }
+            };
 
-        public Dictionary<string, string> SendNewLineMap
-        {
-            get
-            {
-                return new Dictionary<string, string>()
-                {
-                    { "None", "" },
-                    { "CR + LF", "\r\n" },
-                    { "LF", "\n" }
-                };
-            }
-        }
-        public string DefaultSendNewLine
-        {
-            get
-            {
-                return "None";
-            }
-        }
+        public string DefaultReceiveNewLine => "CR + LF";
 
-        public Dictionary<string, StopBits> StopBitsMap
-        {
-            get
+        public Dictionary<string, string> SendNewLineMap =>
+            new Dictionary<string, string>
             {
-                return new Dictionary<string, StopBits>()
-                {
-                    { "1", StopBits.One },
-                    { "1.5", StopBits.OnePointFive },
-                    { "2", StopBits.Two }
-                };
-            }
-        }
-        public string DefaultStopBits
-        {
-            get
-            {
-                return "1";
-            }
-        }
+                { "None", "" },
+                { "CR + LF", "\r\n" },
+                { "LF", "\n" }
+            };
 
-        public Dictionary<string, Handshake> HandshakeMap
-        {
-            get
-            {
-                Dictionary<string, Handshake> map = new Dictionary<string, Handshake>();
-                foreach (string handshakeValue in Enum.GetNames(typeof(Handshake)))
-                {
-                    map.Add(handshakeValue, (Handshake)Enum.Parse(typeof(Handshake), handshakeValue));
-                }
-                return map;
-            }
-        }
-        public string DefaultHandshake
-        {
-            get
-            {
-                return Enum.GetNames(typeof(Handshake))[0];
-            }
-        }
+        public string DefaultSendNewLine => "None";
 
-        public Dictionary<string, Parity> ParityMap
-        {
-            get
+        public Dictionary<string, StopBits> StopBitsMap =>
+            new Dictionary<string, StopBits>
             {
-                Dictionary<string, Parity> map = new Dictionary<string, Parity>();
-                foreach (string parityValue in Enum.GetNames(typeof(Parity)))
-                {
-                    map.Add(parityValue, (Parity)Enum.Parse(typeof(Parity), parityValue));
-                }
-                return map;
-            }
-        }
-        public string DefaultParity
-        {
-            get
-            {
-                return Enum.GetNames(typeof(Parity))[0];
-            }
-        }
+                { "1", StopBits.One },
+                { "1.5", StopBits.OnePointFive },
+                { "2", StopBits.Two }
+            };
 
-        public string[] DataBitsValues
-        {
-            get
-            {
-                return new string[]
-                {
-                    "5",
-                    "6",
-                    "7",
-                    "8"
-                };
-            }
-        }
+        public string DefaultStopBits => "1";
 
-        public string DefaultDataBits
-        {
-            get
-            {
-                return "8";
-            }
-        }
+        public Dictionary<string, Handshake> HandshakeMap => Enum.GetNames(typeof(Handshake)).ToDictionary(handshakeValue => handshakeValue, handshakeValue => (Handshake)Enum.Parse(typeof(Handshake), handshakeValue));
+        public string DefaultHandshake => Enum.GetNames(typeof(Handshake))[0];
 
-        public string DefaultReadTimeout
-        {
-            get
-            {
-                return "500";
-            }
-        }
-        public string DefaultWriteTimeout
-        {
-            get
-            {
-                return "500";
-            }
-        }
+        public Dictionary<string, Parity> ParityMap => Enum.GetNames(typeof(Parity)).ToDictionary(parityValue => parityValue, parityValue => (Parity)Enum.Parse(typeof(Parity), parityValue));
+        public string DefaultParity => Enum.GetNames(typeof(Parity))[0];
 
-        public Dictionary<string, Encoding> EncodingsMap
-        {
-            get
-            {
-                Dictionary<string, Encoding> map = new Dictionary<string, Encoding>();
-                foreach (EncodingInfo encoding in Encoding.GetEncodings())
-                {
-                    map.Add(encoding.CodePage + " " + encoding.Name + " - " + encoding.DisplayName, encoding.GetEncoding());
-                }
-                return map;
-            }
-        }
+        public string[] DataBitsValues => new[] { "5", "6", "7", "8" };
+
+        public string DefaultDataBits => "8";
+
+        public string DefaultReadTimeout => "500";
+
+        public string DefaultWriteTimeout => "500";
+
+        public Dictionary<string, Encoding> EncodingsMap => Encoding.GetEncodings().ToDictionary(encoding => encoding.CodePage + " " + encoding.Name + " - " + encoding.DisplayName, encoding => encoding.GetEncoding());
+
         public string DefaultEncoding
         {
             get
             {
-                Encoding defaultEncoding = Encoding.GetEncoding(0);
+                var defaultEncoding = Encoding.GetEncoding(0);
                 return defaultEncoding.CodePage + " " + defaultEncoding.WebName + " - " + defaultEncoding.EncodingName;
             }
         }
@@ -209,9 +100,9 @@ namespace Serial_Monitor
         {
             get
             {
-                List<string> values = new List<string>();
+                var values = new List<string>();
 
-                for (int i = 6; i <= 72; i++)
+                for (var i = 6; i <= 72; i++)
                 {
                     values.Add(i.ToString());
                 }
@@ -220,43 +111,23 @@ namespace Serial_Monitor
             }
         }
 
-        public string[] OutputFontStyleValues
-        {
-            get
+        public string[] OutputFontStyleValues =>
+            new[]
             {
-                return new[]
-                {
-                    nameof(FontStyles.Normal),
-                    nameof(FontStyles.Italic),
-                    nameof(FontStyles.Oblique)
-                };
-            }
-        }
-        
-        public string DefaultOutputFontSize
-        {
-            get
-            {
-                return "11";
-            }
-        }
+                nameof(FontStyles.Normal),
+                nameof(FontStyles.Italic),
+                nameof(FontStyles.Oblique)
+            };
 
-        public string DefaultOutputFontStyle
-        {
-            get
-            {
-                return nameof(FontStyles.Oblique);
-            }
-        }
-        #endregion
+        public string DefaultOutputFontSize => "11";
 
-        #region Settings
+        public string DefaultOutputFontStyle => nameof(FontStyles.Oblique);
+
         public int BaudRate
         {
             get
             {
-                int baudRate;
-                if (!int.TryParse(BaudRateComboBox.Text, out baudRate))
+                if (!int.TryParse(BaudRateComboBox.Text, out var baudRate))
                 {
                     throw new Exception("Invalid baud rate value!");
                 }
@@ -264,60 +135,23 @@ namespace Serial_Monitor
             }
         }
 
-        public string ReceiveNewLine
-        {
-            get
-            {
-                return ReceiveNewLineMap[ReceiveNewLineComboBox.Text];
-            }
-        }
+        public string ReceiveNewLine => ReceiveNewLineMap[ReceiveNewLineComboBox.Text];
 
-        public string SendNewLine
-        {
-            get
-            {
-                return SendNewLineMap[SendNewLineComboBox.Text];
-            }
-        }
+        public string SendNewLine => SendNewLineMap[SendNewLineComboBox.Text];
 
-        public StopBits StopBits
-        {
-            get
-            {
-                return StopBitsMap[StopBitsComboBox.Text];
-            }
-        }
+        public StopBits StopBits => StopBitsMap[StopBitsComboBox.Text];
 
-        public Handshake Handshake
-        {
-            get
-            {
-                return HandshakeMap[HandshakeComboBox.Text];
-            }
-        }
+        public Handshake Handshake => HandshakeMap[HandshakeComboBox.Text];
 
-        public Parity Parity
-        {
-            get
-            {
-                return ParityMap[ParityComboBox.Text];
-            }
-        }
+        public Parity Parity => ParityMap[ParityComboBox.Text];
 
-        public int DataBits
-        {
-            get
-            {
-                return Convert.ToInt32(DataBitsComboBox.Text);
-            }
-        }
+        public int DataBits => Convert.ToInt32(DataBitsComboBox.Text);
 
         public int ReadTimeout
         {
             get
             {
-                int readTimeout;
-                if (!int.TryParse(ReadTimeoutTextBox.Text, out readTimeout))
+                if (!int.TryParse(ReadTimeoutTextBox.Text, out var readTimeout))
                 {
                     throw new Exception("Invalid read timeout value!");
                 }
@@ -329,8 +163,7 @@ namespace Serial_Monitor
         {
             get
             {
-                int writeTimeout;
-                if (!int.TryParse(WriteTimeoutTextBox.Text, out writeTimeout))
+                if (!int.TryParse(WriteTimeoutTextBox.Text, out var writeTimeout))
                 {
                     throw new Exception("Invalid write timeout value!");
                 }
@@ -338,21 +171,9 @@ namespace Serial_Monitor
             }
         }
 
-        public Encoding Encoding
-        {
-            get
-            {
-                return EncodingsMap[EncodingComboBox.Text];
-            }
-        }
+        public Encoding Encoding => EncodingsMap[EncodingComboBox.Text];
 
-        public int OutputFontSize
-        {
-            get
-            {
-                return Convert.ToInt32(OutputFontSizeComboBox.Text);
-            }
-        }
+        public int OutputFontSize => Convert.ToInt32(OutputFontSizeComboBox.Text);
 
         public FontStyle OutputFontStyle
         {
@@ -364,34 +185,17 @@ namespace Serial_Monitor
                     case nameof(FontStyles.Italic): return FontStyles.Italic;
                     case nameof(FontStyles.Oblique): return FontStyles.Oblique;
                     default: throw new ArgumentOutOfRangeException();
-                };
-            }
-        }
-
-        public bool DtrEnable
-        {
-            get;
-            private set;
-        }
-
-        public bool OutputToFileEnabled
-        {
-            get;
-            private set;
-        }
-
-        public string RecordFile
-        {
-            get
-            {
-                if (!OutputToFileEnabled)
-                {
-                    return null;
                 }
-                return RecordFilePathTextBox.Text;
             }
         }
-        #endregion
+
+        public bool DtrEnable { get; private set;
+        }
+
+        public bool OutputToFileEnabled { get; private set;
+        }
+
+        public string RecordFile => !OutputToFileEnabled ? null : RecordFilePathTextBox.Text;
 
         public SerialMonitorSettingsControl()
         {
@@ -401,61 +205,61 @@ namespace Serial_Monitor
 
         public void Reset()
         {
-            foreach (string rate in BaudRateValues)
+            foreach (var rate in BaudRateValues)
             {
                 BaudRateComboBox.Items.Add(rate);
             }
             BaudRateComboBox.SelectedItem = DefaultBaudRate;
 
-            foreach (string newLine in ReceiveNewLineMap.Keys)
+            foreach (var newLine in ReceiveNewLineMap.Keys)
             {
                 ReceiveNewLineComboBox.Items.Add(newLine);
             }
             ReceiveNewLineComboBox.SelectedItem = DefaultReceiveNewLine;
 
-            foreach (string newLine in SendNewLineMap.Keys)
+            foreach (var newLine in SendNewLineMap.Keys)
             {
                 SendNewLineComboBox.Items.Add(newLine);
             }
             SendNewLineComboBox.SelectedItem = DefaultSendNewLine;
 
-            foreach (string dataBits in DataBitsValues)
+            foreach (var dataBits in DataBitsValues)
             {
                 DataBitsComboBox.Items.Add(dataBits);
             }
             DataBitsComboBox.SelectedItem = DefaultDataBits;
 
-            foreach (string stopBits in StopBitsMap.Keys)
+            foreach (var stopBits in StopBitsMap.Keys)
             {
                 StopBitsComboBox.Items.Add(stopBits);
             }
             StopBitsComboBox.SelectedItem = DefaultStopBits;
 
-            foreach (string encoding in EncodingsMap.Keys)
+            foreach (var encoding in EncodingsMap.Keys)
             {
                 EncodingComboBox.Items.Add(encoding);
             }
             EncodingComboBox.SelectedItem = DefaultEncoding;
 
-            foreach (string fontSize in OutputFontSizeValues)
+            foreach (var fontSize in OutputFontSizeValues)
             {
                 OutputFontSizeComboBox.Items.Add(fontSize);
             }
             OutputFontSizeComboBox.SelectedItem = DefaultOutputFontSize;
 
-            foreach (string fontStyle in OutputFontStyleValues)
+            foreach (var fontStyle in OutputFontStyleValues)
             {
                 OutputFontStyleComboBox.Items.Add(fontStyle);
             }
             OutputFontStyleComboBox.SelectedItem = DefaultOutputFontStyle;
 
-            foreach (string handshakeValue in HandshakeMap.Keys)
+            foreach (var handshakeValue in HandshakeMap.Keys)
             {
                 HandshakeComboBox.Items.Add(handshakeValue);
             }
             HandshakeComboBox.SelectedItem = DefaultHandshake;
 
-            foreach (string parityValue in ParityMap.Keys)
+            foreach (var parityValue in ParityMap.Keys)
             {
                 ParityComboBox.Items.Add(parityValue);
             }
@@ -470,27 +274,19 @@ namespace Serial_Monitor
 
         private void RecordFilePathTextBox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = false;
+            var dialog = new OpenFileDialog { Multiselect = false };
             dialog.ShowDialog();
             RecordFilePathTextBox.Text = dialog.FileName;
         }
 
-        private void DtrToggle_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void DtrToggle_Click(object sender, RoutedEventArgs e)
         {
             DtrEnable = !DtrEnable;
 
-            if (DtrEnable)
-            {
-                DtrToggle.Content = "Disable Data Terminal Ready (DTR)";
-            }
-            else
-            {
-                DtrToggle.Content = "Enable Data Terminal Ready (DTR)";
-            }
+            DtrToggle.Content = DtrEnable ? "Disable Data Terminal Ready (DTR)" : "Enable Data Terminal Ready (DTR)";
         }
 
-        private void OutputToFileToggle_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void OutputToFileToggle_Click(object sender, RoutedEventArgs e)
         {
             OutputToFileEnabled = !OutputToFileEnabled;
 

@@ -12,32 +12,39 @@ namespace Serial_Monitor
 {
     public partial class SerialMonitorControl : UserControl
     {
-        private SerialPort port;
+        public SerialMonitorControl()
+        {
+            InitializeComponent();
+            Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
+            _port = new SerialPort();
+            _portHandlerTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, Application.Current.Dispatcher);
+            _portHandlerTimer.Tick += SerialUpdate;
+        }
 
         private void ConfigurePort()
         {
-            port.PortName = ComPorts.SelectedItem.ToString();
-            port.BaudRate = Settings.BaudRate;
-            port.DataBits = Settings.DataBits;
-            port.Handshake = Settings.Handshake;
-            port.Parity = Settings.Parity;
-            port.StopBits = Settings.StopBits;
-            port.ReadTimeout = Settings.ReadTimeout;
-            port.WriteTimeout = Settings.WriteTimeout;
+            _port.PortName = ComPorts.SelectedItem.ToString();
+            _port.BaudRate = Settings.BaudRate;
+            _port.DataBits = Settings.DataBits;
+            _port.Handshake = Settings.Handshake;
+            _port.Parity = Settings.Parity;
+            _port.StopBits = Settings.StopBits;
+            _port.ReadTimeout = Settings.ReadTimeout;
+            _port.WriteTimeout = Settings.WriteTimeout;
         }
 
         private void PrintColorMessage(string message, SolidColorBrush brush)
         {
             Output.AppendText(message + Environment.NewLine, brush, Settings.OutputFontSize, Settings.OutputFontStyle);
 
-            if (autoScrollEnabled == true)
+            if (_autoScrollEnabled)
             {
                 Output.ScrollToEnd();
             }
 
             if (Settings.OutputToFileEnabled)
             {
-                string file = Settings.RecordFile;
+                var file = Settings.RecordFile;
 
                 if (!string.IsNullOrEmpty(file) && File.Exists(file))
                 {
@@ -46,48 +53,36 @@ namespace Serial_Monitor
             }
         }
 
-        private void PrintErrorMessage(string message)
-        {
-            PrintColorMessage(message, Brushes.Red);
-        }
+        private void PrintErrorMessage(string message) => PrintColorMessage(message, Brushes.Red);
 
-        private void PrintWarningMessage(string message)
-        {
-            PrintColorMessage(message, Brushes.Yellow);
-        }
+        private void PrintWarningMessage(string message) => PrintColorMessage(message, Brushes.Yellow);
 
-        private void PrintSuccessMessage(string message)
-        {
-            PrintColorMessage(message, Brushes.Green);
-        }
+        private void PrintSuccessMessage(string message) => PrintColorMessage(message, Brushes.Green);
 
-        private void PrintProcessMessage(string message)
-        {
-            PrintColorMessage(message, Brushes.Aqua);
-        }
+        private void PrintProcessMessage(string message) => PrintColorMessage(message, Brushes.Aqua);
 
         private void SerialUpdate(object e, EventArgs s)
         {
             try
             {
-                int bytesToRead = port.BytesToRead;
+                var bytesToRead = _port.BytesToRead;
 
                 if (bytesToRead > 0)
                 {
-                    byte[] buffer = new byte[bytesToRead];
-                    port.Read(buffer, 0, bytesToRead);
+                    var buffer = new byte[bytesToRead];
+                    _port.Read(buffer, 0, bytesToRead);
 
-                    string data = Settings.Encoding.GetString(buffer);
+                    var data = Settings.Encoding.GetString(buffer);
                     Output.AppendText(data.Replace(Settings.ReceiveNewLine, "\r"), Settings.OutputFontSize, Settings.OutputFontStyle);
 
-                    if (autoScrollEnabled == true)
+                    if (_autoScrollEnabled)
                     {
                         Output.ScrollToEnd();
                     }
 
                     if (Settings.OutputToFileEnabled)
                     {
-                        string file = Settings.RecordFile;
+                        var file = Settings.RecordFile;
 
                         if (!string.IsNullOrEmpty(file) && File.Exists(file))
                         {
@@ -107,27 +102,13 @@ namespace Serial_Monitor
             }
         }
 
-        private DispatcherTimer portHandlerTimer;
-        private bool autoScrollEnabled = true;
-
-        public SerialMonitorControl()
-        {
-            this.InitializeComponent();
-            Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
-
-            port = new SerialPort();
-
-            portHandlerTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, Application.Current.Dispatcher);
-            portHandlerTimer.Tick += SerialUpdate;
-        }
-
         private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
         {
-            portHandlerTimer.Stop();
-            port.Dispose();
+            _portHandlerTimer.Stop();
+            _port.Dispose();
         }
 
-        private void SettingsOutputControl_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void SettingsOutputControl_Click(object sender, RoutedEventArgs e)
         {
             if (Settings.Visibility == Visibility.Visible)
             {
@@ -143,7 +124,7 @@ namespace Serial_Monitor
             }
         }
 
-        private void Connect_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Connect_Click(object sender, RoutedEventArgs e)
         {
             Settings.Visibility = Visibility.Collapsed;
             Output.Visibility = Visibility.Visible;
@@ -157,14 +138,14 @@ namespace Serial_Monitor
                     ConfigurePort();
 
                     PrintProcessMessage("Connecting...");
-                    port.Open();
+                    _port.Open();
 
-                    if (Settings.DtrEnable == true)
+                    if (Settings.DtrEnable)
                     {
-                        port.DtrEnable = true;
-                        port.DiscardInBuffer();
+                        _port.DtrEnable = true;
+                        _port.DiscardInBuffer();
                         Thread.Sleep(1000);
-                        port.DtrEnable = false;
+                        _port.DtrEnable = false;
                     }
 
                     ConnectButton.Visibility = Visibility.Collapsed;
@@ -178,7 +159,7 @@ namespace Serial_Monitor
                     Settings.IsEnabled = false;
 
                     PrintSuccessMessage("Connected!");
-                    portHandlerTimer.Start();
+                    _portHandlerTimer.Start();
                 }
                 catch (Exception ex)
                 {
@@ -191,7 +172,7 @@ namespace Serial_Monitor
             }
         }
 
-        private void Disconnect_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Disconnect_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -207,8 +188,8 @@ namespace Serial_Monitor
 
         private void Disconnect()
         {
-            portHandlerTimer.Stop();
-            port.Close();
+            _portHandlerTimer.Stop();
+            _port.Close();
 
             ConnectButton.Visibility = Visibility.Visible;
             DisconnectButton.Visibility = Visibility.Collapsed;
@@ -219,27 +200,27 @@ namespace Serial_Monitor
             Settings.IsEnabled = true;
         }
 
-        private void Reconnect_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Reconnect_Click(object sender, RoutedEventArgs e)
         {
             Disconnect_Click(null, null);
             Connect_Click(null, null);
         }
 
-        private void Clear_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Clear_Click(object sender, RoutedEventArgs e)
         {
             Output.Clear();
         }
 
-        private void Send_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Send_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                byte[] data = Encoding.Convert(
+                var data = Encoding.Convert(
                     Encoding.Default,
                     Settings.Encoding,
                     Encoding.Default.GetBytes(MessageToSend.Text + Settings.SendNewLine));
 
-                port.Write(data, 0, data.Length);
+                _port.Write(data, 0, data.Length);
             }
             catch (Exception ex)
             {
@@ -256,7 +237,7 @@ namespace Serial_Monitor
             }
             ComPorts.Items.Clear();
 
-            foreach (string portName in SerialPort.GetPortNames())
+            foreach (var portName in SerialPort.GetPortNames())
             {
                 ComPorts.Items.Add(portName);
             }
@@ -278,9 +259,9 @@ namespace Serial_Monitor
 
         private void AutoScrollToggle_Click(object sender, RoutedEventArgs e)
         {
-            autoScrollEnabled = !autoScrollEnabled;
+            _autoScrollEnabled = !_autoScrollEnabled;
 
-            if (autoScrollEnabled)
+            if (_autoScrollEnabled)
             {
                 AutoScrollToggle.Content = "Disable Auto Scroll";
             }
@@ -289,5 +270,9 @@ namespace Serial_Monitor
                 AutoScrollToggle.Content = "Enable Auto Scroll";
             }
         }
+
+        private readonly SerialPort _port;
+        private readonly DispatcherTimer _portHandlerTimer;
+        private bool _autoScrollEnabled = true;
     }
 }

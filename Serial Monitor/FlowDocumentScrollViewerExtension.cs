@@ -20,7 +20,7 @@ namespace Serial_Monitor
 
         public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, SolidColorBrush brush, int fontSize, FontStyle fontStyle)
         {
-            TextRange range = new TextRange(flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd, flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd);
+            var range = new TextRange(flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd, flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd);
             range.Text = data.Replace(Environment.NewLine, "\r");
             range.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
             range.ApplyPropertyValue(TextElement.FontStyleProperty, fontStyle);
@@ -34,20 +34,13 @@ namespace Serial_Monitor
                 return;
             }
 
-            DependencyObject firstChild = VisualTreeHelper.GetChild(flowDocumentScrollViewer, 0);
-            if (firstChild == null)
+            var firstChild = VisualTreeHelper.GetChild(flowDocumentScrollViewer, 0);
+            if (!(VisualTreeHelper.GetChild(firstChild, 0) is Decorator border))
             {
                 return;
             }
 
-            Decorator border = VisualTreeHelper.GetChild(firstChild, 0) as Decorator;
-
-            if (border == null)
-            {
-                return;
-            }
-
-            (border.Child as ScrollViewer).ScrollToEnd();
+            (border.Child as ScrollViewer)?.ScrollToEnd();
         }
     }
 }

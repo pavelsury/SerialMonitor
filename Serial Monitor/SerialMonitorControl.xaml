@@ -5,13 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Serial_Monitor"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-             mc:Ignorable="d"
-             Name="SerialMonitorWindow">
+             mc:Ignorable="d">
+
     <DockPanel LastChildFill="True">
         <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
             <Button Name="SendButton" Content="Send" IsEnabled="False" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" DockPanel.Dock="Right" Click="Send_Click"/>
             <TextBox Name="MessageToSend" IsEnabled="False" KeyUp="MessageToSend_KeyUp" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
         </DockPanel>
+        
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
             <ComboBox Name="ComPorts" DropDownOpened="ComPorts_DropDownOpened" Margin="5 0 5 10" MinWidth="70" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
             <Button Name="ConnectButton" Content="Connect" Click="Connect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
@@ -21,7 +22,9 @@
             <Button Name="SettingsOutputControl" Content="Show Settings" Click="SettingsOutputControl_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <Button Name="AutoScrollToggle" Content="Disable Auto Scroll" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="AutoScrollToggle_Click"/>
         </WrapPanel>
+        
         <local:SerialMonitorSettingsControl x:Name="Settings" Visibility="Collapsed" Margin="10 10 10 10"/>
+        
         <FlowDocumentScrollViewer Name="Output" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <FlowDocument FontFamily="Consolas" FontSize="11"/>
         </FlowDocumentScrollViewer>
