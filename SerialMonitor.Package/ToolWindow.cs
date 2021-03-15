@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using SerialMonitor.Common.Ui;
+using SerialMonitor.Ui;
 
 namespace SerialMonitor.Package
 {

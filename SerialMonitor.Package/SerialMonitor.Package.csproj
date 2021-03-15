@@ -95,7 +95,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SerialMonitor.Common\SerialMonitor.Common.csproj">
+    <ProjectReference Include="..\SerialMonitor\SerialMonitor.csproj">
       <Project>{788c4516-156a-40ae-bf34-fd1158ed1b97}</Project>
       <Name>SerialMonitor.Common</Name>
     </ProjectReference>
