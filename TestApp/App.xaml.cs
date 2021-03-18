@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using SerialMonitor.Business;
 
 namespace TestApp
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private void OnStartup(object sender, StartupEventArgs e)
+        {
+            new MainWindow { DataContext = _modelFactory }.Show();
+            _modelFactory.UsbNotification.Initialize();
+        }
+
+        private readonly ModelFactory _modelFactory = new ModelFactory();
     }
 }

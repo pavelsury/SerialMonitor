@@ -56,6 +56,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Business\IUsbNotification.cs" />
+    <Compile Include="Business\ModelFactory.cs" />
+    <Compile Include="Business\NotifyPropertyChanged.cs" />
+    <Compile Include="Business\SerialPortManager.cs" />
+    <Compile Include="Business\SettingsManager.cs" />
+    <Compile Include="Business\UsbNotification.cs" />
     <Compile Include="Ui\FlowDocumentScrollViewerExtension.cs" />
     <Compile Include="Ui\SerialMonitorControl.xaml.cs">
       <DependentUpon>SerialMonitorControl.xaml</DependentUpon>
@@ -92,5 +98,6 @@
       <Version>15.0.1</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

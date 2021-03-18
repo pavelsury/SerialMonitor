@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
 using Microsoft.Win32;
+using SerialMonitor.Business;
 
 namespace SerialMonitor.Ui
 {
@@ -123,17 +126,17 @@ namespace SerialMonitor.Ui
 
         public string DefaultOutputFontStyle => nameof(FontStyles.Oblique);
 
-        public int BaudRate
-        {
-            get
-            {
-                if (!int.TryParse(BaudRateComboBox.Text, out var baudRate))
-                {
-                    throw new Exception("Invalid baud rate value!");
-                }
-                return baudRate;
-            }
-        }
+        //public int BaudRate
+        //{
+        //    get
+        //    {
+        //        if (!int.TryParse(BaudRateComboBox.Text, out var baudRate))
+        //        {
+        //            throw new Exception("Invalid baud rate value!");
+        //        }
+        //        return baudRate;
+        //    }
+        //}
 
         public string ReceiveNewLine => ReceiveNewLineMap[ReceiveNewLineComboBox.Text];
 
@@ -205,11 +208,11 @@ namespace SerialMonitor.Ui
 
         public void Reset()
         {
-            foreach (var rate in BaudRateValues)
-            {
-                BaudRateComboBox.Items.Add(rate);
-            }
-            BaudRateComboBox.SelectedItem = DefaultBaudRate;
+            //foreach (var rate in BaudRateValues)
+            //{
+            //    BaudRateComboBox.Items.Add(rate);
+            //}
+            //BaudRateComboBox.SelectedItem = DefaultBaudRate;
 
             foreach (var newLine in ReceiveNewLineMap.Keys)
             {
@@ -272,6 +275,8 @@ namespace SerialMonitor.Ui
             OutputToFileEnabled = false;
         }
 
+        private SettingsManager SettingsManager => (SettingsManager)DataContext;
+
         private void RecordFilePathTextBox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var dialog = new OpenFileDialog { Multiselect = false };
@@ -309,5 +314,22 @@ namespace SerialMonitor.Ui
         //}
 
         //private bool _enablePipeIpc;
+        private void OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            var text = SettingsManager.SelectedBaudRate.ToString();
+            ComboBox.SetCurrentValue(ComboBox.TextProperty, null);
+            ComboBox.SetCurrentValue(ComboBox.TextProperty, text);
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (Keyboard.FocusedElement is UIElement elementWithFocus)
+                {
+                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                }
+            }
+        }
     }
 }

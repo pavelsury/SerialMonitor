@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
-             mc:Ignorable="d">
+             xmlns:business="clr-namespace:SerialMonitor.Business"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance business:SerialPortManager}">
 
     <DockPanel LastChildFill="True">
         <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
@@ -14,7 +16,7 @@
         </DockPanel>
         
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
-            <ComboBox Name="ComPorts" DropDownOpened="ComPorts_DropDownOpened" Margin="5 0 5 10" MinWidth="70" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
+            <ComboBox ItemsSource="{Binding SettingsManager.PortNames}" DropDownOpened="ComPorts_DropDownOpened" Margin="5 0 5 10" MinWidth="70" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
             <Button Name="ConnectButton" Content="Connect" Click="Connect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <Button Name="DisconnectButton" Content="Disconnect" Visibility="Collapsed" Click="Disconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <Button Name="ReconnectButton" Content="Reconnect" Visibility="Collapsed" Click="Reconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
@@ -23,7 +25,8 @@
             <Button Name="AutoScrollToggle" Content="Disable Auto Scroll" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="AutoScrollToggle_Click"/>
         </WrapPanel>
         
-        <ui:SettingsControl x:Name="Settings" Visibility="Collapsed" Margin="10 10 10 10"/>
+        <ui:SettingsControl x:Name="Settings" DataContext="{Binding SettingsManager}"
+                            Visibility="Collapsed" Margin="10 10 10 10"/>
         
         <FlowDocumentScrollViewer Name="Output" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <FlowDocument FontFamily="Consolas" FontSize="11"/>

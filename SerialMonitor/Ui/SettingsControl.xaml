@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:business="clr-namespace:SerialMonitor.Business"
              mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance business:SettingsManager}"
              d:DesignHeight="600" d:DesignWidth="600">
 
     <UserControl.Resources>
@@ -17,7 +19,12 @@
     <WrapPanel Orientation="Vertical">
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Baud Rate:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ComboBox Name="BaudRateComboBox" MinWidth="100" MaxWidth="100" IsEditable="True" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
+            <ComboBox Name="ComboBox" ItemsSource="{Binding BaudRates}"
+                      Text="{Binding SelectedBaudRate, Mode=TwoWay}"
+                      MinWidth="100" MaxWidth="100" IsEditable="True"
+                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"
+                      LostFocus="OnLostFocus"
+                      KeyDown="OnKeyDown"/>
         </StackPanel>
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Receive new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
