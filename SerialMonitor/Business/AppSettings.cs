@@ -4,6 +4,7 @@ namespace SerialMonitor.Business
 {
     public class AppSettings
     {
+        public string SelectedPort { get; set; }
         public Dictionary<string, PortSettings> PortsSettingsMap { get; set; } = new Dictionary<string, PortSettings>();
     }
 }

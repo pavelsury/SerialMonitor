@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using SerialMonitor.Business;
 
 namespace SerialMonitor.Ui
 {
@@ -21,6 +22,8 @@ namespace SerialMonitor.Ui
             _portHandlerTimer.Tick += SerialUpdate;
         }
 
+        private SerialPortManager SerialPortManager => (SerialPortManager)DataContext;
+
         private void ConfigurePort()
         {
             //_port.PortName = ComPorts.SelectedItem.ToString();
@@ -29,8 +32,8 @@ namespace SerialMonitor.Ui
             //_port.Handshake = Settings.Handshake;
             //_port.Parity = Settings.Parity;
             //_port.StopBits = Settings.StopBits;
-            //_port.ReadTimeout = Settings.ReadTimeout;
-            //_port.WriteTimeout = Settings.WriteTimeout;
+            //_port.ReadTimeoutMs = Settings.ReadTimeoutMs;
+            //_port.WriteTimeoutMs = Settings.WriteTimeoutMs;
         }
 
         private void PrintColorMessage(string message, SolidColorBrush brush)
@@ -104,6 +107,7 @@ namespace SerialMonitor.Ui
 
         private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
         {
+            SerialPortManager.SettingsManager.Save();
             _portHandlerTimer.Stop();
             _port.Dispose();
         }

@@ -150,7 +150,7 @@ namespace SerialMonitor.Ui
 
         //public int DataBits => Convert.ToInt32(DataBitsComboBox.Text);
 
-        //public int ReadTimeout
+        //public int ReadTimeoutMs
         //{
         //    get
         //    {
@@ -162,7 +162,7 @@ namespace SerialMonitor.Ui
         //    }
         //}
 
-        //public int WriteTimeout
+        //public int WriteTimeoutMs
         //{
         //    get
         //    {

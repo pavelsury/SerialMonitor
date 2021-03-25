@@ -143,7 +143,7 @@
                      LostFocus="OnTextBoxLostFocus"
                      KeyDown="OnKeyDown">
                 <TextBox.Text>
-                    <Binding Path="SelectedPort.Settings.ReadTimeout" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding Path="SelectedPort.Settings.ReadTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <business:IntNonnegativeRule/>
                         </Binding.ValidationRules>
@@ -158,7 +158,7 @@
                      LostFocus="OnTextBoxLostFocus"
                      KeyDown="OnKeyDown">
                 <TextBox.Text>
-                    <Binding Path="SelectedPort.Settings.WriteTimeout" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding Path="SelectedPort.Settings.WriteTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <business:IntNonnegativeRule/>
                         </Binding.ValidationRules>

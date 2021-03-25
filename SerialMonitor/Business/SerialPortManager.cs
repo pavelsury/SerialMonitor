@@ -11,6 +11,21 @@ namespace SerialMonitor.Business
         {
             SettingsManager = settingsManager;
             usbNotification.DeviceChanged += (s, e) => UpdatePorts();
+        }
+
+        public void InitializeSync()
+        {
+            foreach (var portName in SettingsManager.AppSettings.PortsSettingsMap.Keys)
+            {
+                CreatePortInfo(portName, false);
+            }
+
+            var selectedPortName = SettingsManager.AppSettings.SelectedPort;
+            if (!string.IsNullOrWhiteSpace(selectedPortName))
+            {
+                SettingsManager.SelectedPort = Ports.SingleOrDefault(p => p.Name == selectedPortName) ?? CreatePortInfo(selectedPortName, false);
+            }
+
             UpdatePorts();
         }
 
@@ -27,12 +42,7 @@ namespace SerialMonitor.Business
                 var portInfo = Ports.SingleOrDefault(p => p.Name == portName);
                 if (portInfo == null)
                 {
-                    Ports.AddSorted(new PortInfo
-                    {
-                        Name = portName,
-                        IsAvailable = true,
-                        Settings = SettingsManager.GetSettings(portName)
-                    });
+                    CreatePortInfo(portName, true);
                 }
                 else
                 {
@@ -49,6 +59,18 @@ namespace SerialMonitor.Business
             {
                 SettingsManager.SelectedPort = Ports.FirstOrDefault(p => p.IsAvailable) ?? Ports.FirstOrDefault();
             }
+        }
+
+        private PortInfo CreatePortInfo(string portName, bool isAvailable)
+        {
+            var portInfo = new PortInfo
+            {
+                Name = portName,
+                IsAvailable = isAvailable,
+                Settings = SettingsManager.GetSettings(portName)
+            };
+            Ports.AddSorted(portInfo);
+            return portInfo;
         }
     }
 }

@@ -61,8 +61,11 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Business\AppSettings.cs" />
+    <Compile Include="Business\Helpers\EncodingJsonConverter.cs" />
     <Compile Include="Business\Helpers\IDictionaryExtensions.cs" />
+    <Compile Include="Business\Helpers\IEnumerableExtensions.cs" />
     <Compile Include="Business\Helpers\IListExtensions.cs" />
+    <Compile Include="Business\Helpers\KeyValuePairExtensions.cs" />
     <Compile Include="Business\IntPositiveRule.cs" />
     <Compile Include="Business\Enums\EReceivingNewline.cs" />
     <Compile Include="Business\Enums\ESendingNewline.cs" />
@@ -112,6 +115,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>15.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

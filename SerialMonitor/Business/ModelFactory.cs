@@ -1,4 +1,6 @@
-﻿namespace SerialMonitor.Business
+﻿using System.Threading.Tasks;
+
+namespace SerialMonitor.Business
 {
     public class ModelFactory
     {
@@ -6,6 +8,14 @@
         {
             SettingsManager = new SettingsManager();
             SerialPortManager = new SerialPortManager(SettingsManager, UsbNotification);
+        }
+
+        public async Task InitializeAsync() => await SettingsManager.InitializeAsync();
+
+        public void InitializeSync()
+        {
+            SettingsManager.InitializeSync();
+            SerialPortManager.InitializeSync();
         }
 
         public SerialPortManager SerialPortManager { get; }
