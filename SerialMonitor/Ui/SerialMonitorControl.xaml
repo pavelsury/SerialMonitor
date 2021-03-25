@@ -6,9 +6,18 @@
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
              xmlns:business="clr-namespace:SerialMonitor.Business"
+             xmlns:converters="clr-namespace:SerialMonitor.Ui.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:SerialPortManager}">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SerialMonitor2;component/Ui/Converters/Converters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <DockPanel LastChildFill="True">
         <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
             <Button Name="SendButton" Content="Send" IsEnabled="False" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" DockPanel.Dock="Right" Click="Send_Click"/>
@@ -16,7 +25,19 @@
         </DockPanel>
         
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
-            <ComboBox ItemsSource="{Binding SettingsManager.PortNames}" DropDownOpened="ComPorts_DropDownOpened" Margin="5 0 5 10" MinWidth="70" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
+            <ComboBox ItemsSource="{Binding Ports}"
+                      SelectedValue="{Binding SettingsManager.SelectedPort}"
+                      Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type business:PortInfo}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}"/>
+                            <TextBlock Text=" (gone)" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
             <Button Name="ConnectButton" Content="Connect" Click="Connect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <Button Name="DisconnectButton" Content="Disconnect" Visibility="Collapsed" Click="Disconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <Button Name="ReconnectButton" Content="Reconnect" Visibility="Collapsed" Click="Reconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>

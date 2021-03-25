@@ -48,6 +48,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Ui\Converters\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ui\SerialMonitorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -56,12 +60,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Business\AppSettings.cs" />
+    <Compile Include="Business\Helpers\IDictionaryExtensions.cs" />
+    <Compile Include="Business\Helpers\IListExtensions.cs" />
+    <Compile Include="Business\IntPositiveRule.cs" />
+    <Compile Include="Business\Enums\EReceivingNewline.cs" />
+    <Compile Include="Business\Enums\ESendingNewline.cs" />
+    <Compile Include="Business\IntNonnegativeRule.cs" />
     <Compile Include="Business\IUsbNotification.cs" />
     <Compile Include="Business\ModelFactory.cs" />
     <Compile Include="Business\NotifyPropertyChanged.cs" />
+    <Compile Include="Business\PortInfo.cs" />
+    <Compile Include="Business\PortSettings.cs" />
     <Compile Include="Business\SerialPortManager.cs" />
     <Compile Include="Business\SettingsManager.cs" />
     <Compile Include="Business\UsbNotification.cs" />
+    <Compile Include="Ui\Converters\BoolToObjectsConverter.cs" />
+    <Compile Include="Ui\Converters\BoolToVisibilityCollapsedConverter.cs" />
+    <Compile Include="Ui\Converters\BoolToVisibilityCollapsedInvertedConverter.cs" />
     <Compile Include="Ui\FlowDocumentScrollViewerExtension.cs" />
     <Compile Include="Ui\SerialMonitorControl.xaml.cs">
       <DependentUpon>SerialMonitorControl.xaml</DependentUpon>

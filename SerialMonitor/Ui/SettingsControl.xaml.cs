@@ -138,59 +138,59 @@ namespace SerialMonitor.Ui
         //    }
         //}
 
-        public string ReceiveNewLine => ReceiveNewLineMap[ReceiveNewLineComboBox.Text];
+        //public string ReceiveNewLine => ReceiveNewLineMap[ReceiveNewLineComboBox.Text];
 
-        public string SendNewLine => SendNewLineMap[SendNewLineComboBox.Text];
+        //public string SendNewLine => SendNewLineMap[SendNewLineComboBox.Text];
 
-        public StopBits StopBits => StopBitsMap[StopBitsComboBox.Text];
+        //public StopBits StopBits => StopBitsMap[StopBitsComboBox.Text];
 
-        public Handshake Handshake => HandshakeMap[HandshakeComboBox.Text];
+        //public Handshake Handshake => HandshakeMap[HandshakeComboBox.Text];
 
-        public Parity Parity => ParityMap[ParityComboBox.Text];
+        //public Parity Parity => ParityMap[ParityComboBox.Text];
 
-        public int DataBits => Convert.ToInt32(DataBitsComboBox.Text);
+        //public int DataBits => Convert.ToInt32(DataBitsComboBox.Text);
 
-        public int ReadTimeout
-        {
-            get
-            {
-                if (!int.TryParse(ReadTimeoutTextBox.Text, out var readTimeout))
-                {
-                    throw new Exception("Invalid read timeout value!");
-                }
-                return readTimeout;
-            }
-        }
+        //public int ReadTimeout
+        //{
+        //    get
+        //    {
+        //        if (!int.TryParse(ReadTimeoutTextBox.Text, out var readTimeout))
+        //        {
+        //            throw new Exception("Invalid read timeout value!");
+        //        }
+        //        return readTimeout;
+        //    }
+        //}
 
-        public int WriteTimeout
-        {
-            get
-            {
-                if (!int.TryParse(WriteTimeoutTextBox.Text, out var writeTimeout))
-                {
-                    throw new Exception("Invalid write timeout value!");
-                }
-                return writeTimeout;
-            }
-        }
+        //public int WriteTimeout
+        //{
+        //    get
+        //    {
+        //        if (!int.TryParse(WriteTimeoutTextBox.Text, out var writeTimeout))
+        //        {
+        //            throw new Exception("Invalid write timeout value!");
+        //        }
+        //        return writeTimeout;
+        //    }
+        //}
 
-        public Encoding Encoding => EncodingsMap[EncodingComboBox.Text];
+        //public Encoding Encoding => EncodingsMap[EncodingComboBox.Text];
 
-        public int OutputFontSize => Convert.ToInt32(OutputFontSizeComboBox.Text);
+        //public int OutputFontSize => Convert.ToInt32(OutputFontSizeComboBox.Text);
 
-        public FontStyle OutputFontStyle
-        {
-            get
-            {
-                switch (OutputFontStyleComboBox.Text)
-                {
-                    case nameof(FontStyles.Normal): return FontStyles.Normal;
-                    case nameof(FontStyles.Italic): return FontStyles.Italic;
-                    case nameof(FontStyles.Oblique): return FontStyles.Oblique;
-                    default: throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        //public FontStyle OutputFontStyle
+        //{
+        //    get
+        //    {
+        //        switch (OutputFontStyleComboBox.Text)
+        //        {
+        //            case nameof(FontStyles.Normal): return FontStyles.Normal;
+        //            case nameof(FontStyles.Italic): return FontStyles.Italic;
+        //            case nameof(FontStyles.Oblique): return FontStyles.Oblique;
+        //            default: throw new ArgumentOutOfRangeException();
+        //        }
+        //    }
+        //}
 
         public bool DtrEnable { get; private set;
         }
@@ -214,68 +214,68 @@ namespace SerialMonitor.Ui
             //}
             //BaudRateComboBox.SelectedItem = DefaultBaudRate;
 
-            foreach (var newLine in ReceiveNewLineMap.Keys)
-            {
-                ReceiveNewLineComboBox.Items.Add(newLine);
-            }
-            ReceiveNewLineComboBox.SelectedItem = DefaultReceiveNewLine;
+            //foreach (var newLine in ReceiveNewLineMap.Keys)
+            //{
+            //    ReceiveNewLineComboBox.Items.Add(newLine);
+            //}
+            //ReceiveNewLineComboBox.SelectedItem = DefaultReceiveNewLine;
 
-            foreach (var newLine in SendNewLineMap.Keys)
-            {
-                SendNewLineComboBox.Items.Add(newLine);
-            }
-            SendNewLineComboBox.SelectedItem = DefaultSendNewLine;
+            //foreach (var newLine in SendNewLineMap.Keys)
+            //{
+            //    SendNewLineComboBox.Items.Add(newLine);
+            //}
+            //SendNewLineComboBox.SelectedItem = DefaultSendNewLine;
 
-            foreach (var dataBits in DataBitsValues)
-            {
-                DataBitsComboBox.Items.Add(dataBits);
-            }
-            DataBitsComboBox.SelectedItem = DefaultDataBits;
+            //foreach (var dataBits in DataBitsValues)
+            //{
+            //    DataBitsComboBox.Items.Add(dataBits);
+            //}
+            //DataBitsComboBox.SelectedItem = DefaultDataBits;
 
-            foreach (var stopBits in StopBitsMap.Keys)
-            {
-                StopBitsComboBox.Items.Add(stopBits);
-            }
-            StopBitsComboBox.SelectedItem = DefaultStopBits;
+            //foreach (var stopBits in StopBitsMap.Keys)
+            //{
+            //    StopBitsComboBox.Items.Add(stopBits);
+            //}
+            //StopBitsComboBox.SelectedItem = DefaultStopBits;
 
-            foreach (var encoding in EncodingsMap.Keys)
-            {
-                EncodingComboBox.Items.Add(encoding);
-            }
-            EncodingComboBox.SelectedItem = DefaultEncoding;
+            //foreach (var encoding in EncodingsMap.Keys)
+            //{
+            //    EncodingComboBox.Items.Add(encoding);
+            //}
+            //EncodingComboBox.SelectedItem = DefaultEncoding;
 
-            foreach (var fontSize in OutputFontSizeValues)
-            {
-                OutputFontSizeComboBox.Items.Add(fontSize);
-            }
-            OutputFontSizeComboBox.SelectedItem = DefaultOutputFontSize;
+            //foreach (var fontSize in OutputFontSizeValues)
+            //{
+            //    OutputFontSizeComboBox.Items.Add(fontSize);
+            //}
+            //OutputFontSizeComboBox.SelectedItem = DefaultOutputFontSize;
 
-            foreach (var fontStyle in OutputFontStyleValues)
-            {
-                OutputFontStyleComboBox.Items.Add(fontStyle);
-            }
-            OutputFontStyleComboBox.SelectedItem = DefaultOutputFontStyle;
+            //foreach (var fontStyle in OutputFontStyleValues)
+            //{
+            //    OutputFontStyleComboBox.Items.Add(fontStyle);
+            //}
+            //OutputFontStyleComboBox.SelectedItem = DefaultOutputFontStyle;
 
-            foreach (var handshakeValue in HandshakeMap.Keys)
-            {
-                HandshakeComboBox.Items.Add(handshakeValue);
-            }
-            HandshakeComboBox.SelectedItem = DefaultHandshake;
+            //foreach (var handshakeValue in HandshakeMap.Keys)
+            //{
+            //    HandshakeComboBox.Items.Add(handshakeValue);
+            //}
+            //HandshakeComboBox.SelectedItem = DefaultHandshake;
 
-            foreach (var parityValue in ParityMap.Keys)
-            {
-                ParityComboBox.Items.Add(parityValue);
-            }
-            ParityComboBox.SelectedItem = DefaultParity;
+            //foreach (var parityValue in ParityMap.Keys)
+            //{
+            //    ParityComboBox.Items.Add(parityValue);
+            //}
+            //ParityComboBox.SelectedItem = DefaultParity;
 
-            ReadTimeoutTextBox.Text = DefaultReadTimeout;
-            WriteTimeoutTextBox.Text = DefaultWriteTimeout;
+            //ReadTimeoutTextBox.Text = DefaultReadTimeout;
+            //WriteTimeoutTextBox.Text = DefaultWriteTimeout;
 
-            DtrEnable = true;
-            OutputToFileEnabled = false;
+            //DtrEnable = true;
+            //OutputToFileEnabled = false;
         }
 
-        private SettingsManager SettingsManager => (SettingsManager)DataContext;
+        private PortSettings PortSettings => (PortSettings)DataContext;
 
         private void RecordFilePathTextBox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -314,11 +314,20 @@ namespace SerialMonitor.Ui
         //}
 
         //private bool _enablePipeIpc;
-        private void OnLostFocus(object sender, RoutedEventArgs e)
+        private void OnComboBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            var text = SettingsManager.SelectedBaudRate.ToString();
-            ComboBox.SetCurrentValue(ComboBox.TextProperty, null);
-            ComboBox.SetCurrentValue(ComboBox.TextProperty, text);
+            var comboBox = (ComboBox)sender;
+            comboBox.SetCurrentValue(ComboBox.TextProperty, null);
+            var bindingExpression = comboBox.GetBindingExpression(ComboBox.TextProperty);
+            bindingExpression?.UpdateTarget();
+        }
+
+        private void OnTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            textBox.SetCurrentValue(TextBox.TextProperty, null);
+            var bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
+            bindingExpression?.UpdateTarget();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)

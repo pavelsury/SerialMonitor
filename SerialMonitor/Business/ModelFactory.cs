@@ -4,8 +4,8 @@
     {
         public ModelFactory()
         {
-            SettingsManager = new SettingsManager(UsbNotification);
-            SerialPortManager = new SerialPortManager(SettingsManager);
+            SettingsManager = new SettingsManager();
+            SerialPortManager = new SerialPortManager(SettingsManager, UsbNotification);
         }
 
         public SerialPortManager SerialPortManager { get; }

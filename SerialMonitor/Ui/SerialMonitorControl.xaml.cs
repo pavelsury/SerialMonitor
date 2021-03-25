@@ -25,32 +25,32 @@ namespace SerialMonitor.Ui
         {
             //_port.PortName = ComPorts.SelectedItem.ToString();
             //_port.BaudRate = Settings.BaudRate;
-            _port.DataBits = Settings.DataBits;
-            _port.Handshake = Settings.Handshake;
-            _port.Parity = Settings.Parity;
-            _port.StopBits = Settings.StopBits;
-            _port.ReadTimeout = Settings.ReadTimeout;
-            _port.WriteTimeout = Settings.WriteTimeout;
+            //_port.DataBits = Settings.DataBits;
+            //_port.Handshake = Settings.Handshake;
+            //_port.Parity = Settings.Parity;
+            //_port.StopBits = Settings.StopBits;
+            //_port.ReadTimeout = Settings.ReadTimeout;
+            //_port.WriteTimeout = Settings.WriteTimeout;
         }
 
         private void PrintColorMessage(string message, SolidColorBrush brush)
         {
-            Output.AppendText(message + Environment.NewLine, brush, Settings.OutputFontSize, Settings.OutputFontStyle);
+            //Output.AppendText(message + Environment.NewLine, brush, Settings.OutputFontSize, Settings.OutputFontStyle);
 
-            if (_autoScrollEnabled)
-            {
-                Output.ScrollToEnd();
-            }
+            //if (_autoScrollEnabled)
+            //{
+            //    Output.ScrollToEnd();
+            //}
 
-            if (Settings.OutputToFileEnabled)
-            {
-                var file = Settings.RecordFile;
+            //if (Settings.OutputToFileEnabled)
+            //{
+            //    var file = Settings.RecordFile;
 
-                if (!string.IsNullOrEmpty(file) && File.Exists(file))
-                {
-                    File.AppendAllText(file, message);
-                }
-            }
+            //    if (!string.IsNullOrEmpty(file) && File.Exists(file))
+            //    {
+            //        File.AppendAllText(file, message);
+            //    }
+            //}
         }
 
         private void PrintErrorMessage(string message) => PrintColorMessage(message, Brushes.Red);
@@ -65,31 +65,31 @@ namespace SerialMonitor.Ui
         {
             try
             {
-                var bytesToRead = _port.BytesToRead;
+                //var bytesToRead = _port.BytesToRead;
 
-                if (bytesToRead > 0)
-                {
-                    var buffer = new byte[bytesToRead];
-                    _port.Read(buffer, 0, bytesToRead);
+                //if (bytesToRead > 0)
+                //{
+                //    var buffer = new byte[bytesToRead];
+                //    _port.Read(buffer, 0, bytesToRead);
 
-                    var data = Settings.Encoding.GetString(buffer);
-                    Output.AppendText(data.Replace(Settings.ReceiveNewLine, "\r"), Settings.OutputFontSize, Settings.OutputFontStyle);
+                //    var data = Settings.Encoding.GetString(buffer);
+                //    Output.AppendText(data.Replace(Settings.ReceiveNewLine, "\r"), Settings.OutputFontSize, Settings.OutputFontStyle);
 
-                    if (_autoScrollEnabled)
-                    {
-                        Output.ScrollToEnd();
-                    }
+                //    if (_autoScrollEnabled)
+                //    {
+                //        Output.ScrollToEnd();
+                //    }
 
-                    if (Settings.OutputToFileEnabled)
-                    {
-                        var file = Settings.RecordFile;
+                //    if (Settings.OutputToFileEnabled)
+                //    {
+                //        var file = Settings.RecordFile;
 
-                        if (!string.IsNullOrEmpty(file) && File.Exists(file))
-                        {
-                            File.AppendAllText(file, data.Replace(Settings.ReceiveNewLine, Environment.NewLine));
-                        }
-                    }
-                }
+                //        if (!string.IsNullOrEmpty(file) && File.Exists(file))
+                //        {
+                //            File.AppendAllText(file, data.Replace(Settings.ReceiveNewLine, Environment.NewLine));
+                //        }
+                //    }
+                //}
             }
             catch (InvalidOperationException ex)
             {
@@ -213,19 +213,19 @@ namespace SerialMonitor.Ui
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var data = Encoding.Convert(
-                    Encoding.Default,
-                    Settings.Encoding,
-                    Encoding.Default.GetBytes(MessageToSend.Text + Settings.SendNewLine));
+            //try
+            //{
+            //    var data = Encoding.Convert(
+            //        Encoding.Default,
+            //        Settings.Encoding,
+            //        Encoding.Default.GetBytes(MessageToSend.Text + Settings.SendNewLine));
 
-                _port.Write(data, 0, data.Length);
-            }
-            catch (Exception ex)
-            {
-                PrintErrorMessage(ex.Message);
-            }
+            //    _port.Write(data, 0, data.Length);
+            //}
+            //catch (Exception ex)
+            //{
+            //    PrintErrorMessage(ex.Message);
+            //}
         }
 
         private void ComPorts_DropDownOpened(object sender, EventArgs e)
