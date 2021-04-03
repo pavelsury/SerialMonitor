@@ -5,5 +5,7 @@
     <converters:BoolToObjectsConverter x:Key="BoolToObjectsConverter"/>
     <converters:BoolToVisibilityCollapsedConverter x:Key="BoolToVisibilityCollapsedConverter"/>
     <converters:BoolToVisibilityCollapsedInvertedConverter x:Key="BoolToVisibilityCollapsedInvertedConverter"/>
+    <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter"/>
+    <converters:ObjectToObjectsConverter x:Key="ObjectToObjectsConverter"/>
+    <converters:MasterWidthToWidthConverter x:Key="MasterWidthToWidthConverter"/>
 </ResourceDictionary>
-    

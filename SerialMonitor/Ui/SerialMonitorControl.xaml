@@ -23,9 +23,9 @@
             <Button Name="SendButton" Content="Send" IsEnabled="False" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" DockPanel.Dock="Right" Click="Send_Click"/>
             <TextBox Name="MessageToSend" IsEnabled="False" KeyUp="MessageToSend_KeyUp" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
         </DockPanel>
-        
+
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
-            <ComboBox ItemsSource="{Binding Ports}"
+            <ComboBox Name="PortComboBox" ItemsSource="{Binding Ports}"
                       SelectedValue="{Binding SettingsManager.SelectedPort}"
                       Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
                 <ComboBox.ItemTemplate>
@@ -39,18 +39,43 @@
             </ComboBox>
 
             <Button Name="ConnectButton" Content="Connect" Click="Connect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Name="DisconnectButton" Content="Disconnect" Visibility="Collapsed" Click="Disconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Name="ReconnectButton" Content="Reconnect" Visibility="Collapsed" Click="Reconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Content="Clear" Click="Clear_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Name="SettingsOutputControl" Content="Show Settings" Click="SettingsOutputControl_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Name="AutoScrollToggle" Content="Disable Auto Scroll" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="AutoScrollToggle_Click"/>
+            <!--<Button Name="DisconnectButton" Content="Disconnect" Visibility="Collapsed" Click="Disconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+            <Button Name="ReconnectButton" Content="Reconnect" Visibility="Collapsed" Click="Reconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>-->
+            <Border>
+                <Border.Width>
+                    <MultiBinding Converter="{StaticResource MasterWidthToWidthConverter}">
+                        <Binding Path="ActualWidth" ElementName="TabControl"/>
+                        <Binding Path="ActualWidth" ElementName="PortComboBox"/>
+                        <Binding Path="ActualWidth" ElementName="ConnectButton"/>
+                        <Binding Path="ActualWidth" ElementName="ClearConnect"/>
+                        <Binding Path="ActualWidth" ElementName="AutoScrollToggle"/>
+                        <Binding Source="30"/>
+                    </MultiBinding>
+                </Border.Width>
+            </Border>
+            
+            <Button Name="ClearConnect" Content="Clear" Click="Clear_Click" Margin="5 0 5 10" Padding="10 0 10 0"
+                    Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
+                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+            <Button Name="AutoScrollToggle" Content="Disable Auto Scroll" Margin="5 0 5 10" Padding="10 0 10 0"
+                    Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
+                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="AutoScrollToggle_Click"/>
         </WrapPanel>
-        
-        <ui:SettingsControl x:Name="Settings" DataContext="{Binding SettingsManager}"
-                            Visibility="Collapsed" Margin="10 10 10 10"/>
-        
-        <FlowDocumentScrollViewer Name="Output" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <FlowDocument FontFamily="Consolas" FontSize="11"/>
-        </FlowDocumentScrollViewer>
+
+        <!--<WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+        </WrapPanel>-->
+
+        <TabControl Name="TabControl" Margin="10 0 10 10">
+            <TabItem Header="Console">
+                <FlowDocumentScrollViewer Name="Output" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <FlowDocument FontFamily="Consolas" FontSize="11"/>
+                </FlowDocumentScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Settings">
+                <ui:SettingsControl DataContext="{Binding SettingsManager}" Margin="10" 
+                                    IsEnabled="{Binding SelectedPort, Converter={StaticResource ObjectToBoolConverter}}"/>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </UserControl>

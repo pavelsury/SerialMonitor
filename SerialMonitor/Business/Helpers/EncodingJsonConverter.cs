@@ -8,7 +8,7 @@ namespace SerialMonitor.Business.Helpers
     {
         public override void WriteJson(JsonWriter writer, Encoding value, JsonSerializer serializer)
         {
-            writer.WriteValue(value.CodePage.ToString());
+            writer.WriteValue(value.CodePage);
         }
 
         public override Encoding ReadJson(JsonReader reader, Type objectType, Encoding existingValue, bool hasExistingValue, JsonSerializer serializer)

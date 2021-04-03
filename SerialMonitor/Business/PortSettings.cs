@@ -43,6 +43,12 @@ namespace SerialMonitor.Business
         
         public int WriteTimeoutMs { get; set; } = DefaultWriteTimeoutMs;
 
+        public bool DTREnabled { get; set; } = true;
+        
+        public bool OutputToFileEnabled { get; set; } = false;
+
+        public string OutputFilename { get; set; }
+
         public void Validate()
         {
             if (BaudRate <= 0)

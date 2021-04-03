@@ -62,6 +62,7 @@
     </Page>
     <Compile Include="Business\AppSettings.cs" />
     <Compile Include="Business\Helpers\EncodingJsonConverter.cs" />
+    <Compile Include="Business\Helpers\FileHelper.cs" />
     <Compile Include="Business\Helpers\IDictionaryExtensions.cs" />
     <Compile Include="Business\Helpers\IEnumerableExtensions.cs" />
     <Compile Include="Business\Helpers\IListExtensions.cs" />
@@ -81,6 +82,9 @@
     <Compile Include="Ui\Converters\BoolToObjectsConverter.cs" />
     <Compile Include="Ui\Converters\BoolToVisibilityCollapsedConverter.cs" />
     <Compile Include="Ui\Converters\BoolToVisibilityCollapsedInvertedConverter.cs" />
+    <Compile Include="Ui\Converters\MasterWidthToWidthConverter.cs" />
+    <Compile Include="Ui\Converters\ObjectToBoolConverter.cs" />
+    <Compile Include="Ui\Converters\ObjectToObjectsConverter.cs" />
     <Compile Include="Ui\FlowDocumentScrollViewerExtension.cs" />
     <Compile Include="Ui\SerialMonitorControl.xaml.cs">
       <DependentUpon>SerialMonitorControl.xaml</DependentUpon>

@@ -9,9 +9,10 @@ namespace SerialMonitor.Ui.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool isVisible)
+            switch (value)
             {
-                return isVisible ? Visibility.Collapsed : Visibility.Visible;
+                case bool b: return GetVisibility(b);
+                case int i: return GetVisibility(i != 0);
             }
 
             return DependencyProperty.UnsetValue;
@@ -22,5 +23,6 @@ namespace SerialMonitor.Ui.Converters
             throw new NotImplementedException();
         }
 
+        private static Visibility GetVisibility(bool isCollapsed) => isCollapsed ? Visibility.Collapsed : Visibility.Visible;
     }
 }

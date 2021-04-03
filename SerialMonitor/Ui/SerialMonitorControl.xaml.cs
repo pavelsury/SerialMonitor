@@ -112,27 +112,27 @@ namespace SerialMonitor.Ui
             _port.Dispose();
         }
 
-        private void SettingsOutputControl_Click(object sender, RoutedEventArgs e)
-        {
-            if (Settings.Visibility == Visibility.Visible)
-            {
-                Settings.Visibility = Visibility.Collapsed;
-                Output.Visibility = Visibility.Visible;
-                SettingsOutputControl.Content = "Show Settings";
-            }
-            else if (Settings.Visibility == Visibility.Collapsed)
-            {
-                Settings.Visibility = Visibility.Visible;
-                Output.Visibility = Visibility.Collapsed;
-                SettingsOutputControl.Content = "Show Output";
-            }
-        }
+        //private void SettingsOutputControl_Click(object sender, RoutedEventArgs e)
+        //{
+            //if (Settings.Visibility == Visibility.Visible)
+            //{
+            //    Settings.Visibility = Visibility.Collapsed;
+            //    Output.Visibility = Visibility.Visible;
+            //    SettingsOutputControl.Content = "Show Settings";
+            //}
+            //else if (Settings.Visibility == Visibility.Collapsed)
+            //{
+            //    Settings.Visibility = Visibility.Visible;
+            //    Output.Visibility = Visibility.Collapsed;
+            //    SettingsOutputControl.Content = "Show Output";
+            //}
+        //}
 
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Visibility = Visibility.Collapsed;
+            //Settings.Visibility = Visibility.Collapsed;
             Output.Visibility = Visibility.Visible;
-            SettingsOutputControl.Content = "Show Settings";
+            //SettingsOutputControl.Content = "Show Settings";
 
             //if (ComPorts.SelectedIndex != -1)
             //{
@@ -196,12 +196,12 @@ namespace SerialMonitor.Ui
             _port.Close();
 
             ConnectButton.Visibility = Visibility.Visible;
-            DisconnectButton.Visibility = Visibility.Collapsed;
-            ReconnectButton.Visibility = Visibility.Collapsed;
+            //DisconnectButton.Visibility = Visibility.Collapsed;
+            //ReconnectButton.Visibility = Visibility.Collapsed;
             //ComPorts.IsEnabled = true;
-            MessageToSend.IsEnabled = false;
-            SendButton.IsEnabled = false;
-            Settings.IsEnabled = true;
+            //MessageToSend.IsEnabled = false;
+            //SendButton.IsEnabled = false;
+            //Settings.IsEnabled = true;
         }
 
         private void Reconnect_Click(object sender, RoutedEventArgs e)

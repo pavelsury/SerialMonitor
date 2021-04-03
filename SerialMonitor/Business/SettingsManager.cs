@@ -42,28 +42,30 @@ namespace SerialMonitor.Business
         public void Save()
         {
             Directory.CreateDirectory(_settingsFolder);
-            File.WriteAllText(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
+            FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
         }
 
         private Task LoadAsync()
         {
             return Task.Run(() =>
             {
+                if (!File.Exists(_settingsFilename))
+                {
+                    return;
+                }
+
                 try
                 {
-                    if (File.Exists(_settingsFilename))
+                    var serializationSettings = new JsonSerializerSettings
                     {
-                        var serializationSettings = new JsonSerializerSettings
-                        {
-                            Error = (s, e) => e.ErrorContext.Handled = e.CurrentObject is PortSettings
-                        };
+                        Error = (s, e) => e.ErrorContext.Handled = e.CurrentObject is PortSettings
+                    };
 
-                        var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(_settingsFilename), serializationSettings);
-                        if (appSettings != null)
-                        {
-                            appSettings.PortsSettingsMap.Values.ForEach(p => p.Validate());
-                            AppSettings = appSettings;
-                        }
+                    var appSettings = JsonConvert.DeserializeObject<AppSettings>(FileHelper.ReadAllText(_settingsFilename), serializationSettings);
+                    if (appSettings != null)
+                    {
+                        appSettings.PortsSettingsMap.Values.ForEach(p => p.Validate());
+                        AppSettings = appSettings;
                     }
                 }
                 catch (JsonException)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -198,7 +199,7 @@ namespace SerialMonitor.Ui
         public bool OutputToFileEnabled { get; private set;
         }
 
-        public string RecordFile => !OutputToFileEnabled ? null : RecordFilePathTextBox.Text;
+        //public string RecordFile => !OutputToFileEnabled ? null : RecordFilePathTextBox.Text;
 
         public SettingsControl()
         {
@@ -281,30 +282,30 @@ namespace SerialMonitor.Ui
         {
             var dialog = new OpenFileDialog { Multiselect = false };
             dialog.ShowDialog();
-            RecordFilePathTextBox.Text = dialog.FileName;
+            //RecordFilePathTextBox.Text = dialog.FileName;
         }
 
         private void DtrToggle_Click(object sender, RoutedEventArgs e)
         {
-            DtrEnable = !DtrEnable;
+            //DtrEnable = !DtrEnable;
 
-            DtrToggle.Content = DtrEnable ? "Disable Data Terminal Ready (DTR)" : "Enable Data Terminal Ready (DTR)";
+            //DtrToggle.Content = DtrEnable ? "Disable Data Terminal Ready (DTR)" : "Enable Data Terminal Ready (DTR)";
         }
 
         private void OutputToFileToggle_Click(object sender, RoutedEventArgs e)
         {
-            OutputToFileEnabled = !OutputToFileEnabled;
+            //OutputToFileEnabled = !OutputToFileEnabled;
 
-            if (OutputToFileEnabled)
-            {
-                OutputToFileToggle.Content = "Disable output to file";
-                RecordFilePathTextBox.IsEnabled = true;
-            }
-            else
-            {
-                OutputToFileToggle.Content = "Enable output to file";
-                RecordFilePathTextBox.IsEnabled = false;
-            }
+            //if (OutputToFileEnabled)
+            //{
+            //    OutputToFileToggle.Content = "Disable output to file";
+            //    RecordFilePathTextBox.IsEnabled = true;
+            //}
+            //else
+            //{
+            //    OutputToFileToggle.Content = "Enable output to file";
+            //    RecordFilePathTextBox.IsEnabled = false;
+            //}
         }
 
         //private void EnablePipeIpcToggle_Click(object sender, RoutedEventArgs e)
