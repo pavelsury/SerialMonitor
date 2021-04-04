@@ -7,7 +7,8 @@
         xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance business:ModelFactory}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        Closed="OnClosed">
 
-    <ui:SerialMonitorControl DataContext="{Binding SerialPortManager}"/>
+    <ui:SerialMonitorControl x:Name="SerialMonitorControl" DataContext="{Binding SerialPortManager}"/>
 </Window>

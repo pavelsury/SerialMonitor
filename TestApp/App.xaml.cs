@@ -9,8 +9,9 @@ namespace TestApp
         {
             await _modelFactory.InitializeAsync();
             _modelFactory.InitializeSync();
-            new MainWindow { DataContext = _modelFactory }.Show();
-            _modelFactory.UsbNotification.Initialize();
+            var mainWindow = new MainWindow { DataContext = _modelFactory };
+            _modelFactory.SetConsoleMessageLogger(mainWindow.SerialMonitorControl);
+            mainWindow.Show();
         }
 
         private readonly ModelFactory _modelFactory = new ModelFactory();

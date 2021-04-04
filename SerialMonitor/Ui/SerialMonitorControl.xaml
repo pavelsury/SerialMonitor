@@ -8,7 +8,8 @@
              xmlns:business="clr-namespace:SerialMonitor.Business"
              xmlns:converters="clr-namespace:SerialMonitor.Ui.Converters"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance business:SerialPortManager}">
+             d:DataContext="{d:DesignInstance business:SerialPortManager}"
+             Name="Control">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,26 +20,39 @@
     </UserControl.Resources>
     
     <DockPanel LastChildFill="True">
-        <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
-            <Button Name="SendButton" Content="Send" IsEnabled="False" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" DockPanel.Dock="Right" Click="Send_Click"/>
-            <TextBox Name="MessageToSend" IsEnabled="False" KeyUp="MessageToSend_KeyUp" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
+        <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True"
+                   IsEnabled="{Binding IsConnected}">
+            <Button Name="SendButton" Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+            <TextBox Name="MessageTextBox" KeyUp="OnMessageTextBoxKeyUp" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
         </DockPanel>
 
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
             <ComboBox Name="PortComboBox" ItemsSource="{Binding Ports}"
                       SelectedValue="{Binding SettingsManager.SelectedPort}"
+                      IsEnabled="{Binding IsConnected, Converter={StaticResource BoolInverterConverter}}"
                       Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type business:PortInfo}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}"/>
-                            <TextBlock Text=" (gone)" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"/>
+                            <TextBlock Text=" (N/A)" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button Name="ConnectButton" Content="Connect" Click="Connect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+            <Button Name="ConnectButton" Click="OnConnectDisconnect" Margin="5 0 5 10" Padding="10 0 10 0"
+                    IsEnabled="{Binding SettingsManager.SelectedPort.IsAvailable, FallbackValue=False}"
+                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
+                <Button.Content>
+                    <MultiBinding Converter="{StaticResource BoolToObjectsConverter}">
+                        <Binding Path="IsConnected"/>
+                        <Binding Source="Connect"/>
+                        <Binding Source="Disconnect"/>
+
+                    </MultiBinding>
+                </Button.Content>
+            </Button>
             <!--<Button Name="DisconnectButton" Content="Disconnect" Visibility="Collapsed" Click="Disconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <Button Name="ReconnectButton" Content="Reconnect" Visibility="Collapsed" Click="Reconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>-->
             <Border>
@@ -54,12 +68,22 @@
                 </Border.Width>
             </Border>
             
-            <Button Name="ClearConnect" Content="Clear" Click="Clear_Click" Margin="5 0 5 10" Padding="10 0 10 0"
+            <Button Name="ClearConnect" Content="Clear" Click="OnClearButtonClick" Margin="5 0 5 10" Padding="10 0 10 0"
                     Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
                     Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Name="AutoScrollToggle" Content="Disable Auto Scroll" Margin="5 0 5 10" Padding="10 0 10 0"
-                    Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
-                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="AutoScrollToggle_Click"/>
+            
+            <ToggleButton Name="AutoScrollToggle" Margin="5 0 5 10" Padding="10 0 10 0"
+                          IsChecked="{Binding IsAutoscrollEnabled, ElementName=Control}"
+                          Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
+                          Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
+                <ToggleButton.Content>
+                    <MultiBinding Converter="{StaticResource BoolToObjectsConverter}">
+                        <Binding Path="IsAutoscrollEnabled" ElementName="Control"/>
+                        <Binding Source="Auto scroll off"/>
+                        <Binding Source="Auto scroll on"/>
+                    </MultiBinding>
+                </ToggleButton.Content>
+            </ToggleButton>
         </WrapPanel>
 
         <!--<WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
@@ -73,8 +97,14 @@
             </TabItem>
 
             <TabItem Header="Settings">
-                <ui:SettingsControl DataContext="{Binding SettingsManager}" Margin="10" 
-                                    IsEnabled="{Binding SelectedPort, Converter={StaticResource ObjectToBoolConverter}}"/>
+                <ui:SettingsControl DataContext="{Binding SettingsManager}" Margin="10">
+                    <ui:SettingsControl.IsEnabled>
+                        <MultiBinding Converter="{StaticResource AndConverter}">
+                            <Binding Path="SelectedPort" Converter="{StaticResource ObjectToBoolConverter}"/>
+                            <Binding Path="DataContext.IsConnected" ElementName="Control" Converter="{StaticResource BoolInverterConverter}"/>
+                        </MultiBinding>
+                    </ui:SettingsControl.IsEnabled>
+                </ui:SettingsControl>
             </TabItem>
         </TabControl>
     </DockPanel>

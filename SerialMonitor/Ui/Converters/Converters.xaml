@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:SerialMonitor.Ui.Converters">
     
+    <converters:AndConverter x:Key="AndConverter"/>
+    <converters:BoolInverterConverter x:Key="BoolInverterConverter"/>
     <converters:BoolToObjectsConverter x:Key="BoolToObjectsConverter"/>
     <converters:BoolToVisibilityCollapsedConverter x:Key="BoolToVisibilityCollapsedConverter"/>
     <converters:BoolToVisibilityCollapsedInvertedConverter x:Key="BoolToVisibilityCollapsedInvertedConverter"/>

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.IO.Ports;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,7 +9,7 @@ using SerialMonitor.Business;
 
 namespace SerialMonitor.Ui
 {
-    public partial class SerialMonitorControl : UserControl
+    public partial class SerialMonitorControl : UserControl, IMessageLogger
     {
         public SerialMonitorControl()
         {
@@ -23,6 +21,8 @@ namespace SerialMonitor.Ui
         }
 
         private SerialPortManager SerialPortManager => (SerialPortManager)DataContext;
+
+        private PortSettings PortSettings => SerialPortManager.SettingsManager.SelectedPort.Settings;
 
         private void ConfigurePort()
         {
@@ -36,33 +36,32 @@ namespace SerialMonitor.Ui
             //_port.WriteTimeoutMs = Settings.WriteTimeoutMs;
         }
 
-        private void PrintColorMessage(string message, SolidColorBrush brush)
+        public static readonly DependencyProperty IsAutoscrollEnabledProperty = DependencyProperty.Register(
+            nameof(IsAutoscrollEnabled), typeof(bool), typeof(SerialMonitorControl), new PropertyMetadata(true));
+
+        public bool IsAutoscrollEnabled
         {
-            //Output.AppendText(message + Environment.NewLine, brush, Settings.OutputFontSize, Settings.OutputFontStyle);
-
-            //if (_autoScrollEnabled)
-            //{
-            //    Output.ScrollToEnd();
-            //}
-
-            //if (Settings.OutputToFileEnabled)
-            //{
-            //    var file = Settings.RecordFile;
-
-            //    if (!string.IsNullOrEmpty(file) && File.Exists(file))
-            //    {
-            //        File.AppendAllText(file, message);
-            //    }
-            //}
+            get => (bool)GetValue(IsAutoscrollEnabledProperty);
+            set => SetValue(IsAutoscrollEnabledProperty, value);
         }
 
-        private void PrintErrorMessage(string message) => PrintColorMessage(message, Brushes.Red);
+        public void PrintErrorMessage(string message) => PrintColorMessage(message, Brushes.Red);
 
-        private void PrintWarningMessage(string message) => PrintColorMessage(message, Brushes.Yellow);
+        public void PrintWarningMessage(string message) => PrintColorMessage(message, Brushes.Yellow);
 
-        private void PrintSuccessMessage(string message) => PrintColorMessage(message, Brushes.Green);
+        public void PrintSuccessMessage(string message) => PrintColorMessage(message, Brushes.Green);
 
-        private void PrintProcessMessage(string message) => PrintColorMessage(message, Brushes.Aqua);
+        public void PrintProcessMessage(string message) => PrintColorMessage(message, Brushes.Aqua);
+
+        private void PrintColorMessage(string message, SolidColorBrush brush)
+        {
+            Output.AppendText(message + Environment.NewLine, brush, PortSettings.FontSize, PortSettings.FontStyle);
+
+            if (IsAutoscrollEnabled)
+            {
+                Output.ScrollToEnd();
+            }
+        }
 
         private void SerialUpdate(object e, EventArgs s)
         {
@@ -210,13 +209,14 @@ namespace SerialMonitor.Ui
             Connect_Click(null, null);
         }
 
-        private void Clear_Click(object sender, RoutedEventArgs e)
+        private void OnClearButtonClick(object sender, RoutedEventArgs e)
         {
             Output.Clear();
         }
 
-        private void Send_Click(object sender, RoutedEventArgs e)
+        private void OnSendButtonClick(object sender, RoutedEventArgs e)
         {
+            SerialPortManager.SendText(MessageTextBox.Text);
             //try
             //{
             //    var data = Encoding.Convert(
@@ -252,31 +252,29 @@ namespace SerialMonitor.Ui
             //}
         }
 
-        private void MessageToSend_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void OnMessageTextBoxKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                Send_Click(null, null);
-                MessageToSend.Text = "";
-            }
-        }
-
-        private void AutoScrollToggle_Click(object sender, RoutedEventArgs e)
-        {
-            _autoScrollEnabled = !_autoScrollEnabled;
-
-            if (_autoScrollEnabled)
-            {
-                AutoScrollToggle.Content = "Disable Auto Scroll";
-            }
-            else
-            {
-                AutoScrollToggle.Content = "Enable Auto Scroll";
+                SerialPortManager.SendText(MessageTextBox.Text);
+                MessageTextBox.Text = string.Empty;
             }
         }
 
         private readonly SerialPort _port;
         private readonly DispatcherTimer _portHandlerTimer;
-        private bool _autoScrollEnabled = true;
+
+        private void OnConnectDisconnect(object sender, RoutedEventArgs e)
+        {
+            if (SerialPortManager.IsConnected)
+            {
+                SerialPortManager.Disconnect();
+            }
+            else
+            {
+                TabControl.SelectedIndex = 0;
+                SerialPortManager.Connect();
+            }
+        }
     }
 }

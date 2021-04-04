@@ -71,6 +71,8 @@
     <Compile Include="Business\Enums\EReceivingNewline.cs" />
     <Compile Include="Business\Enums\ESendingNewline.cs" />
     <Compile Include="Business\IntNonnegativeRule.cs" />
+    <Compile Include="Business\IMessageLogger.cs" />
+    <Compile Include="Business\MessageLogger.cs" />
     <Compile Include="Business\IUsbNotification.cs" />
     <Compile Include="Business\ModelFactory.cs" />
     <Compile Include="Business\NotifyPropertyChanged.cs" />
@@ -79,6 +81,8 @@
     <Compile Include="Business\SerialPortManager.cs" />
     <Compile Include="Business\SettingsManager.cs" />
     <Compile Include="Business\UsbNotification.cs" />
+    <Compile Include="Ui\Converters\AndConverter.cs" />
+    <Compile Include="Ui\Converters\BoolInverterConverter.cs" />
     <Compile Include="Ui\Converters\BoolToObjectsConverter.cs" />
     <Compile Include="Ui\Converters\BoolToVisibilityCollapsedConverter.cs" />
     <Compile Include="Ui\Converters\BoolToVisibilityCollapsedInvertedConverter.cs" />
