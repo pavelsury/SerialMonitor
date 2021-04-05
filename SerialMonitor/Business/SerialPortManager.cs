@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
@@ -23,6 +24,7 @@ namespace SerialMonitor.Business
             _port = new SerialPort();
             _port.DataReceived += OnDataReceived;
             usbNotification.DeviceChanged += (s, e) => UpdatePorts();
+            Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
         }
 
         public IConsoleWriter ConsoleWriter{ private get; set; }
@@ -89,7 +91,7 @@ namespace SerialMonitor.Business
 
         public void Disconnect()
         {
-            _messageLogger.PrintProcessMessage($@"{Environment.NewLine}Closing port...");
+            _messageLogger.PrintProcessMessage("Closing port...");
             
             try
             {
@@ -231,6 +233,15 @@ namespace SerialMonitor.Business
             };
             Ports.AddSorted(portInfo);
             return portInfo;
+        }
+
+        private void OnShutdownStarted(object sender, EventArgs e)
+        {
+            if (IsConnected)
+            {
+                Disconnect();
+            }
+            SettingsManager.Save();
         }
 
         private readonly IMainThreadRunner _mainThreadRunner;

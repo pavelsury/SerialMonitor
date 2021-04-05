@@ -41,7 +41,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button Name="ConnectButton" Click="OnConnectDisconnect" Margin="5 0 5 10" Padding="10 0 10 0"
+            <Button Name="ConnectButton" Click="OnConnectButtonClick" Margin="5 0 5 10" Padding="10 0 10 0"
                     IsEnabled="{Binding SettingsManager.SelectedPort.IsAvailable, FallbackValue=False}"
                     Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
                 <Button.Content>
@@ -53,8 +53,7 @@
                     </MultiBinding>
                 </Button.Content>
             </Button>
-            <!--<Button Name="DisconnectButton" Content="Disconnect" Visibility="Collapsed" Click="Disconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <Button Name="ReconnectButton" Content="Reconnect" Visibility="Collapsed" Click="Reconnect_Click" Margin="5 0 5 10" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>-->
+
             <Border>
                 <Border.Width>
                     <MultiBinding Converter="{StaticResource MasterWidthToWidthConverter}">
@@ -86,9 +85,6 @@
             </ToggleButton>
         </WrapPanel>
 
-        <!--<WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-        </WrapPanel>-->
-
         <TabControl Name="TabControl" Margin="10 0 10 10">
             <TabItem Header="Console">
                 <FlowDocumentScrollViewer Name="Output" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -96,7 +92,7 @@
                 </FlowDocumentScrollViewer>
             </TabItem>
 
-            <TabItem Header="Settings">
+            <TabItem Header="Port settings">
                 <ui:SettingsControl DataContext="{Binding SettingsManager}" Margin="10">
                     <ui:SettingsControl.IsEnabled>
                         <MultiBinding Converter="{StaticResource AndConverter}">

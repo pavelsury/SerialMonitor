@@ -33,7 +33,15 @@
         
         <TextBlock Grid.Row="0" Margin="0,0,0,10">
             <Run>Settings for port: </Run>
-            <Run Text="{Binding SelectedPort.Name, FallbackValue='no port available'}"/>
+            <Run Text="{Binding SelectedPort.Name, FallbackValue='no COM port available'}" FontWeight="Bold">
+                <Run.Foreground>
+                    <MultiBinding Converter="{StaticResource ObjectToObjectsConverter}">
+                        <Binding Path="SelectedPort"/>
+                        <Binding Source="Red"/>
+                        <Binding Source="{x:Static DependencyProperty.UnsetValue}"/>
+                    </MultiBinding>
+                </Run.Foreground>
+            </Run>
         </TextBlock>
 
         <WrapPanel Grid.Row="1" Orientation="Vertical">
@@ -197,7 +205,7 @@
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <CheckBox Name="DtrCheckBox" IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}" Click="DtrToggle_Click"
+                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                       Margin="195,0,0,0">
                     <CheckBox.Content>
                         <!-- Quick and dirty way how to make checkbox's text to be on left side -->
@@ -208,7 +216,7 @@
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <CheckBox Name="EnableOutputFileCheckBox" IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}" Click="OutputToFileToggle_Click"
+                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                       Margin="195,0,0,0">
                     <CheckBox.Content>
                         <Label Content="Enable output to file:" Margin="-210,0,0,0" Padding="0"/>
@@ -218,16 +226,13 @@
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <Label Content="Record file path:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <TextBox Text="{Binding SelectedPort.Settings.OutputFilename}"
-                     IsEnabled="{Binding SelectedPort.Settings.OutputToFileEnabled}"
-                     MouseDoubleClick="RecordFilePathTextBox_MouseDoubleClick" VerticalContentAlignment="Center"
-                     KeyDown="OnKeyDown"
-                     MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"/>
+                <TextBox Name="OutputFilenameTextBox"
+                         Text="{Binding SelectedPort.Settings.OutputFilename}"
+                         IsEnabled="{Binding SelectedPort.Settings.OutputToFileEnabled}"
+                         MouseDoubleClick="OnOutputFilenameTextBoxMouseDoubleClick" VerticalContentAlignment="Center"
+                         KeyDown="OnKeyDown"
+                         MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"/>
             </StackPanel>
-
-            <!--<StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Button Name="PipeIpcToggle" Content="Enable pipe IPC" MinWidth="200" MaxWidth="200" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}" Click="EnablePipeIpcToggle_Click"/>
-        </StackPanel>-->
         </WrapPanel>
     </Grid>
 </UserControl>

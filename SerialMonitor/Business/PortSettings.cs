@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO.Ports;
 using System.Text;
 using System.Windows;
@@ -47,7 +48,7 @@ namespace SerialMonitor.Business
         
         public bool OutputToFileEnabled { get; set; } = false;
 
-        public string OutputFilename { get; set; }
+        public string OutputFilename { get; set; } = string.Empty;
 
         public void Validate()
         {
