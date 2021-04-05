@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,21 @@ namespace SerialMonitor.Business
 {
     public class SerialPortManager : NotifyPropertyChanged
     {
-        public SerialPortManager(SettingsManager settingsManager, IMessageLogger messageLogger, IUsbNotification usbNotification)
+        public SerialPortManager(
+            SettingsManager settingsManager,
+            IMainThreadRunner mainThreadRunner,
+            IMessageLogger messageLogger,
+            IUsbNotification usbNotification)
         {
+            _mainThreadRunner = mainThreadRunner;
             _messageLogger = messageLogger;
             SettingsManager = settingsManager;
             _port = new SerialPort();
+            _port.DataReceived += OnDataReceived;
             usbNotification.DeviceChanged += (s, e) => UpdatePorts();
         }
+
+        public IConsoleWriter ConsoleWriter{ private get; set; }
 
         public void InitializeSync()
         {
@@ -48,10 +57,9 @@ namespace SerialMonitor.Business
 
         public void Connect()
         {
+            _messageLogger.PrintProcessMessage("Configuring port...");
             try
             {
-                _messageLogger.PrintProcessMessage("Configuring port...");
-                
                 _port.PortName = SettingsManager.SelectedPort.Name;
                 _port.BaudRate = PortSettings.BaudRate;
                 _port.DataBits = PortSettings.DataBits;
@@ -61,11 +69,16 @@ namespace SerialMonitor.Business
                 _port.ReadTimeout = PortSettings.ReadTimeoutMs;
                 _port.WriteTimeout = PortSettings.WriteTimeoutMs;
 
-
                 _messageLogger.PrintProcessMessage("Connecting...");
                 _port.Open();
             }
-            catch (Exception e)
+            catch (Exception e) when (
+                e is ArgumentNullException ||
+                e is ArgumentOutOfRangeException ||
+                e is ArgumentException ||
+                e is InvalidOperationException ||
+                e is IOException ||
+                e is UnauthorizedAccessException)
             {
                 _messageLogger.PrintErrorMessage(e.Message);
             }
@@ -82,7 +95,7 @@ namespace SerialMonitor.Business
             {
                 _port.Close();
             }
-            catch (Exception e)
+            catch (IOException e)
             {
                 _messageLogger.PrintErrorMessage(e.Message);
             }
@@ -93,27 +106,87 @@ namespace SerialMonitor.Business
 
         public void SendText(string text)
         {
+            string newline;
+            switch (PortSettings.SendingNewline)
+            {
+                case ESendingNewline.None: newline = string.Empty; break;
+                case ESendingNewline.Crlf: newline = "\r\n"; break;
+                case ESendingNewline.Lf: newline = "\n"; break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            var data = Encoding.Convert(Encoding.Default, PortSettings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
+            
             try
             {
-                string newline;
-                switch (PortSettings.SendingNewline)
-                {
-                    case ESendingNewline.None: newline = string.Empty; break;
-                    case ESendingNewline.Crlf: newline = "\r\n"; break;
-                    case ESendingNewline.Lf: newline = "\n"; break;
-                    default: throw new ArgumentOutOfRangeException();
-                }
-
-                var data = Encoding.Convert(Encoding.Default, PortSettings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
                 _port.Write(data, 0, data.Length);
             }
-            catch (Exception e)
+            catch (Exception e) when (
+                e is ArgumentNullException ||
+                e is InvalidOperationException ||
+                e is ArgumentOutOfRangeException ||
+                e is ArgumentException ||
+                e is TimeoutException)
             {
                 _messageLogger.PrintErrorMessage(e.Message);
             }
         }
 
-        private bool _isConnected;
+        private void OnDataReceived(object sender, SerialDataReceivedEventArgs e) => _mainThreadRunner.Run(ReadData);
+
+        private void ReadData()
+        {
+            if (!IsConnected)
+            {
+                return;
+            }
+
+            byte[] buffer;
+            try
+            {
+                var bytesToRead = _port.BytesToRead;
+                if (bytesToRead <= 0)
+                {
+                    return;
+                }
+
+                buffer = new byte[bytesToRead];
+                _port.Read(buffer, 0, bytesToRead);
+            }
+            catch (Exception e) when (
+                e is InvalidOperationException ||
+                e is ArgumentNullException ||
+                e is ArgumentOutOfRangeException ||
+                e is ArgumentException ||
+                e is TimeoutException)
+            {
+                _messageLogger.PrintErrorMessage($"{Environment.NewLine}{e.Message}");
+                Disconnect();
+                return;
+            }
+
+            string newline;
+            switch (PortSettings.ReceivingNewline)
+            {
+                case EReceivingNewline.Crlf: newline = "\r\n"; break;
+                case EReceivingNewline.Lf: newline = "\n"; break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            var data = PortSettings.Encoding.GetString(buffer);
+            ConsoleWriter.WriteText(data.Replace(newline, "\r"));
+
+            if (!PortSettings.OutputToFileEnabled)
+            {
+                return;
+            }
+
+            var file = PortSettings.OutputFilename;
+            if (!string.IsNullOrEmpty(file))
+            {
+                File.AppendAllText(file, data.Replace(newline, Environment.NewLine));
+            }
+        }
 
         private void UpdatePorts()
         {
@@ -141,6 +214,11 @@ namespace SerialMonitor.Business
             {
                 SettingsManager.SelectedPort = Ports.FirstOrDefault(p => p.IsAvailable) ?? Ports.FirstOrDefault();
             }
+
+            if (IsConnected && SettingsManager.SelectedPort?.IsAvailable == false)
+            {
+                Disconnect();
+            }
         }
 
         private PortInfo CreatePortInfo(string portName, bool isAvailable)
@@ -155,7 +233,9 @@ namespace SerialMonitor.Business
             return portInfo;
         }
 
+        private readonly IMainThreadRunner _mainThreadRunner;
         private readonly IMessageLogger _messageLogger;
         private readonly SerialPort _port;
+        private bool _isConnected;
     }
 }

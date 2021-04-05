@@ -35,7 +35,7 @@
                     <DataTemplate DataType="{x:Type business:PortInfo}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}"/>
-                            <TextBlock Text=" (N/A)" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"/>
+                            <TextBlock Text=" (n/a)" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>

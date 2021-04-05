@@ -4,11 +4,11 @@ namespace SerialMonitor.Business
 {
     public class ModelFactory
     {
-        public ModelFactory()
+        public ModelFactory(IMainThreadRunner mainThreadRunner)
         {
             SettingsManager = new SettingsManager();
             MessageLogger = new MessageLogger(SettingsManager);
-            SerialPortManager = new SerialPortManager(SettingsManager, MessageLogger, UsbNotification);
+            SerialPortManager = new SerialPortManager(SettingsManager, mainThreadRunner, MessageLogger, UsbNotification);
         }
 
         public async Task InitializeAsync() => await SettingsManager.InitializeAsync();
@@ -20,7 +20,11 @@ namespace SerialMonitor.Business
             SerialPortManager.InitializeSync();
         }
 
-        public void SetConsoleMessageLogger(IMessageLogger consoleMessageLogger) => MessageLogger.ConsoleMessageLogger = consoleMessageLogger;
+        public void SetConsoleWriter(IConsoleWriter consoleWriter)
+        {
+            MessageLogger.ConsoleWriter = consoleWriter;
+            SerialPortManager.ConsoleWriter = consoleWriter;
+        }
 
         public SerialPortManager SerialPortManager { get; }
         public SettingsManager SettingsManager { get; }

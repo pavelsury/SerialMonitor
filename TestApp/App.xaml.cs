@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Threading;
 using SerialMonitor.Business;
 
 namespace TestApp
@@ -10,10 +11,10 @@ namespace TestApp
             await _modelFactory.InitializeAsync();
             _modelFactory.InitializeSync();
             var mainWindow = new MainWindow { DataContext = _modelFactory };
-            _modelFactory.SetConsoleMessageLogger(mainWindow.SerialMonitorControl);
+            _modelFactory.SetConsoleWriter(mainWindow.SerialMonitorControl);
             mainWindow.Show();
         }
 
-        private readonly ModelFactory _modelFactory = new ModelFactory();
+        private readonly ModelFactory _modelFactory = new ModelFactory(new AppMainThreadRunner(Dispatcher.CurrentDispatcher));
     }
 }

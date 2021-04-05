@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using SerialMonitor.Business.Enums;
 
 namespace SerialMonitor.Business
 {
@@ -10,29 +11,29 @@ namespace SerialMonitor.Business
             _settingsManager = settingsManager;
         }
 
-        public IMessageLogger ConsoleMessageLogger { private get; set; }
+        public IConsoleWriter ConsoleWriter { private get; set; }
 
         public void PrintErrorMessage(string message)
         {
-            ConsoleMessageLogger?.PrintErrorMessage(message);
+            ConsoleWriter?.WriteLine(message, EConsoleTextType.Error);
             PrintMessageToFile(message);
         }
 
         public void PrintWarningMessage(string message)
         {
-            ConsoleMessageLogger?.PrintWarningMessage(message);
+            ConsoleWriter?.WriteLine(message, EConsoleTextType.Warning);
             PrintMessageToFile(message);
         }
 
         public void PrintSuccessMessage(string message)
         {
-            ConsoleMessageLogger?.PrintSuccessMessage(message);
+            ConsoleWriter?.WriteLine(message, EConsoleTextType.Success);
             PrintMessageToFile(message);
         }
 
         public void PrintProcessMessage(string message)
         {
-            ConsoleMessageLogger?.PrintProcessMessage(message);
+            ConsoleWriter?.WriteLine(message, EConsoleTextType.Process);
             PrintMessageToFile(message);
         }
 
