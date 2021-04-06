@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{788C4516-156A-40AE-BF34-FD1158ED1B97}</ProjectGuid>
     <OutputType>library</OutputType>
-    <RootNamespace>SerialMonitor</RootNamespace>
-    <AssemblyName>SerialMonitor2</AssemblyName>
+    <RootNamespace>SerialMonitor.Ui</RootNamespace>
+    <AssemblyName>SerialMonitor2.Ui</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -48,55 +48,33 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Ui\Converters\Converters.xaml">
+    <Page Include="Converters\Converters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Ui\SerialMonitorControl.xaml">
+    <Page Include="SerialMonitorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Ui\SettingsControl.xaml">
+    <Page Include="SettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Business\AppSettings.cs" />
-    <Compile Include="Business\Enums\EConsoleTextType.cs" />
-    <Compile Include="Business\Helpers\EncodingJsonConverter.cs" />
-    <Compile Include="Business\Helpers\FileHelper.cs" />
-    <Compile Include="Business\Helpers\IDictionaryExtensions.cs" />
-    <Compile Include="Business\Helpers\IEnumerableExtensions.cs" />
-    <Compile Include="Business\Helpers\IListExtensions.cs" />
-    <Compile Include="Business\Helpers\KeyValuePairExtensions.cs" />
-    <Compile Include="Business\IConsoleWriter.cs" />
-    <Compile Include="Business\IntPositiveRule.cs" />
-    <Compile Include="Business\Enums\EReceivingNewline.cs" />
-    <Compile Include="Business\Enums\ESendingNewline.cs" />
-    <Compile Include="Business\IntNonnegativeRule.cs" />
-    <Compile Include="Business\IMessageLogger.cs" />
-    <Compile Include="Business\IMainThreadRunner.cs" />
-    <Compile Include="Business\MessageLogger.cs" />
-    <Compile Include="Business\IUsbNotification.cs" />
-    <Compile Include="Business\ModelFactory.cs" />
-    <Compile Include="Business\NotifyPropertyChanged.cs" />
-    <Compile Include="Business\PortInfo.cs" />
-    <Compile Include="Business\PortSettings.cs" />
-    <Compile Include="Business\SerialPortManager.cs" />
-    <Compile Include="Business\SettingsManager.cs" />
-    <Compile Include="Business\UsbNotification.cs" />
-    <Compile Include="Ui\Converters\AndConverter.cs" />
-    <Compile Include="Ui\Converters\BoolInverterConverter.cs" />
-    <Compile Include="Ui\Converters\BoolToObjectsConverter.cs" />
-    <Compile Include="Ui\Converters\BoolToVisibilityCollapsedConverter.cs" />
-    <Compile Include="Ui\Converters\BoolToVisibilityCollapsedInvertedConverter.cs" />
-    <Compile Include="Ui\Converters\MasterWidthToWidthConverter.cs" />
-    <Compile Include="Ui\Converters\ObjectToBoolConverter.cs" />
-    <Compile Include="Ui\Converters\ObjectToObjectsConverter.cs" />
-    <Compile Include="Ui\FlowDocumentScrollViewerExtension.cs" />
-    <Compile Include="Ui\SerialMonitorControl.xaml.cs">
+    <Compile Include="Converters\AndConverter.cs" />
+    <Compile Include="Converters\BoolInverterConverter.cs" />
+    <Compile Include="Converters\BoolToObjectsConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityCollapsedConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityCollapsedInvertedConverter.cs" />
+    <Compile Include="Converters\MasterWidthToWidthConverter.cs" />
+    <Compile Include="Converters\ObjectToBoolConverter.cs" />
+    <Compile Include="Converters\ObjectToObjectsConverter.cs" />
+    <Compile Include="FlowDocumentScrollViewerExtension.cs" />
+    <Compile Include="IntNonnegativeRule.cs" />
+    <Compile Include="IntPositiveRule.cs" />
+    <Compile Include="SerialMonitorControl.xaml.cs">
       <DependentUpon>SerialMonitorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Ui\SettingsControl.xaml.cs">
+    <Compile Include="SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -127,10 +105,12 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>15.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
-    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj">
+      <Project>{cb6de9b9-5f21-4556-b255-dc71d1288201}</Project>
+      <Name>SerialMonitor.Business</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

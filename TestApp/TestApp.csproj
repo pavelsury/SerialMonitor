@@ -96,9 +96,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SerialMonitor\SerialMonitor.csproj">
+    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj">
+      <Project>{cb6de9b9-5f21-4556-b255-dc71d1288201}</Project>
+      <Name>SerialMonitor.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SerialMonitor.Ui\SerialMonitor.Ui.csproj">
       <Project>{788c4516-156a-40ae-bf34-fd1158ed1b97}</Project>
-      <Name>SerialMonitor</Name>
+      <Name>SerialMonitor.Ui</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

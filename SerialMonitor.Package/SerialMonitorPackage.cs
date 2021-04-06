@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
+using SerialMonitor.Business;
 using Task = System.Threading.Tasks.Task;
 
 namespace SerialMonitor.Package
@@ -48,9 +50,15 @@ namespace SerialMonitor.Package
         {
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
+            await _modelFactory.InitializeAsync();
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            _modelFactory.InitializeSync();
             await CommandHelper.InitializeAsync(this);
+            IMainThreadRunner t = null;
+            t.ToString();
         }
+
+        private readonly ModelFactory _modelFactory = new ModelFactory(null);
 
         #endregion
     }

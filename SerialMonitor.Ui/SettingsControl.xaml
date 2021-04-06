@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-             xmlns:business="clr-namespace:SerialMonitor.Business"
-             xmlns:enums="clr-namespace:SerialMonitor.Business.Enums"
+             xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
+             xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:ui="clr-namespace:SerialMonitor.Ui"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:SettingsManager}"
              d:DesignHeight="600" d:DesignWidth="600">
@@ -15,7 +16,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/SerialMonitor2;component/Ui/Converters/Converters.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SettingsStackPanel" TargetType="StackPanel">
@@ -55,7 +56,7 @@
                     <ComboBox.Text>
                         <Binding Path="SelectedPort.Settings.BaudRate" Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <business:IntPositiveRule/>
+                                <ui:IntPositiveRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </ComboBox.Text>
@@ -180,7 +181,7 @@
                     <TextBox.Text>
                         <Binding Path="SelectedPort.Settings.ReadTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <business:IntNonnegativeRule/>
+                                <ui:IntNonnegativeRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -196,7 +197,7 @@
                     <TextBox.Text>
                         <Binding Path="SelectedPort.Settings.WriteTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <business:IntNonnegativeRule/>
+                                <ui:IntNonnegativeRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>

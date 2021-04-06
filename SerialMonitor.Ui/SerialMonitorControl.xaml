@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
-             xmlns:business="clr-namespace:SerialMonitor.Business"
-             xmlns:converters="clr-namespace:SerialMonitor.Ui.Converters"
+             xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:SerialPortManager}"
              Name="Control">
@@ -14,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/SerialMonitor2;component/Ui/Converters/Converters.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

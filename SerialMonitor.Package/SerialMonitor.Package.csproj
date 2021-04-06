@@ -49,6 +49,7 @@
     <Compile Include="ToolWindow.cs" />
     <Compile Include="CommandHelper.cs" />
     <Compile Include="SerialMonitorPackage.cs" />
+    <Compile Include="VsMainThreadRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -95,12 +96,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SerialMonitor\SerialMonitor.csproj">
+    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj">
+      <Project>{cb6de9b9-5f21-4556-b255-dc71d1288201}</Project>
+      <Name>SerialMonitor.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SerialMonitor.Ui\SerialMonitor.Ui.csproj">
       <Project>{788c4516-156a-40ae-bf34-fd1158ed1b97}</Project>
-      <Name>SerialMonitor.Common</Name>
+      <Name>SerialMonitor.Ui</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
