@@ -36,8 +36,6 @@ namespace SerialMonitor
         /// </summary>
         public const string PackageGuidString = "2b832628-2793-480c-bdbb-a2b960bcf3b4";
 
-        #region Package Members
-
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -60,7 +58,5 @@ namespace SerialMonitor
         }
 
         private readonly ModelFactory _modelFactory = new ModelFactory(new VsMainThreadRunner());
-
-        #endregion
     }
 }
