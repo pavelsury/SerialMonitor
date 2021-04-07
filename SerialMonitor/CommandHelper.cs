@@ -2,15 +2,13 @@
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using SerialMonitor.Business;
-using SerialMonitor.Ui;
 using Task = System.Threading.Tasks.Task;
 
 namespace SerialMonitor
 {
     internal static class CommandHelper
     {
-        public static async Task InitializeAsync(AsyncPackage package, ModelFactory modelFactory)
+        public static async Task InitializeAsync(AsyncPackage package)
         {
             var commandService = (IMenuCommandService)await package.GetServiceAsync(typeof(IMenuCommandService));
             if (commandService == null)
@@ -20,14 +18,11 @@ namespace SerialMonitor
 
             const int commandIdValue = 0x0100;
             var commandId = new CommandID(Guid.Parse("edf12506-fbfd-4d38-99e4-f64c7ac9d468"), commandIdValue);
-            var menuCommand = new MenuCommand((s, e) => ThreadHelper.JoinableTaskFactory.Run(async delegate
-            {
-                await ShowToolWindowAsync(package, modelFactory);
-            }), commandId);
+            var menuCommand = new MenuCommand((s, e) => ThreadHelper.JoinableTaskFactory.Run(async () => await ShowToolWindowAsync(package)), commandId);
             commandService.AddCommand(menuCommand);
         }
 
-        private static async Task ShowToolWindowAsync(Microsoft.VisualStudio.Shell.Package package, ModelFactory modelFactory)
+        private static async Task ShowToolWindowAsync(Package package)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             
@@ -36,13 +31,6 @@ namespace SerialMonitor
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
-
-            //var serialMonitorControl = (SerialMonitorControl)window.Content;
-            //if (serialMonitorControl.DataContext == null)
-            //{
-            //    modelFactory.SetConsoleWriter(serialMonitorControl);
-            //    serialMonitorControl.DataContext = modelFactory.SerialPortManager;
-            //}
 
             var windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());

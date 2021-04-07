@@ -51,7 +51,12 @@ namespace SerialMonitor
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await _modelFactory.InitializeAsync();
-            await CommandHelper.InitializeAsync(this, _modelFactory);
+            await CommandHelper.InitializeAsync(this);
+        }
+
+        protected override WindowPane InstantiateToolWindow(Type toolWindowType)
+        {
+            return toolWindowType == typeof(ToolWindow) ? new ToolWindow(_modelFactory) : base.InstantiateToolWindow(toolWindowType);
         }
 
         private readonly ModelFactory _modelFactory = new ModelFactory(new VsMainThreadRunner());
