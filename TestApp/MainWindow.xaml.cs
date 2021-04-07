@@ -9,10 +9,5 @@ namespace TestApp
         {
             InitializeComponent();
         }
-
-        private void OnClosed(object sender, EventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
     }
 }

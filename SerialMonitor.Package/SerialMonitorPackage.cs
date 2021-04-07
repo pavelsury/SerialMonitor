@@ -50,15 +50,12 @@ namespace SerialMonitor.Package
         {
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
-            await _modelFactory.InitializeAsync();
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            _modelFactory.InitializeSync();
-            await CommandHelper.InitializeAsync(this);
-            IMainThreadRunner t = null;
-            t.ToString();
+            await _modelFactory.InitializeAsync();
+            await CommandHelper.InitializeAsync(this, _modelFactory);
         }
 
-        private readonly ModelFactory _modelFactory = new ModelFactory(null);
+        private readonly ModelFactory _modelFactory = new ModelFactory(new VsMainThreadRunner());
 
         #endregion
     }

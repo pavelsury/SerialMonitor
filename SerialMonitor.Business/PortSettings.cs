@@ -62,7 +62,7 @@ namespace SerialMonitor.Business
                 DataBits = DefaultDataBits;
             }
 
-            if (FontSize < 6 || FontSize > 66)
+            if (FontSize < DefaultFontSizeMin || FontSize > DefaultFontSizeMax)
             {
                 FontSize = DefaultFontSize;
             }
@@ -82,6 +82,9 @@ namespace SerialMonitor.Business
                 WriteTimeoutMs = DefaultWriteTimeoutMs;
             }
         }
+
+        public const int DefaultFontSizeMin = 6;
+        public const int DefaultFontSizeMax = 72;
 
         private const int DefaultBaudRate = 9600;
         private const int DefaultDataBits = 8;

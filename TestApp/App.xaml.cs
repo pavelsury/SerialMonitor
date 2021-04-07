@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
 using SerialMonitor.Business;
+using SerialMonitor.Ui;
 
 namespace TestApp
 {
@@ -9,10 +10,9 @@ namespace TestApp
         private async void OnStartup(object sender, StartupEventArgs e)
         {
             await _modelFactory.InitializeAsync();
-            _modelFactory.InitializeSync();
-            var mainWindow = new MainWindow { DataContext = _modelFactory };
-            _modelFactory.SetConsoleWriter(mainWindow.SerialMonitorControl);
-            mainWindow.Show();
+            var serialMonitorControl = new SerialMonitorControl { DataContext = _modelFactory.SerialPortManager };
+            _modelFactory.SetConsoleWriter(serialMonitorControl);
+            new MainWindow { Content = serialMonitorControl }.Show();
         }
 
         private readonly ModelFactory _modelFactory = new ModelFactory(new AppMainThreadRunner(Dispatcher.CurrentDispatcher));

@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="ComboPair.cs" />
     <Compile Include="Converters\AndConverter.cs" />
     <Compile Include="Converters\BoolInverterConverter.cs" />
     <Compile Include="Converters\BoolToObjectsConverter.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Converters\BoolToVisibilityCollapsedInvertedConverter.cs" />
     <Compile Include="Converters\MasterWidthToWidthConverter.cs" />
     <Compile Include="Converters\ObjectToBoolConverter.cs" />
+    <Compile Include="Converters\ObjectToBoolInvertedConverter.cs" />
     <Compile Include="Converters\ObjectToObjectsConverter.cs" />
     <Compile Include="FlowDocumentScrollViewerExtension.cs" />
     <Compile Include="IntNonnegativeRule.cs" />

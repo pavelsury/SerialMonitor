@@ -23,6 +23,15 @@ namespace SerialMonitor.Ui
             set => SetValue(IsAutoscrollEnabledProperty, value);
         }
 
+        public static readonly DependencyProperty IsPortConsoleEmptyProperty = DependencyProperty.Register(
+            nameof(IsPortConsoleEmpty), typeof(bool), typeof(SerialMonitorControl), new PropertyMetadata(true));
+
+        public bool IsPortConsoleEmpty
+        {
+            get => (bool)GetValue(IsPortConsoleEmptyProperty);
+            set => SetValue(IsPortConsoleEmptyProperty, value);
+        }
+
         public void WriteText(string text)
         {
             WriteText(text, null);
@@ -48,15 +57,26 @@ namespace SerialMonitor.Ui
 
         private void WriteText(string text, SolidColorBrush brush)
         {
-            Output.AppendText(text, brush, PortSettings.FontSize, PortSettings.FontStyle);
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            PortConsole.AppendText(text, brush, PortSettings.FontSize, PortSettings.FontStyle);
 
             if (IsAutoscrollEnabled)
             {
-                Output.ScrollToEnd();
+                PortConsole.ScrollToEnd();
             }
+
+            IsPortConsoleEmpty = false;
         }
 
-        private void OnClearButtonClick(object sender, RoutedEventArgs e) => Output.Clear();
+        private void OnClearButtonClick(object sender, RoutedEventArgs e)
+        {
+            PortConsole.Clear();
+            IsPortConsoleEmpty = true;
+        }
 
         private void OnSendButtonClick(object sender, RoutedEventArgs e) => SerialPortManager.SendText(MessageTextBox.Text);
 

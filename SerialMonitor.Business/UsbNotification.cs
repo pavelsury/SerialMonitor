@@ -5,17 +5,31 @@ using System.Windows.Interop;
 
 namespace SerialMonitor.Business
 {
-    public class UsbNotification : IUsbNotification
+    public sealed class UsbNotification : IUsbNotification, IDisposable
     {
-        public void Initialize()
+        public static UsbNotification Instance { get; private set; } = new UsbNotification();
+
+        public event EventHandler<bool> DeviceChanged;
+
+        public void Dispose()
+        {
+            DeviceChanged = null;
+
+            if (_buffer != IntPtr.Zero)
+            {
+                UnregisterDeviceNotification(_buffer);
+                Marshal.FreeHGlobal(_buffer);
+            }
+            _window.Close();
+            Instance = null;
+        }
+
+        private UsbNotification()
         {
             _window = new Window();
             _window.SourceInitialized += OnSourceInitialized;
-            var helper = new WindowInteropHelper(_window);
-            helper.EnsureHandle();
+            new WindowInteropHelper(_window).EnsureHandle();
         }
-        
-        public event EventHandler<bool> DeviceChanged;
 
         private void OnSourceInitialized(object sender, EventArgs e)
         {
@@ -47,7 +61,7 @@ namespace SerialMonitor.Business
             return IntPtr.Zero;
         }
 
-        private static void RegisterUsbDeviceNotification(IntPtr windowHandle)
+        private void RegisterUsbDeviceNotification(IntPtr windowHandle)
         {
             var dbi = new DevBroadcastDeviceinterface
             {
@@ -58,10 +72,10 @@ namespace SerialMonitor.Business
             };
 
             dbi.Size = Marshal.SizeOf(dbi);
-            var buffer = Marshal.AllocHGlobal(dbi.Size);
-            Marshal.StructureToPtr(dbi, buffer, true);
+            _buffer = Marshal.AllocHGlobal(dbi.Size);
+            Marshal.StructureToPtr(dbi, _buffer, true);
 
-            RegisterDeviceNotification(windowHandle, buffer, 0);
+            RegisterDeviceNotification(windowHandle, _buffer, 0);
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -80,8 +94,8 @@ namespace SerialMonitor.Business
             internal short Name;
         }
 
-
-        private Window _window;
+        private readonly Window _window;
+        private IntPtr _buffer;
         private const int DbtDevtypDeviceinterface = 5;
         private const int DbtDeviceArrival = 0x8000;
         private const int DbtDeviceRemoveComplete = 0x8004;

@@ -6,6 +6,7 @@
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
+             xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:SerialPortManager}"
              Name="Control">
@@ -19,8 +20,13 @@
     </UserControl.Resources>
     
     <DockPanel LastChildFill="True">
-        <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True"
-                   IsEnabled="{Binding IsConnected}">
+        <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
+            <DockPanel.IsEnabled>
+                <MultiBinding Converter="{StaticResource AndConverter}">
+                    <Binding Path="IsConnected"/>
+                    <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
+                </MultiBinding>
+            </DockPanel.IsEnabled>
             <Button Name="SendButton" Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
             <TextBox Name="MessageTextBox" KeyUp="OnMessageTextBoxKeyUp" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
         </DockPanel>
@@ -48,7 +54,6 @@
                         <Binding Path="IsConnected"/>
                         <Binding Source="Connect"/>
                         <Binding Source="Disconnect"/>
-
                     </MultiBinding>
                 </Button.Content>
             </Button>
@@ -59,34 +64,59 @@
                         <Binding Path="ActualWidth" ElementName="TabControl"/>
                         <Binding Path="ActualWidth" ElementName="PortComboBox"/>
                         <Binding Path="ActualWidth" ElementName="ConnectButton"/>
-                        <Binding Path="ActualWidth" ElementName="ClearConnect"/>
+                        <Binding Path="ActualWidth" ElementName="ClearConsole"/>
                         <Binding Path="ActualWidth" ElementName="AutoScrollToggle"/>
                         <Binding Source="30"/>
                     </MultiBinding>
                 </Border.Width>
             </Border>
             
-            <Button Name="ClearConnect" Content="Clear" Click="OnClearButtonClick" Margin="5 0 5 10" Padding="10 0 10 0"
-                    Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
-                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            
-            <ToggleButton Name="AutoScrollToggle" Margin="5 0 5 10" Padding="10 0 10 0"
-                          IsChecked="{Binding IsAutoscrollEnabled, ElementName=Control}"
-                          Visibility="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"
-                          Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
-                <ToggleButton.Content>
-                    <MultiBinding Converter="{StaticResource BoolToObjectsConverter}">
-                        <Binding Path="IsAutoscrollEnabled" ElementName="Control"/>
-                        <Binding Source="Auto scroll off"/>
-                        <Binding Source="Auto scroll on"/>
+            <CheckBox Name="AutoScrollToggle" Margin="5 0 5 10" Padding="10 0 10 0"
+                      Content="Auto scroll"
+                      IsChecked="{Binding IsAutoscrollEnabled, ElementName=Control}"
+                      IsEnabled="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource ObjectToBoolInvertedConverter}}"
+                      VerticalAlignment="Center"
+                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"/>
+
+            <Button Name="ClearConsole" Content="Clear" Click="OnClearButtonClick" Margin="5 0 5 10" Padding="10 0 10 0"
+                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource AndConverter}">
+                        <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
+                        <Binding Path="IsPortConsoleEmpty" ElementName="Control" Converter="{StaticResource BoolInverterConverter}"/>
                     </MultiBinding>
-                </ToggleButton.Content>
-            </ToggleButton>
+                </Button.IsEnabled>
+            </Button>
         </WrapPanel>
 
-        <TabControl Name="TabControl" Margin="10 0 10 10">
+        <TabControl Name="TabControl" Margin="10 0 10 10"
+                    Background="Transparent"
+                    Foreground="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"
+                    BorderBrush="{DynamicResource {x:Static vs:CommonControlsColors.ButtonBorderBrushKey}}">
+            <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TabItem}">
+                                    <Label Name="Label"  Content="{TemplateBinding Header}" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"
+                                           BorderThickness="1"
+                                           BorderBrush="{DynamicResource {x:Static vs:CommonControlsColors.ButtonBorderBrushKey}}"/>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Label" Property="Background"
+                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveBrushKey}}" />
+                                            <Setter TargetName="Label" Property="Foreground"
+                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveTextBrushKey}}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+            </TabControl.Resources>
+
             <TabItem Header="Console">
-                <FlowDocumentScrollViewer Name="Output" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <FlowDocumentScrollViewer Name="PortConsole" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <FlowDocument FontFamily="Consolas" FontSize="11"/>
                 </FlowDocumentScrollViewer>
             </TabItem>

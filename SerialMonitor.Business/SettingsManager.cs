@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SerialMonitor.Business.Helpers;
@@ -15,11 +12,6 @@ namespace SerialMonitor.Business
         {
             _settingsFilename = Path.Combine(_settingsFolder, "Settings.json");
         }
-
-        public async Task InitializeAsync() => await LoadAsync();
-
-        public void InitializeSync()
-        { }
 
         public PortInfo SelectedPort
         {
@@ -35,9 +27,12 @@ namespace SerialMonitor.Business
 
         public PortSettings GetSettings(string portName) => AppSettings.PortsSettingsMap.GetOrCreate(portName);
 
-        public Dictionary<Encoding, string> Encodings { get; } = Encoding.GetEncodings().ToDictionary(e => e.GetEncoding(), e => e.CodePage + " " + e.Name + " - " + e.DisplayName);
-
-        public List<int> FontSizes { get; } = Enumerable.Range(6, 67).ToList();
+        public void ResetSelectedPortSettings()
+        {
+            var portSettings = new PortSettings();
+            AppSettings.PortsSettingsMap[SelectedPort.Name] = portSettings;
+            SelectedPort.Settings = portSettings;
+        }
 
         public void Save()
         {
@@ -45,7 +40,7 @@ namespace SerialMonitor.Business
             FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
         }
 
-        private Task LoadAsync()
+        public Task LoadAsync()
         {
             return Task.Run(() =>
             {

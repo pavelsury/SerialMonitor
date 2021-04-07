@@ -4,13 +4,12 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
-using System.Windows.Threading;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
 namespace SerialMonitor.Business
 {
-    public class SerialPortManager : NotifyPropertyChanged
+    public class SerialPortManager : NotifyPropertyChanged, IDisposable
     {
         public SerialPortManager(
             SettingsManager settingsManager,
@@ -20,16 +19,17 @@ namespace SerialMonitor.Business
         {
             _mainThreadRunner = mainThreadRunner;
             _messageLogger = messageLogger;
+            _usbNotification = usbNotification;
             SettingsManager = settingsManager;
+            
             _port = new SerialPort();
             _port.DataReceived += OnDataReceived;
-            usbNotification.DeviceChanged += (s, e) => UpdatePorts();
-            Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
+            _usbNotification.DeviceChanged += OnUsbDevicesChanged;
         }
 
         public IConsoleWriter ConsoleWriter{ private get; set; }
 
-        public void InitializeSync()
+        public void Initialize()
         {
             foreach (var portName in SettingsManager.AppSettings.PortsSettingsMap.Keys)
             {
@@ -134,6 +134,18 @@ namespace SerialMonitor.Business
             }
         }
 
+        public void Dispose()
+        {
+            _usbNotification.DeviceChanged -= OnUsbDevicesChanged;
+
+            if (IsConnected)
+            {
+                Disconnect();
+            }
+            _port.Dispose();
+            _port = null;
+        }
+
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e) => _mainThreadRunner.Run(ReadData);
 
         private void ReadData()
@@ -190,6 +202,8 @@ namespace SerialMonitor.Business
             }
         }
 
+        private void OnUsbDevicesChanged(object sender, bool e) => UpdatePorts();
+
         private void UpdatePorts()
         {
             var portNames = SerialPort.GetPortNames();
@@ -235,18 +249,10 @@ namespace SerialMonitor.Business
             return portInfo;
         }
 
-        private void OnShutdownStarted(object sender, EventArgs e)
-        {
-            if (IsConnected)
-            {
-                Disconnect();
-            }
-            SettingsManager.Save();
-        }
-
         private readonly IMainThreadRunner _mainThreadRunner;
         private readonly IMessageLogger _messageLogger;
-        private readonly SerialPort _port;
+        private readonly IUsbNotification _usbNotification;
+        private SerialPort _port;
         private bool _isConnected;
     }
 }

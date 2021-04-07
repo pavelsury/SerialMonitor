@@ -1,7 +1,11 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
+using SerialMonitor.Business;
 
 namespace SerialMonitor.Ui
 {
@@ -10,7 +14,22 @@ namespace SerialMonitor.Ui
         public SettingsControl()
         {
             InitializeComponent();
+            BaudRateComboBox.Focus();
         }
+
+        public List<ComboPair> Encodings { get; } = Encoding.GetEncodings().Select(e => new ComboPair
+        {
+            Value = e.GetEncoding(),
+            Text = e.CodePage + " " + e.Name + " - " + e.DisplayName
+        }).ToList();
+
+        public List<ComboPair> FontSizes { get; } = Enumerable.Range(PortSettings.DefaultFontSizeMin, PortSettings.DefaultFontSizeMax - PortSettings.DefaultFontSizeMin + 1).Select(i => new ComboPair
+        {
+            Value = i,
+            Text = i.ToString()
+        }).ToList();
+
+        private SettingsManager SettingsManager => (SettingsManager)DataContext;
 
         private void OnOutputFilenameTextBoxMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -47,5 +66,7 @@ namespace SerialMonitor.Ui
                 }
             }
         }
+
+        private void OnResetButtonClick(object sender, RoutedEventArgs e) => SettingsManager.ResetSelectedPortSettings();
     }
 }

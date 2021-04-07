@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace SerialMonitor.Business
 {
@@ -6,29 +8,34 @@ namespace SerialMonitor.Business
     {
         public ModelFactory(IMainThreadRunner mainThreadRunner)
         {
-            SettingsManager = new SettingsManager();
-            MessageLogger = new MessageLogger(SettingsManager);
-            SerialPortManager = new SerialPortManager(SettingsManager, mainThreadRunner, MessageLogger, UsbNotification);
+            Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
+            _settingsManager = new SettingsManager();
+            _messageLogger = new MessageLogger(_settingsManager);
+            SerialPortManager = new SerialPortManager(_settingsManager, mainThreadRunner, _messageLogger, UsbNotification.Instance);
         }
 
-        public async Task InitializeAsync() => await SettingsManager.InitializeAsync();
-
-        public void InitializeSync()
+        public async Task InitializeAsync()
         {
-            UsbNotification.Initialize();
-            SettingsManager.InitializeSync();
-            SerialPortManager.InitializeSync();
+            await _settingsManager.LoadAsync();
+            SerialPortManager.Initialize();
         }
 
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
         {
-            MessageLogger.ConsoleWriter = consoleWriter;
+            _messageLogger.ConsoleWriter = consoleWriter;
             SerialPortManager.ConsoleWriter = consoleWriter;
         }
 
+        private void OnShutdownStarted(object sender, EventArgs e)
+        {
+            _settingsManager.Save();
+            SerialPortManager.Dispose();
+            UsbNotification.Instance.Dispose();
+        }
+
         public SerialPortManager SerialPortManager { get; }
-        public SettingsManager SettingsManager { get; }
-        public MessageLogger MessageLogger { get; }
-        public UsbNotification UsbNotification { get; } = new UsbNotification();
+
+        private readonly SettingsManager _settingsManager;
+        private readonly MessageLogger _messageLogger;
     }
 }

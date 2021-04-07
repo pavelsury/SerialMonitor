@@ -4,21 +4,27 @@ using Newtonsoft.Json;
 
 namespace SerialMonitor.Business.Helpers
 {
-    public class EncodingJsonConverter : JsonConverter<Encoding>
+    public class EncodingJsonConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, Encoding value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(value.CodePage);
+            writer.WriteValue(((Encoding)value).CodePage);
         }
 
-        public override Encoding ReadJson(JsonReader reader, Type objectType, Encoding existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             switch (reader.Value)
             {
                 case int v: return GetEncoding(v);
+                case long v: return GetEncoding((int)v);
                 case string s: return int.TryParse(s, out var p) ? GetEncoding(p) : null;
                 default: return null;
             }
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Encoding);
         }
 
         private static Encoding GetEncoding(int codePage)
