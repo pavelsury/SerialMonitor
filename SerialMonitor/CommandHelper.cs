@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Windows.Controls;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using SerialMonitor.Business;
 using SerialMonitor.Ui;
 using Task = System.Threading.Tasks.Task;
 
-namespace SerialMonitor.Package
+namespace SerialMonitor
 {
     internal static class CommandHelper
     {
@@ -38,12 +37,12 @@ namespace SerialMonitor.Package
                 throw new NotSupportedException("Cannot create tool window");
             }
 
-            var serialMonitorControl = (SerialMonitorControl)window.Content;
-            if (serialMonitorControl.DataContext == null)
-            {
-                modelFactory.SetConsoleWriter(serialMonitorControl);
-                serialMonitorControl.DataContext = modelFactory.SerialPortManager;
-            }
+            //var serialMonitorControl = (SerialMonitorControl)window.Content;
+            //if (serialMonitorControl.DataContext == null)
+            //{
+            //    modelFactory.SetConsoleWriter(serialMonitorControl);
+            //    serialMonitorControl.DataContext = modelFactory.SerialPortManager;
+            //}
 
             var windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());

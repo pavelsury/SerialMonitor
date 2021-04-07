@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using SerialMonitor.Business;
 
-namespace SerialMonitor.Package
+namespace SerialMonitor
 {
     public class VsMainThreadRunner : IMainThreadRunner
     {

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{E5EC1111-F9EF-4413-AD32-312FFD1B4C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialMonitor.Package", "SerialMonitor.Package\SerialMonitor.Package.csproj", "{4C0D63C8-0406-431A-8173-C0EEFAD1625F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialMonitor", "SerialMonitor\SerialMonitor.csproj", "{4C0D63C8-0406-431A-8173-C0EEFAD1625F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialMonitor.Business", "SerialMonitor.Business\SerialMonitor.Business.csproj", "{CB6DE9B9-5F21-4556-B255-DC71D1288201}"
 EndProject

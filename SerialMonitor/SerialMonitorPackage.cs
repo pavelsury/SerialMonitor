@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using SerialMonitor.Business;
 using Task = System.Threading.Tasks.Task;
 
-namespace SerialMonitor.Package
+namespace SerialMonitor
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
