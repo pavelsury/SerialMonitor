@@ -15,15 +15,6 @@ namespace SerialMonitor.Ui
 
         public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, SolidColorBrush brush, int fontSize, FontStyle fontStyle)
         {
-            if (brush == null)
-            {
-                brush = flowDocumentScrollViewer.TryFindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush;
-                if (brush == null)
-                {
-                    brush = Brushes.Black;
-                }
-            }
-
             var range = new TextRange(flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd, flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd)
             {
                 Text = data.Replace(Environment.NewLine, "\r")

@@ -61,6 +61,11 @@ namespace SerialMonitor.Ui
                 return;
             }
 
+            if (brush == null)
+            {
+                brush = TryFindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush ?? Brushes.Black;
+            }
+
             PortConsole.AppendText(text, brush, PortSettings.FontSize, PortSettings.FontStyle);
 
             if (IsAutoscrollEnabled)
