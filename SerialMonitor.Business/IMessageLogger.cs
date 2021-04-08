@@ -2,12 +2,8 @@
 {
     public interface IMessageLogger
     {
-        void PrintErrorMessage(string message);
-
+        void PrintInfoMessage(string message);
         void PrintWarningMessage(string message);
-
-        void PrintSuccessMessage(string message);
-
-        void PrintProcessMessage(string message);
+        void PrintErrorMessage(string message);
     }
 }

@@ -13,9 +13,9 @@ namespace SerialMonitor.Business
 
         public IConsoleWriter ConsoleWriter { private get; set; }
 
-        public void PrintErrorMessage(string message)
+        public void PrintInfoMessage(string message)
         {
-            ConsoleWriter?.WriteLine(message, EConsoleTextType.Error);
+            ConsoleWriter?.WriteLine(message, EConsoleTextType.Info);
             PrintMessageToFile(message);
         }
 
@@ -25,15 +25,9 @@ namespace SerialMonitor.Business
             PrintMessageToFile(message);
         }
 
-        public void PrintSuccessMessage(string message)
+        public void PrintErrorMessage(string message)
         {
-            ConsoleWriter?.WriteLine(message, EConsoleTextType.Success);
-            PrintMessageToFile(message);
-        }
-
-        public void PrintProcessMessage(string message)
-        {
-            ConsoleWriter?.WriteLine(message, EConsoleTextType.Process);
+            ConsoleWriter?.WriteLine(message, EConsoleTextType.Error);
             PrintMessageToFile(message);
         }
 

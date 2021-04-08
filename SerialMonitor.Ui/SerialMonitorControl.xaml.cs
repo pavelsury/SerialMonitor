@@ -42,8 +42,7 @@ namespace SerialMonitor.Ui
             SolidColorBrush brush;
             switch (consoleTextType)
             {
-                case EConsoleTextType.Process: brush = Brushes.Aqua; break;
-                case EConsoleTextType.Success: brush = Brushes.Green; break;
+                case EConsoleTextType.Info: brush = Brushes.Green; break;
                 case EConsoleTextType.Warning: brush = Brushes.Yellow; break;
                 case EConsoleTextType.Error: brush = Brushes.Red; break;
                 default: throw new ArgumentOutOfRangeException(nameof(consoleTextType), consoleTextType, null);

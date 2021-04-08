@@ -59,7 +59,7 @@ namespace SerialMonitor.Business
 
         public void Connect()
         {
-            _messageLogger.PrintProcessMessage("Configuring port...");
+            _messageLogger.PrintInfoMessage("Connecting...");
             try
             {
                 _port.PortName = SettingsManager.SelectedPort.Name;
@@ -70,8 +70,6 @@ namespace SerialMonitor.Business
                 _port.StopBits = PortSettings.StopBits;
                 _port.ReadTimeout = PortSettings.ReadTimeoutMs;
                 _port.WriteTimeout = PortSettings.WriteTimeoutMs;
-
-                _messageLogger.PrintProcessMessage("Connecting...");
                 _port.Open();
             }
             catch (Exception e) when (
@@ -86,12 +84,12 @@ namespace SerialMonitor.Business
             }
             
             IsConnected = true;
-            _messageLogger.PrintSuccessMessage("Connected!");
+            _messageLogger.PrintInfoMessage("Connected!");
         }
 
         public void Disconnect()
         {
-            _messageLogger.PrintProcessMessage("Closing port...");
+            _messageLogger.PrintInfoMessage("Closing port...");
             
             try
             {
@@ -103,7 +101,7 @@ namespace SerialMonitor.Business
             }
             
             IsConnected = false;
-            _messageLogger.PrintSuccessMessage("Port closed!");
+            _messageLogger.PrintInfoMessage("Port closed!");
         }
 
         public void SendText(string text)

@@ -2,8 +2,7 @@
 {
     public enum EConsoleTextType
     {
-        Process,
-        Success,
+        Info,
         Warning,
         Error
     }
