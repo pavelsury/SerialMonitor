@@ -136,6 +136,11 @@ namespace SerialMonitor.Business
 
         public void Dispose()
         {
+            if (_port == null)
+            {
+                return;
+            }
+
             _usbNotification.DeviceChanged -= OnUsbDevicesChanged;
 
             if (IsConnected)

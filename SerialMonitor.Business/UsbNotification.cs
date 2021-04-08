@@ -7,12 +7,23 @@ namespace SerialMonitor.Business
 {
     public sealed class UsbNotification : IUsbNotification, IDisposable
     {
-        public static UsbNotification Instance { get; private set; } = new UsbNotification();
+        public UsbNotification()
+        {
+            _window = new Window();
+            _window.SourceInitialized += OnSourceInitialized;
+            new WindowInteropHelper(_window).EnsureHandle();
+        }
 
         public event EventHandler<bool> DeviceChanged;
 
         public void Dispose()
         {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            _isDisposed = true;
             DeviceChanged = null;
 
             if (_buffer != IntPtr.Zero)
@@ -21,14 +32,6 @@ namespace SerialMonitor.Business
                 Marshal.FreeHGlobal(_buffer);
             }
             _window.Close();
-            Instance = null;
-        }
-
-        private UsbNotification()
-        {
-            _window = new Window();
-            _window.SourceInitialized += OnSourceInitialized;
-            new WindowInteropHelper(_window).EnsureHandle();
         }
 
         private void OnSourceInitialized(object sender, EventArgs e)
@@ -43,7 +46,7 @@ namespace SerialMonitor.Business
 
         private IntPtr HwndHandler(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
-            if (msg == WmDeviceChange)
+            if (!_isDisposed && msg == WmDeviceChange)
             {
                 switch ((int)wparam)
                 {
@@ -96,6 +99,7 @@ namespace SerialMonitor.Business
 
         private readonly Window _window;
         private IntPtr _buffer;
+        private bool _isDisposed;
         private const int DbtDevtypDeviceinterface = 5;
         private const int DbtDeviceArrival = 0x8000;
         private const int DbtDeviceRemoveComplete = 0x8004;
