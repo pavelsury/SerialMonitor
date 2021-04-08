@@ -36,8 +36,8 @@
         <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBlock Name="PortTextBlock" VerticalAlignment="Center" Margin="0,0,20,10"
                        Foreground="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}">
-                <Run>Settings for port: </Run>
-                <Run Text="{Binding SelectedPort.Name, FallbackValue=' no COM port available'}" FontWeight="Bold">
+                <Run Text="Settings for port: "/>
+                <Run Text="{Binding SelectedPort.Name, FallbackValue='no COM port available'}" FontWeight="Bold">
                     <Run.Style>
                         <Style TargetType="{x:Type Run}">
                             <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"/>
