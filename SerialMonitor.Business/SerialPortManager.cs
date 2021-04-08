@@ -81,6 +81,7 @@ namespace SerialMonitor.Business
                 e is UnauthorizedAccessException)
             {
                 _messageLogger.PrintErrorMessage(e.Message);
+                return;
             }
             
             IsConnected = true;
