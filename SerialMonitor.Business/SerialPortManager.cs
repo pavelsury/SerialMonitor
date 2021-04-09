@@ -27,10 +27,10 @@ namespace SerialMonitor.Business
             _usbNotification.DeviceChanged += OnUsbDevicesChanged;
         }
 
-        public IConsoleWriter ConsoleWriter{ private get; set; }
-
-        public void Initialize()
+        public void Initialize(IConsoleWriter consoleWriter)
         {
+            _consoleWriter = consoleWriter;
+
             foreach (var portName in SettingsManager.AppSettings.PortsSettingsMap.Keys)
             {
                 CreatePortInfo(portName, false);
@@ -102,7 +102,7 @@ namespace SerialMonitor.Business
             }
             
             IsConnected = false;
-            _messageLogger.PrintInfoMessage("Port closed!");
+            _messageLogger.PrintInfoMessage($"Port closed!{Environment.NewLine}");
         }
 
         public void SendText(string text)
@@ -192,7 +192,7 @@ namespace SerialMonitor.Business
             }
 
             var data = PortSettings.Encoding.GetString(buffer);
-            ConsoleWriter.WriteText(data.Replace(newline, "\r"));
+            _consoleWriter.WriteText(data.Replace(newline, "\r"));
 
             if (!PortSettings.OutputToFileEnabled)
             {
@@ -225,6 +225,11 @@ namespace SerialMonitor.Business
                 }
             }
 
+            if (!Ports.Any())
+            {
+                return;
+            }
+
             foreach (var portInfo in Ports)
             {
                 portInfo.IsAvailable = portNames.Any(n => n == portInfo.Name);
@@ -232,12 +237,18 @@ namespace SerialMonitor.Business
 
             if (SettingsManager.SelectedPort == null)
             {
-                SettingsManager.SelectedPort = Ports.FirstOrDefault(p => p.IsAvailable) ?? Ports.FirstOrDefault();
+                SettingsManager.SelectedPort = Ports.FirstOrDefault(p => p.IsAvailable) ?? Ports.First();
             }
 
-            if (IsConnected && SettingsManager.SelectedPort?.IsAvailable == false)
+            if (IsConnected && !SettingsManager.SelectedPort.IsAvailable)
             {
                 Disconnect();
+                return;
+            }
+
+            if (!IsConnected && SettingsManager.SelectedPort.IsAvailable && SettingsManager.AppSettings.AutoconnectEnabled)
+            {
+                Connect();
             }
         }
 
@@ -256,6 +267,7 @@ namespace SerialMonitor.Business
         private readonly IMainThreadRunner _mainThreadRunner;
         private readonly IMessageLogger _messageLogger;
         private readonly IUsbNotification _usbNotification;
+        public IConsoleWriter _consoleWriter;
         private SerialPort _port;
         private bool _isConnected;
     }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SerialMonitor.Ui.SettingsControl"
+﻿<UserControl x:Class="SerialMonitor.Ui.PortSettingsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -230,7 +230,7 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <CheckBox Name="DtrCheckBox" IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
+                <CheckBox IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
                           Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                           Margin="195,0,0,0">
                     <CheckBox.Content>
@@ -241,7 +241,7 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <CheckBox Name="EnableOutputFileCheckBox" IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
+                <CheckBox IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
                           Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                           Margin="195,0,0,0">
                     <CheckBox.Content>

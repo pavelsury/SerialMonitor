@@ -11,6 +11,7 @@ namespace TestApp
         {
             await _modelFactory.InitializeAsync();
             var serialMonitorControl = new SerialMonitorControl { DataContext = _modelFactory.SerialPortManager };
+            serialMonitorControl.CreateDefaultResources();
             _modelFactory.SetConsoleWriter(serialMonitorControl);
             new MainWindow { Content = serialMonitorControl }.Show();
         }

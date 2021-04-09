@@ -9,9 +9,9 @@ using SerialMonitor.Business;
 
 namespace SerialMonitor.Ui
 {
-    public partial class SettingsControl : UserControl
+    public partial class PortSettingsControl : UserControl
     {
-        public SettingsControl()
+        public PortSettingsControl()
         {
             InitializeComponent();
             BaudRateComboBox.Focus();

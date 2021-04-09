@@ -17,13 +17,12 @@ namespace SerialMonitor.Business
         public async Task InitializeAsync()
         {
             await _settingsManager.LoadAsync();
-            SerialPortManager.Initialize();
         }
 
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
         {
             _messageLogger.ConsoleWriter = consoleWriter;
-            SerialPortManager.ConsoleWriter = consoleWriter;
+            SerialPortManager.Initialize(consoleWriter);
         }
 
         private void OnShutdownStarted(object sender, EventArgs e)

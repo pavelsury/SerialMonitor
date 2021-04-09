@@ -104,9 +104,9 @@
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="Label" Property="Background"
-                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveBrushKey}}" />
+                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveBrushKey}}"/>
                                             <Setter TargetName="Label" Property="Foreground"
-                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveTextBrushKey}}" />
+                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveTextBrushKey}}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -122,14 +122,25 @@
             </TabItem>
 
             <TabItem Header="Port settings">
-                <ui:SettingsControl DataContext="{Binding SettingsManager}" Margin="10">
-                    <ui:SettingsControl.IsEnabled>
+                <ui:PortSettingsControl DataContext="{Binding SettingsManager}" Margin="10">
+                    <ui:PortSettingsControl.IsEnabled>
                         <MultiBinding Converter="{StaticResource AndConverter}">
                             <Binding Path="SelectedPort" Converter="{StaticResource ObjectToBoolConverter}"/>
                             <Binding Path="DataContext.IsConnected" ElementName="Control" Converter="{StaticResource BoolInverterConverter}"/>
                         </MultiBinding>
-                    </ui:SettingsControl.IsEnabled>
-                </ui:SettingsControl>
+                    </ui:PortSettingsControl.IsEnabled>
+                </ui:PortSettingsControl>
+            </TabItem>
+
+            <TabItem Header="General settings">
+                <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="10">
+                    <ui:GeneralSettingsControl.IsEnabled>
+                        <MultiBinding Converter="{StaticResource AndConverter}">
+                            <Binding Path="SelectedPort" Converter="{StaticResource ObjectToBoolConverter}"/>
+                            <Binding Path="DataContext.IsConnected" ElementName="Control" Converter="{StaticResource BoolInverterConverter}"/>
+                        </MultiBinding>
+                    </ui:GeneralSettingsControl.IsEnabled>
+                </ui:GeneralSettingsControl>
             </TabItem>
         </TabControl>
     </DockPanel>

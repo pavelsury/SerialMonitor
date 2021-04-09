@@ -14,6 +14,12 @@ namespace SerialMonitor.Ui
             InitializeComponent();
         }
 
+        public void CreateDefaultResources()
+        {
+            Resources.Add(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.ButtonBorderBrushKey, new SolidColorBrush(Colors.LightGray));
+            Resources.Add(Microsoft.VisualStudio.PlatformUI.ThemedDialogColors.SelectedItemActiveBrushKey, new SolidColorBrush(Colors.LightSkyBlue));
+        }
+
         public static readonly DependencyProperty IsAutoscrollEnabledProperty = DependencyProperty.Register(
             nameof(IsAutoscrollEnabled), typeof(bool), typeof(SerialMonitorControl), new PropertyMetadata(true));
 

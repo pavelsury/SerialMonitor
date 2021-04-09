@@ -52,11 +52,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GeneralSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SerialMonitorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingsControl.xaml">
+    <Page Include="PortSettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -71,13 +75,16 @@
     <Compile Include="Converters\ObjectToBoolInvertedConverter.cs" />
     <Compile Include="Converters\ObjectToObjectsConverter.cs" />
     <Compile Include="FlowDocumentScrollViewerExtension.cs" />
+    <Compile Include="GeneralSettingsControl.xaml.cs">
+      <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IntNonnegativeRule.cs" />
     <Compile Include="IntPositiveRule.cs" />
     <Compile Include="SerialMonitorControl.xaml.cs">
       <DependentUpon>SerialMonitorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsControl.xaml.cs">
-      <DependentUpon>SettingsControl.xaml</DependentUpon>
+    <Compile Include="PortSettingsControl.xaml.cs">
+      <DependentUpon>PortSettingsControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
