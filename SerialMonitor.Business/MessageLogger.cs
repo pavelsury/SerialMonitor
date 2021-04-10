@@ -13,23 +13,17 @@ namespace SerialMonitor.Business
 
         public IConsoleWriter ConsoleWriter { private get; set; }
 
-        public void PrintInfoMessage(string message)
+        public void PrintMessage(string message, EMessageType messageType)
         {
-            ConsoleWriter?.WriteLine(message, EConsoleTextType.Info);
+            ConsoleWriter?.WriteLine(message, messageType);
             PrintMessageToFile(message);
         }
 
-        public void PrintWarningMessage(string message)
-        {
-            ConsoleWriter?.WriteLine(message, EConsoleTextType.Warning);
-            PrintMessageToFile(message);
-        }
+        public void PrintInfoMessage(string message) => PrintMessage(message, EMessageType.Info);
 
-        public void PrintErrorMessage(string message)
-        {
-            ConsoleWriter?.WriteLine(message, EConsoleTextType.Error);
-            PrintMessageToFile(message);
-        }
+        public void PrintWarningMessage(string message) => PrintMessage(message, EMessageType.Warning);
+
+        public void PrintErrorMessage(string message) => PrintMessage(message, EMessageType.Error);
 
         private void PrintMessageToFile(string message)
         {

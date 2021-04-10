@@ -43,22 +43,22 @@ namespace SerialMonitor.Ui
             WriteText(text, null);
         }
 
-        public void WriteLine(string text, EConsoleTextType consoleTextType)
+        public void WriteLine(string text, EMessageType messageType)
         {
             SolidColorBrush brush;
-            switch (consoleTextType)
+            switch (messageType)
             {
-                case EConsoleTextType.Info: brush = Brushes.Green; break;
-                case EConsoleTextType.Warning: brush = Brushes.Yellow; break;
-                case EConsoleTextType.Error: brush = Brushes.Red; break;
-                default: throw new ArgumentOutOfRangeException(nameof(consoleTextType), consoleTextType, null);
+                case EMessageType.Info: brush = Brushes.Green; break;
+                case EMessageType.Warning: brush = Brushes.DarkOrange; break;
+                case EMessageType.Error: brush = Brushes.Red; break;
+                default: throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
             WriteText($"{text}{Environment.NewLine}", brush);
         }
 
         private SerialPortManager SerialPortManager => (SerialPortManager)DataContext;
 
-        private PortSettings PortSettings => SerialPortManager.SettingsManager.SelectedPort.Settings;
+        private PortSettings SelectedPortSettings => SerialPortManager.SettingsManager.SelectedPort.Settings;
 
         private void WriteText(string text, SolidColorBrush brush)
         {
@@ -72,7 +72,7 @@ namespace SerialMonitor.Ui
                 brush = TryFindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush ?? Brushes.Black;
             }
 
-            PortConsole.AppendText(text, brush, PortSettings.FontSize, PortSettings.FontStyle);
+            PortConsole.AppendText(text, brush, SelectedPortSettings.FontSize, SelectedPortSettings.FontStyle);
 
             if (IsAutoscrollEnabled)
             {

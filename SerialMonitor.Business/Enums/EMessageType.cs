@@ -1,6 +1,6 @@
 ﻿namespace SerialMonitor.Business.Enums
 {
-    public enum EConsoleTextType
+    public enum EMessageType
     {
         Info,
         Warning,

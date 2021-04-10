@@ -74,6 +74,7 @@
     <Compile Include="Converters\ObjectToBoolConverter.cs" />
     <Compile Include="Converters\ObjectToBoolInvertedConverter.cs" />
     <Compile Include="Converters\ObjectToObjectsConverter.cs" />
+    <Compile Include="Converters\ConnectionStateToConnectTextConverter.cs" />
     <Compile Include="FlowDocumentScrollViewerExtension.cs" />
     <Compile Include="GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>

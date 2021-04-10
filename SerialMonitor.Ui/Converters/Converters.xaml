@@ -11,4 +11,5 @@
     <converters:ObjectToBoolInvertedConverter x:Key="ObjectToBoolInvertedConverter"/>
     <converters:ObjectToObjectsConverter x:Key="ObjectToObjectsConverter"/>
     <converters:MasterWidthToWidthConverter x:Key="MasterWidthToWidthConverter"/>
+    <converters:ConnectionStateToConnectTextConverter x:Key="ConnectionStateToConnectTextConverter"/>
 </ResourceDictionary>

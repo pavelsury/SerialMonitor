@@ -45,7 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Enums\EConsoleTextType.cs" />
+    <Compile Include="Enums\EConnectionState.cs" />
+    <Compile Include="Enums\EMessageType.cs" />
     <Compile Include="Enums\EReceivingNewline.cs" />
     <Compile Include="Enums\ESendingNewline.cs" />
     <Compile Include="Helpers\EncodingJsonConverter.cs" />

@@ -4,6 +4,8 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
@@ -39,7 +41,7 @@ namespace SerialMonitor.Business
             var selectedPortName = SettingsManager.AppSettings.SelectedPort;
             if (!string.IsNullOrWhiteSpace(selectedPortName))
             {
-                SettingsManager.SelectedPort = Ports.SingleOrDefault(p => p.Name == selectedPortName) ?? CreatePortInfo(selectedPortName, false);
+                SelectedPort = Ports.SingleOrDefault(p => p.Name == selectedPortName) ?? CreatePortInfo(selectedPortName, false);
             }
 
             UpdatePorts();
@@ -47,51 +49,128 @@ namespace SerialMonitor.Business
 
         public SettingsManager SettingsManager { get; }
 
-        public PortSettings PortSettings => SettingsManager.SelectedPort.Settings;
-
         public ObservableCollection<PortInfo> Ports { get; set; } = new ObservableCollection<PortInfo>();
 
-        public bool IsConnected
+        public EConnectionState ConnectionState
         {
-            get => _isConnected;
-            set => SetNotifyingValueProperty(ref _isConnected, value);
+            get => _connectionState;
+            set => SetNotifyingValueProperty(ref _connectionState, value, () =>
+            {
+                OnPropertyChanged(nameof(IsDisconnected));
+                OnPropertyChanged(nameof(IsConnecting));
+                OnPropertyChanged(nameof(IsConnectingLong));
+                OnPropertyChanged(nameof(IsConnected));
+            });
         }
+
+        public bool IsDisconnected => _connectionState == EConnectionState.NotConnected;
+        public bool IsConnecting => _connectionState == EConnectionState.ConnectingShort || _connectionState == EConnectionState.ConnectingLong;
+        public bool IsConnectingLong => _connectionState == EConnectionState.ConnectingLong;
+        public bool IsConnected => _connectionState == EConnectionState.Connected;
 
         public void Connect()
         {
-            _messageLogger.PrintInfoMessage("Connecting...");
+            if (IsConnecting || IsConnected)
+            {
+                return;
+            }
+
+            ConnectionState = EConnectionState.ConnectingShort;
+
             try
             {
-                _port.PortName = SettingsManager.SelectedPort.Name;
-                _port.BaudRate = PortSettings.BaudRate;
-                _port.DataBits = PortSettings.DataBits;
-                _port.Handshake = PortSettings.Handshake;
-                _port.Parity = PortSettings.Parity;
-                _port.StopBits = PortSettings.StopBits;
-                _port.ReadTimeout = PortSettings.ReadTimeoutMs;
-                _port.WriteTimeout = PortSettings.WriteTimeoutMs;
-                _port.Open();
+                _port.PortName = SelectedPort.Name;
+                _port.BaudRate = SelectedPort.Settings.BaudRate;
+                _port.DataBits = SelectedPort.Settings.DataBits;
+                _port.Handshake = SelectedPort.Settings.Handshake;
+                _port.Parity = SelectedPort.Settings.Parity;
+                _port.StopBits = SelectedPort.Settings.StopBits;
+                _port.ReadTimeout = SelectedPort.Settings.ReadTimeoutMs;
+                _port.WriteTimeout = SelectedPort.Settings.WriteTimeoutMs;
             }
             catch (Exception e) when (
                 e is ArgumentNullException ||
                 e is ArgumentOutOfRangeException ||
                 e is ArgumentException ||
                 e is InvalidOperationException ||
-                e is IOException ||
-                e is UnauthorizedAccessException)
+                e is IOException)
             {
-                _messageLogger.PrintErrorMessage(e.Message);
+                ConnectionState = EConnectionState.NotConnected;
+                _messageLogger.PrintErrorMessage(GetErrorMessage(e));
                 return;
             }
-            
-            IsConnected = true;
-            _messageLogger.PrintInfoMessage("Connected!");
+            catch (Exception)
+            {
+                ConnectionState = EConnectionState.NotConnected;
+                throw;
+            }
+
+            Task.Run(() =>
+            {
+                Exception exception = null;
+                
+                using (var cts = new CancellationTokenSource())
+                {
+                    try
+                    {
+                        Task.Delay(750, cts.Token)
+                            .ContinueWith(t => _mainThreadRunner.Run(() =>
+                            {
+                                if (ConnectionState == EConnectionState.ConnectingShort)
+                                {
+                                    ConnectionState = EConnectionState.ConnectingLong;
+                                }
+                            }), cts.Token);
+
+                        _port.Open();
+                    }
+                    catch (Exception e)
+                    {
+                        exception = e;
+                    }
+                    finally
+                    {
+                        cts.Cancel();
+                    }
+                }
+
+                _mainThreadRunner.Run(() =>
+                {
+                    if (exception == null)
+                    {
+                        ConnectionState = EConnectionState.Connected;
+                        _messageLogger.PrintInfoMessage($"{SelectedPort.Name} connected!");
+                        return;
+                    }
+
+                    ConnectionState = EConnectionState.NotConnected;
+
+                    if (exception is ArgumentOutOfRangeException ||
+                        exception is ArgumentException ||
+                        exception is InvalidOperationException ||
+                        exception is IOException ||
+                        exception is UnauthorizedAccessException)
+                    {
+                        _messageLogger.PrintErrorMessage(GetErrorMessage(exception));
+                        return;
+                    } 
+                    
+                    throw exception;
+                });
+            });
+
+            string GetErrorMessage(Exception e) => $"{SelectedPort.Name} connecting failed!{Environment.NewLine}{e.Message}";
         }
 
-        public void Disconnect()
+        public void Disconnect() => Disconnect(false);
+
+        private void Disconnect(bool isFailure)
         {
-            _messageLogger.PrintInfoMessage("Closing port...");
-            
+            if (!IsConnected)
+            {
+                return;
+            }
+
             try
             {
                 _port.Close();
@@ -101,14 +180,15 @@ namespace SerialMonitor.Business
                 _messageLogger.PrintErrorMessage(e.Message);
             }
             
-            IsConnected = false;
-            _messageLogger.PrintInfoMessage($"Port closed!{Environment.NewLine}");
+            ConnectionState = EConnectionState.NotConnected;
+            
+            _messageLogger.PrintMessage($"{SelectedPort.Name} disconnected!{Environment.NewLine}", isFailure ? EMessageType.Warning : EMessageType.Info);
         }
 
         public void SendText(string text)
         {
             string newline;
-            switch (PortSettings.SendingNewline)
+            switch (SelectedPort.Settings.SendingNewline)
             {
                 case ESendingNewline.None: newline = string.Empty; break;
                 case ESendingNewline.Crlf: newline = "\r\n"; break;
@@ -116,7 +196,7 @@ namespace SerialMonitor.Business
                 default: throw new ArgumentOutOfRangeException();
             }
 
-            var data = Encoding.Convert(Encoding.Default, PortSettings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
+            var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
             
             try
             {
@@ -144,10 +224,16 @@ namespace SerialMonitor.Business
 
             if (IsConnected)
             {
-                Disconnect();
+                Disconnect(true);
             }
             _port.Dispose();
             _port = null;
+        }
+
+        private PortInfo SelectedPort
+        {
+            get => SettingsManager.SelectedPort;
+            set => SettingsManager.SelectedPort = value;
         }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e) => _mainThreadRunner.Run(ReadData);
@@ -179,27 +265,27 @@ namespace SerialMonitor.Business
                 e is TimeoutException)
             {
                 _messageLogger.PrintErrorMessage($"{Environment.NewLine}{e.Message}");
-                Disconnect();
+                Disconnect(true);
                 return;
             }
 
             string newline;
-            switch (PortSettings.ReceivingNewline)
+            switch (SelectedPort.Settings.ReceivingNewline)
             {
                 case EReceivingNewline.Crlf: newline = "\r\n"; break;
                 case EReceivingNewline.Lf: newline = "\n"; break;
                 default: throw new ArgumentOutOfRangeException();
             }
 
-            var data = PortSettings.Encoding.GetString(buffer);
+            var data = SelectedPort.Settings.Encoding.GetString(buffer);
             _consoleWriter.WriteText(data.Replace(newline, "\r"));
 
-            if (!PortSettings.OutputToFileEnabled)
+            if (!SelectedPort.Settings.OutputToFileEnabled)
             {
                 return;
             }
 
-            var file = PortSettings.OutputFilename;
+            var file = SelectedPort.Settings.OutputFilename;
             if (!string.IsNullOrEmpty(file))
             {
                 File.AppendAllText(file, data.Replace(newline, Environment.NewLine));
@@ -210,6 +296,7 @@ namespace SerialMonitor.Business
 
         private void UpdatePorts()
         {
+            var wasSelectedPortAvailable = SelectedPort?.IsAvailable == true;
             var portNames = SerialPort.GetPortNames();
             
             foreach (var portName in portNames)
@@ -235,20 +322,23 @@ namespace SerialMonitor.Business
                 portInfo.IsAvailable = portNames.Any(n => n == portInfo.Name);
             }
 
-            if (SettingsManager.SelectedPort == null)
+            if (SelectedPort == null)
             {
-                SettingsManager.SelectedPort = Ports.FirstOrDefault(p => p.IsAvailable) ?? Ports.First();
+                SelectedPort = Ports.FirstOrDefault(p => p.IsAvailable) ?? Ports.First();
             }
 
-            if (IsConnected && !SettingsManager.SelectedPort.IsAvailable)
+            if (!SelectedPort.IsAvailable && IsConnected)
             {
-                Disconnect();
+                Disconnect(true);
                 return;
             }
 
-            if (!IsConnected && SettingsManager.SelectedPort.IsAvailable && SettingsManager.AppSettings.AutoconnectEnabled)
+            if (SettingsManager.AppSettings.AutoconnectEnabled && IsDisconnected)
             {
-                Connect();
+                if (!wasSelectedPortAvailable && SelectedPort.IsAvailable)
+                {
+                    Connect();
+                }
             }
         }
 
@@ -267,8 +357,8 @@ namespace SerialMonitor.Business
         private readonly IMainThreadRunner _mainThreadRunner;
         private readonly IMessageLogger _messageLogger;
         private readonly IUsbNotification _usbNotification;
-        public IConsoleWriter _consoleWriter;
+        private IConsoleWriter _consoleWriter;
         private SerialPort _port;
-        private bool _isConnected;
+        private EConnectionState _connectionState;
     }
 }
