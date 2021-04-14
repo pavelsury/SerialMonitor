@@ -57,6 +57,6 @@ namespace SerialMonitor
             return toolWindowType == typeof(ToolWindow) ? new ToolWindow(_modelFactory) : base.InstantiateToolWindow(toolWindowType);
         }
 
-        private readonly ModelFactory _modelFactory = new ModelFactory(new VsMainThreadRunner());
+        private readonly ModelFactory _modelFactory = new ModelFactory();
     }
 }

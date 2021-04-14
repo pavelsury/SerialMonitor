@@ -6,12 +6,12 @@ namespace SerialMonitor.Business
 {
     public class ModelFactory
     {
-        public ModelFactory(IMainThreadRunner mainThreadRunner)
+        public ModelFactory()
         {
             Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
             _settingsManager = new SettingsManager();
             _messageLogger = new MessageLogger(_settingsManager);
-            SerialPortManager = new SerialPortManager(_settingsManager, mainThreadRunner, _messageLogger, _usbNotification);
+            SerialPortManager = new SerialPortManager(_settingsManager, new MainThreadRunner(Dispatcher.CurrentDispatcher), _messageLogger, _usbNotification);
         }
 
         public async Task InitializeAsync()

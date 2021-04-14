@@ -2,7 +2,9 @@
 {
     public enum EConnectionState
     {
-        NotConnected,
+        Disconnected,
+        DisconnectingGracefully,
+        DisconnectingByFailure,
         ConnectingShort,
         ConnectingLong,
         Connected

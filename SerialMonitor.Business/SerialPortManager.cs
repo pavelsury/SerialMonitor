@@ -25,7 +25,6 @@ namespace SerialMonitor.Business
             SettingsManager = settingsManager;
             
             _port = new SerialPort();
-            _port.DataReceived += OnDataReceived;
             _usbNotification.DeviceChanged += OnUsbDevicesChanged;
         }
 
@@ -57,109 +56,144 @@ namespace SerialMonitor.Business
             set => SetNotifyingValueProperty(ref _connectionState, value, () =>
             {
                 OnPropertyChanged(nameof(IsDisconnected));
-                OnPropertyChanged(nameof(IsConnecting));
+                OnPropertyChanged(nameof(IsConnectionChanging));
                 OnPropertyChanged(nameof(IsConnectingLong));
                 OnPropertyChanged(nameof(IsConnected));
             });
         }
 
-        public bool IsDisconnected => _connectionState == EConnectionState.NotConnected;
-        public bool IsConnecting => _connectionState == EConnectionState.ConnectingShort || _connectionState == EConnectionState.ConnectingLong;
+        public bool IsDisconnected => _connectionState == EConnectionState.Disconnected;
+        public bool IsConnectionChanging =>
+            _connectionState == EConnectionState.ConnectingShort ||
+            _connectionState == EConnectionState.ConnectingLong ||
+            _connectionState == EConnectionState.DisconnectingGracefully ||
+            _connectionState == EConnectionState.DisconnectingByFailure;
         public bool IsConnectingLong => _connectionState == EConnectionState.ConnectingLong;
         public bool IsConnected => _connectionState == EConnectionState.Connected;
 
         public void Connect()
         {
-            if (IsConnecting || IsConnected)
+            if (!IsDisconnected)
             {
                 return;
             }
 
             ConnectionState = EConnectionState.ConnectingShort;
 
-            try
+            _portTask = Task.Run(async () =>
             {
-                _port.PortName = SelectedPort.Name;
-                _port.BaudRate = SelectedPort.Settings.BaudRate;
-                _port.DataBits = SelectedPort.Settings.DataBits;
-                _port.Handshake = SelectedPort.Settings.Handshake;
-                _port.Parity = SelectedPort.Settings.Parity;
-                _port.StopBits = SelectedPort.Settings.StopBits;
-                _port.ReadTimeout = SelectedPort.Settings.ReadTimeoutMs;
-                _port.WriteTimeout = SelectedPort.Settings.WriteTimeoutMs;
-            }
-            catch (Exception e) when (
-                e is ArgumentNullException ||
-                e is ArgumentOutOfRangeException ||
-                e is ArgumentException ||
-                e is InvalidOperationException ||
-                e is IOException)
-            {
-                ConnectionState = EConnectionState.NotConnected;
-                _messageLogger.PrintErrorMessage(GetErrorMessage(e));
-                return;
-            }
-            catch (Exception)
-            {
-                ConnectionState = EConnectionState.NotConnected;
-                throw;
-            }
-
-            Task.Run(() =>
-            {
-                Exception exception = null;
-                
-                using (var cts = new CancellationTokenSource())
+                using (var delayCts = new CancellationTokenSource())
                 {
+                    var delayTask = Task.Delay(750, delayCts.Token).ContinueWith(t => _mainThreadRunner.Run(() =>
+                    {
+                        if (ConnectionState == EConnectionState.ConnectingShort)
+                        {
+                            ConnectionState = EConnectionState.ConnectingLong;
+                        }
+                    }), delayCts.Token);
+
                     try
                     {
-                        Task.Delay(750, cts.Token)
-                            .ContinueWith(t => _mainThreadRunner.Run(() =>
-                            {
-                                if (ConnectionState == EConnectionState.ConnectingShort)
-                                {
-                                    ConnectionState = EConnectionState.ConnectingLong;
-                                }
-                            }), cts.Token);
-
+                        _port.PortName = SelectedPort.Name;
+                        _port.BaudRate = SelectedPort.Settings.BaudRate;
+                        _port.DataBits = SelectedPort.Settings.DataBits;
+                        _port.Handshake = SelectedPort.Settings.Handshake;
+                        _port.Parity = SelectedPort.Settings.Parity;
+                        _port.StopBits = SelectedPort.Settings.StopBits;
+                        _port.ReadTimeout = SelectedPort.Settings.ReadTimeoutMs;
+                        _port.WriteTimeout = SelectedPort.Settings.WriteTimeoutMs;
                         _port.Open();
                     }
                     catch (Exception e)
                     {
-                        exception = e;
+                        _mainThreadRunner.Run(() =>
+                        {
+                            ConnectionState = EConnectionState.Disconnected;
+                            _messageLogger.PrintWarningMessage(GetConnectExceptionMessage(e));
+                        });
+                        return;
                     }
                     finally
                     {
-                        cts.Cancel();
+                        try
+                        {
+                            delayCts.Cancel();
+                            await delayTask;
+                        }
+                        catch (OperationCanceledException)
+                        { }
                     }
                 }
 
                 _mainThreadRunner.Run(() =>
                 {
-                    if (exception == null)
-                    {
-                        ConnectionState = EConnectionState.Connected;
-                        _messageLogger.PrintInfoMessage($"{SelectedPort.Name} connected!");
-                        return;
-                    }
-
-                    ConnectionState = EConnectionState.NotConnected;
-
-                    if (exception is ArgumentOutOfRangeException ||
-                        exception is ArgumentException ||
-                        exception is InvalidOperationException ||
-                        exception is IOException ||
-                        exception is UnauthorizedAccessException)
-                    {
-                        _messageLogger.PrintErrorMessage(GetErrorMessage(exception));
-                        return;
-                    } 
-                    
-                    throw exception;
+                    ConnectionState = EConnectionState.Connected;
+                    _messageLogger.PrintInfoMessage($"{SelectedPort.Name} connected!");
                 });
+
+                await ReadData();
             });
 
-            string GetErrorMessage(Exception e) => $"{SelectedPort.Name} connecting failed!{Environment.NewLine}{e.Message}";
+            string GetConnectExceptionMessage(Exception e) => $"{SelectedPort.Name} connecting failed!{Environment.NewLine}{e.GetType()}: {e.Message}";
+        }
+
+        private async Task ReadData()
+        {
+            const int bufferLength = 10000;
+            var buffer = new byte[bufferLength];
+            var spareCr = string.Empty;
+            string newline;
+
+            switch (SelectedPort.Settings.ReceivingNewline)
+            {
+                case EReceivingNewline.Crlf: newline = "\r\n"; break;
+                case EReceivingNewline.Lf: newline = "\n"; break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            while (true)
+            {
+                int bytesCount;
+                try
+                {
+                    bytesCount = await _port.BaseStream.ReadAsync(buffer, 0, bufferLength);
+                }
+                catch (Exception e)
+                {
+                    _mainThreadRunner.Run(() =>
+                    {
+                        if (_connectionState != EConnectionState.DisconnectingGracefully)
+                        {
+                            _messageLogger.PrintWarningMessage(GetReadExceptionMessage(e));
+                        }
+                    });
+                    return;
+                }
+
+                if (bytesCount <= 0)
+                {
+                    continue;
+                }
+
+                var data = spareCr + SelectedPort.Settings.Encoding.GetString(buffer, 0, bytesCount);
+
+                if (SelectedPort.Settings.ReceivingNewline == EReceivingNewline.Crlf && data.EndsWith("\r"))
+                {
+                    data = data.Remove(data.Length - 1);
+                    spareCr = "\r";
+                }
+                else
+                {
+                    spareCr = string.Empty;
+                }
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    ProcessReceivedData(data, newline);
+                }
+            }
+
+            string GetReadExceptionMessage(Exception e) => $"{SelectedPort.Name} reading failed!{Environment.NewLine}{e.GetType()}: {e.Message}";
         }
 
         public void Disconnect() => Disconnect(false);
@@ -171,18 +205,40 @@ namespace SerialMonitor.Business
                 return;
             }
 
-            try
+            ConnectionState = isFailure ? EConnectionState.DisconnectingByFailure : EConnectionState.DisconnectingGracefully;
+
+            Task.Run(async () =>
             {
-                _port.Close();
-            }
-            catch (IOException e)
-            {
-                _messageLogger.PrintErrorMessage(e.Message);
-            }
-            
-            ConnectionState = EConnectionState.NotConnected;
-            
-            _messageLogger.PrintMessage($"{SelectedPort.Name} disconnected!{Environment.NewLine}", isFailure ? EMessageType.Warning : EMessageType.Info);
+                Exception exception = null;
+
+                try
+                {
+                    _port.Close();
+                }
+                catch (Exception e)
+                {
+                    exception = e;
+                }
+
+                try
+                {
+                    await _portTask;
+                }
+                catch (Exception)
+                { }
+
+                _mainThreadRunner.Run(() =>
+                {
+                    _portTask = Task.CompletedTask;
+                    if (!isFailure && exception != null)
+                    {
+                        _messageLogger.PrintWarningMessage($"{exception.GetType()}: {exception.Message}");
+                    }
+                    var text = isFailure ? "disconnected unexpectedly!" : "disconnected!";
+                    _messageLogger.PrintMessage($"{SelectedPort.Name} {text}{Environment.NewLine}", isFailure ? EMessageType.Error : EMessageType.Info);
+                    ConnectionState = EConnectionState.Disconnected;
+                });
+            });
         }
 
         public void SendText(string text)
@@ -202,14 +258,9 @@ namespace SerialMonitor.Business
             {
                 _port.Write(data, 0, data.Length);
             }
-            catch (Exception e) when (
-                e is ArgumentNullException ||
-                e is InvalidOperationException ||
-                e is ArgumentOutOfRangeException ||
-                e is ArgumentException ||
-                e is TimeoutException)
+            catch (Exception e)
             {
-                _messageLogger.PrintErrorMessage(e.Message);
+                _messageLogger.PrintWarningMessage(e.Message);
             }
         }
 
@@ -222,11 +273,12 @@ namespace SerialMonitor.Business
 
             _usbNotification.DeviceChanged -= OnUsbDevicesChanged;
 
-            if (IsConnected)
+            try
             {
-                Disconnect(true);
+                _port.Dispose();
             }
-            _port.Dispose();
+            catch (Exception)
+            { }
             _port = null;
         }
 
@@ -236,59 +288,47 @@ namespace SerialMonitor.Business
             set => SettingsManager.SelectedPort = value;
         }
 
-        private void OnDataReceived(object sender, SerialDataReceivedEventArgs e) => _mainThreadRunner.Run(ReadData);
-
-        private void ReadData()
+        private void ProcessReceivedData(string data, string newline)
         {
-            if (!IsConnected)
+            var text = data.Replace(newline, "\r");
+            lock (_receivedTextLock)
+            {
+                if (_receivedText == null)
+                {
+                    _receivedText = text;
+                    _mainThreadRunner.Run(WriteReceivedText);
+                }
+                else
+                {
+                    _receivedText += text;
+                }
+            }
+
+            var filename = SelectedPort.Settings.OutputFilename;
+            if (!SelectedPort.Settings.OutputToFileEnabled || string.IsNullOrEmpty(filename))
             {
                 return;
             }
 
-            byte[] buffer;
             try
             {
-                var bytesToRead = _port.BytesToRead;
-                if (bytesToRead <= 0)
+                File.AppendAllText(filename, data.Replace(newline, Environment.NewLine));
+            }
+            catch (Exception e)
+            {
+                _mainThreadRunner.Run(() => _messageLogger.PrintWarningMessage($"Can't write to file: {filename}{Environment.NewLine}Exception: {e.Message}{Environment.NewLine}"));
+            }
+        }
+
+        private void WriteReceivedText()
+        {
+            lock (_receivedTextLock)
+            {
+                if (IsConnected)
                 {
-                    return;
+                    _consoleWriter.WriteText(_receivedText);
                 }
-
-                buffer = new byte[bytesToRead];
-                _port.Read(buffer, 0, bytesToRead);
-            }
-            catch (Exception e) when (
-                e is InvalidOperationException ||
-                e is ArgumentNullException ||
-                e is ArgumentOutOfRangeException ||
-                e is ArgumentException ||
-                e is TimeoutException)
-            {
-                _messageLogger.PrintErrorMessage($"{Environment.NewLine}{e.Message}");
-                Disconnect(true);
-                return;
-            }
-
-            string newline;
-            switch (SelectedPort.Settings.ReceivingNewline)
-            {
-                case EReceivingNewline.Crlf: newline = "\r\n"; break;
-                case EReceivingNewline.Lf: newline = "\n"; break;
-                default: throw new ArgumentOutOfRangeException();
-            }
-
-            var data = SelectedPort.Settings.Encoding.GetString(buffer);
-            _consoleWriter.WriteText(data.Replace(newline, "\r"));
-
-            if (!SelectedPort.Settings.OutputToFileEnabled)
-            {
-                return;
-            }
-
-            var file = SelectedPort.Settings.OutputFilename;
-            if (!string.IsNullOrEmpty(file))
-            {
-                File.AppendAllText(file, data.Replace(newline, Environment.NewLine));
+                _receivedText = null;
             }
         }
 
@@ -360,5 +400,8 @@ namespace SerialMonitor.Business
         private IConsoleWriter _consoleWriter;
         private SerialPort _port;
         private EConnectionState _connectionState;
+        private Task _portTask = Task.CompletedTask;
+        private string _receivedText;
+        private readonly object _receivedTextLock = new object();
     }
 }

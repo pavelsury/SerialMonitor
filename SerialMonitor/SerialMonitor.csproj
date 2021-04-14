@@ -49,7 +49,6 @@
     <Compile Include="ToolWindow.cs" />
     <Compile Include="CommandHelper.cs" />
     <Compile Include="SerialMonitorPackage.cs" />
-    <Compile Include="VsMainThreadRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">

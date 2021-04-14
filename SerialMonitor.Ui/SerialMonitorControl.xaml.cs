@@ -53,6 +53,12 @@ namespace SerialMonitor.Ui
                 case EMessageType.Error: brush = Brushes.Red; break;
                 default: throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
+
+            if (_lastInsertedText != null && !_lastInsertedText.EndsWith("\n"))
+            {
+                text = $"{Environment.NewLine}{text}";
+            }
+
             WriteText($"{text}{Environment.NewLine}", brush);
         }
 
@@ -73,6 +79,7 @@ namespace SerialMonitor.Ui
             }
 
             PortConsole.AppendText(text, brush, SelectedPortSettings.FontSize, SelectedPortSettings.FontStyle);
+            _lastInsertedText = text;
 
             if (IsAutoscrollEnabled)
             {
@@ -111,5 +118,7 @@ namespace SerialMonitor.Ui
                 SerialPortManager.Connect();
             }
         }
+
+        private string _lastInsertedText;
     }
 }

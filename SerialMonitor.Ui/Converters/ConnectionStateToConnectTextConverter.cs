@@ -12,9 +12,11 @@ namespace SerialMonitor.Ui.Converters
             var connectionState = (EConnectionState)value;
             switch (connectionState)
             {
-                case EConnectionState.NotConnected:
+                case EConnectionState.Disconnected:
                 case EConnectionState.ConnectingShort: return "Connect";
                 case EConnectionState.ConnectingLong: return "Connecting...";
+                case EConnectionState.DisconnectingGracefully:
+                case EConnectionState.DisconnectingByFailure:
                 case EConnectionState.Connected: return "Disconnect";
                 default: throw new ArgumentOutOfRangeException();
             }

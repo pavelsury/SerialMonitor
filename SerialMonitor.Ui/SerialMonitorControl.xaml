@@ -28,7 +28,7 @@
         </MultiBinding>
     </UserControl.Cursor>
 
-    <DockPanel LastChildFill="True" IsHitTestVisible="{Binding IsConnecting, Converter={StaticResource BoolInverterConverter}}">
+    <DockPanel LastChildFill="True" IsHitTestVisible="{Binding IsConnectionChanging, Converter={StaticResource BoolInverterConverter}}">
         <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
             <DockPanel.IsEnabled>
                 <MultiBinding Converter="{StaticResource AndConverter}">
@@ -57,14 +57,8 @@
 
             <Button Name="ConnectButton" Click="OnConnectButtonClick" Margin="5 0 5 10" Padding="10 0 10 0" Width="90"
                     Content="{Binding ConnectionState, Converter={StaticResource ConnectionStateToConnectTextConverter}}"
-                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
-                <Button.IsEnabled>
-                    <MultiBinding Converter="{StaticResource AndConverter}">
-                        <Binding Path="SettingsManager.SelectedPort.IsAvailable" FallbackValue="False"/>
-                        <Binding Path="IsConnecting" Converter="{StaticResource BoolInverterConverter}"/>
-                    </MultiBinding>
-                </Button.IsEnabled>
-            </Button>
+                    IsEnabled="{Binding SettingsManager.SelectedPort.IsAvailable, FallbackValue=False}"
+                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
 
             <Border>
                 <Border.Width>

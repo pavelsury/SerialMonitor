@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Threading;
 using SerialMonitor.Business;
 using SerialMonitor.Ui;
 
@@ -16,6 +15,6 @@ namespace TestApp
             new MainWindow { Content = serialMonitorControl }.Show();
         }
 
-        private readonly ModelFactory _modelFactory = new ModelFactory(new AppMainThreadRunner(Dispatcher.CurrentDispatcher));
+        private readonly ModelFactory _modelFactory = new ModelFactory();
     }
 }

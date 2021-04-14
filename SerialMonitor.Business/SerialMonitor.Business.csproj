@@ -59,6 +59,7 @@
     <Compile Include="IMainThreadRunner.cs" />
     <Compile Include="IMessageLogger.cs" />
     <Compile Include="IUsbNotification.cs" />
+    <Compile Include="MainThreadRunner.cs" />
     <Compile Include="MessageLogger.cs" />
     <Compile Include="ModelFactory.cs" />
     <Compile Include="NotifyPropertyChanged.cs" />
