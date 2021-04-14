@@ -11,7 +11,7 @@ namespace SerialMonitor
         public ToolWindow(ModelFactory modelFactory) : base(null)
         {
             Caption = "Serial Monitor 2";
-            var serialMonitorControl = new SerialMonitorControl { DataContext = modelFactory.SerialPortManager };
+            var serialMonitorControl = new SerialMonitorControl { DataContext = modelFactory.PortManager };
             modelFactory.SetConsoleWriter(serialMonitorControl);
             Content = serialMonitorControl;
         }

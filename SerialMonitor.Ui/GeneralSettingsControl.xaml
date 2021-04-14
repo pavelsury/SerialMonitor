@@ -13,12 +13,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/SettingsStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="SettingsStackPanel" TargetType="StackPanel">
-                <Setter Property="Margin" Value="5 5 5 5"/>
-                <Setter Property="Orientation" Value="Horizontal"/>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 

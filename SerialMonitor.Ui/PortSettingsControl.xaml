@@ -18,12 +18,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/SettingsStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="SettingsStackPanel" TargetType="StackPanel">
-                <Setter Property="Margin" Value="5 5 5 5"/>
-                <Setter Property="Orientation" Value="Horizontal"/>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -43,7 +39,7 @@
                             <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding SelectedPort}" Value="{x:Null}">
-                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Setter Property="Foreground" Value="DarkOrange"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

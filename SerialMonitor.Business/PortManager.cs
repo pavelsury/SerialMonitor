@@ -11,9 +11,9 @@ using SerialMonitor.Business.Helpers;
 
 namespace SerialMonitor.Business
 {
-    public class SerialPortManager : NotifyPropertyChanged, IDisposable
+    public class PortManager : NotifyPropertyChanged, IDisposable
     {
-        public SerialPortManager(
+        public PortManager(
             SettingsManager settingsManager,
             IMainThreadRunner mainThreadRunner,
             IMessageLogger messageLogger,

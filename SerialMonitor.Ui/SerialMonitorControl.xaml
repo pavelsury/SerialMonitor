@@ -8,7 +8,7 @@
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance business:SerialPortManager}"
+             d:DataContext="{d:DesignInstance business:PortManager}"
              Name="Control"
              Background="Transparent">
 
@@ -16,6 +16,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/TabStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -95,28 +96,6 @@
                     Background="Transparent"
                     Foreground="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static vs:CommonControlsColors.ButtonBorderBrushKey}}">
-            <TabControl.Resources>
-                    <Style TargetType="{x:Type TabItem}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type TabItem}">
-                                    <Label Name="Label"  Content="{TemplateBinding Header}" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"
-                                           BorderThickness="1"
-                                           BorderBrush="{DynamicResource {x:Static vs:CommonControlsColors.ButtonBorderBrushKey}}"/>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Label" Property="Background"
-                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveBrushKey}}"/>
-                                            <Setter TargetName="Label" Property="Foreground"
-                                                    Value="{DynamicResource {x:Static vs:ThemedDialogColors.SelectedItemActiveTextBrushKey}}"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-            </TabControl.Resources>
-
             <TabItem Header="Console">
                 <FlowDocumentScrollViewer Name="PortConsole" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <FlowDocument FontFamily="Consolas" FontSize="11"/>

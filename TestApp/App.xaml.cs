@@ -9,7 +9,7 @@ namespace TestApp
         private async void OnStartup(object sender, StartupEventArgs e)
         {
             await _modelFactory.InitializeAsync();
-            var serialMonitorControl = new SerialMonitorControl { DataContext = _modelFactory.SerialPortManager };
+            var serialMonitorControl = new SerialMonitorControl { DataContext = _modelFactory.PortManager };
             serialMonitorControl.CreateDefaultResources();
             _modelFactory.SetConsoleWriter(serialMonitorControl);
             new MainWindow { Content = serialMonitorControl }.Show();

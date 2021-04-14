@@ -62,9 +62,9 @@ namespace SerialMonitor.Ui
             WriteText($"{text}{Environment.NewLine}", brush);
         }
 
-        private SerialPortManager SerialPortManager => (SerialPortManager)DataContext;
+        private PortManager PortManager => (PortManager)DataContext;
 
-        private PortSettings SelectedPortSettings => SerialPortManager.SettingsManager.SelectedPort.Settings;
+        private PortSettings SelectedPortSettings => PortManager.SettingsManager.SelectedPort.Settings;
 
         private void WriteText(string text, SolidColorBrush brush)
         {
@@ -95,27 +95,27 @@ namespace SerialMonitor.Ui
             IsPortConsoleEmpty = true;
         }
 
-        private void OnSendButtonClick(object sender, RoutedEventArgs e) => SerialPortManager.SendText(MessageTextBox.Text);
+        private void OnSendButtonClick(object sender, RoutedEventArgs e) => PortManager.SendText(MessageTextBox.Text);
 
         private void OnMessageTextBoxKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                SerialPortManager.SendText(MessageTextBox.Text);
+                PortManager.SendText(MessageTextBox.Text);
                 MessageTextBox.Text = string.Empty;
             }
         }
 
         private void OnConnectButtonClick(object sender, RoutedEventArgs e)
         {
-            if (SerialPortManager.IsConnected)
+            if (PortManager.IsConnected)
             {
-                SerialPortManager.Disconnect();
+                PortManager.Disconnect();
             }
             else
             {
                 TabControl.SelectedIndex = 0;
-                SerialPortManager.Connect();
+                PortManager.Connect();
             }
         }
 
