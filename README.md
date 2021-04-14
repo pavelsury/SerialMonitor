@@ -11,7 +11,7 @@ Features
 - [x] Support Visual Studio color scheme.
 - [x] Redirect output from serial port to file.
 - [x] Save port settings
-- [ ] Autoconnection
+- [x] Autoconnection
 - [ ] Raw hex data visualisation
 - [ ] Pipes IPC
 - [ ] Write data from file to serial port.
