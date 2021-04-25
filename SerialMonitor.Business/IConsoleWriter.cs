@@ -4,7 +4,7 @@ namespace SerialMonitor.Business
 {
     public interface IConsoleWriter
     {
-        void WriteText(string text);
-        void WriteLine(string text, EMessageType messageType);
+        void Write(string text, EMessageType messageType);
+        void Clear();
     }
 }

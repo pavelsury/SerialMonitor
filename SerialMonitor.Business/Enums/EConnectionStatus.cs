@@ -1,6 +1,6 @@
 ﻿namespace SerialMonitor.Business.Enums
 {
-    public enum EConnectionState
+    public enum EConnectionStatus
     {
         Disconnected,
         DisconnectingGracefully,

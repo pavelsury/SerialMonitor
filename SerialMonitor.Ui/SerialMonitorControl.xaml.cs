@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using SerialMonitor.Business;
 using SerialMonitor.Business.Enums;
@@ -12,6 +13,8 @@ namespace SerialMonitor.Ui
         public SerialMonitorControl()
         {
             InitializeComponent();
+            FlowDocument.Blocks.Add(_paragraph);
+            _dataBrush = TryFindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush ?? Brushes.Black;
         }
 
         public void CreateDefaultResources()
@@ -38,28 +41,26 @@ namespace SerialMonitor.Ui
             set => SetValue(IsPortConsoleEmptyProperty, value);
         }
 
-        public void WriteText(string text)
-        {
-            WriteText(text, null);
-        }
-
-        public void WriteLine(string text, EMessageType messageType)
+        public void Write(string text, EMessageType messageType)
         {
             SolidColorBrush brush;
+
             switch (messageType)
             {
+                case EMessageType.Data: brush = _dataBrush; break;
                 case EMessageType.Info: brush = Brushes.Green; break;
                 case EMessageType.Warning: brush = Brushes.DarkOrange; break;
                 case EMessageType.Error: brush = Brushes.Red; break;
                 default: throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
 
-            if (_lastInsertedText != null && !_lastInsertedText.EndsWith("\n"))
-            {
-                text = $"{Environment.NewLine}{text}";
-            }
+            WriteText(text, brush);
+        }
 
-            WriteText($"{text}{Environment.NewLine}", brush);
+        public void Clear()
+        {
+            _paragraph.Inlines.Clear();
+            IsPortConsoleEmpty = true;
         }
 
         private PortManager PortManager => (PortManager)DataContext;
@@ -73,27 +74,22 @@ namespace SerialMonitor.Ui
                 return;
             }
 
-            if (brush == null)
+            _paragraph.Inlines.Add(new Run(text)
             {
-                brush = TryFindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush ?? Brushes.Black;
-            }
-
-            PortConsole.AppendText(text, brush, SelectedPortSettings.FontSize, SelectedPortSettings.FontStyle);
-            _lastInsertedText = text;
+                Foreground = brush,
+                FontStyle = SelectedPortSettings.FontStyle,
+                FontSize = SelectedPortSettings.FontSize
+            });
 
             if (IsAutoscrollEnabled)
             {
-                PortConsole.ScrollToEnd();
+                FlowDocumentScrollViewer.ScrollToEnd();
             }
 
             IsPortConsoleEmpty = false;
         }
 
-        private void OnClearButtonClick(object sender, RoutedEventArgs e)
-        {
-            PortConsole.Clear();
-            IsPortConsoleEmpty = true;
-        }
+        private void OnClearButtonClick(object sender, RoutedEventArgs e) => PortManager.ConsoleManager.ClearAll();
 
         private void OnSendButtonClick(object sender, RoutedEventArgs e) => PortManager.SendText(MessageTextBox.Text);
 
@@ -119,6 +115,7 @@ namespace SerialMonitor.Ui
             }
         }
 
-        private string _lastInsertedText;
+        private readonly SolidColorBrush _dataBrush;
+        private readonly Paragraph _paragraph = new Paragraph();
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
 namespace SerialMonitor.Business
@@ -20,6 +21,16 @@ namespace SerialMonitor.Business
             {
                 SetNotifyingProperty(ref _selectedPort, value);
                 AppSettings.SelectedPort = _selectedPort?.Name;
+            }
+        }
+
+        public EViewMode ViewMode
+        {
+            get => _viewMode;
+            set
+            {
+                SetNotifyingValueProperty(ref _viewMode, value);
+                AppSettings.ViewMode = _viewMode;
             }
         }
 
@@ -53,14 +64,17 @@ namespace SerialMonitor.Business
                 {
                     var serializationSettings = new JsonSerializerSettings
                     {
-                        Error = (s, e) => e.ErrorContext.Handled = e.CurrentObject is PortSettings
+                        Error = (s, e) => e.ErrorContext.Handled =
+                            e.CurrentObject is AppSettings ||
+                            e.CurrentObject is PortSettings
                     };
 
                     var appSettings = JsonConvert.DeserializeObject<AppSettings>(FileHelper.ReadAllText(_settingsFilename), serializationSettings);
                     if (appSettings != null)
                     {
-                        appSettings.PortsSettingsMap.Values.ForEach(p => p.Validate());
+                        appSettings.Validate();
                         AppSettings = appSettings;
+                        ViewMode = AppSettings.ViewMode;
                     }
                 }
                 catch (JsonException)
@@ -72,5 +86,6 @@ namespace SerialMonitor.Business
         private readonly string _settingsFilename;
 
         private PortInfo _selectedPort;
+        private EViewMode _viewMode = EViewMode.Text;
     }
 }

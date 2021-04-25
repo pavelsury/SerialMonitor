@@ -2,6 +2,7 @@
 {
     public enum EMessageType
     {
+        Data,
         Info,
         Warning,
         Error

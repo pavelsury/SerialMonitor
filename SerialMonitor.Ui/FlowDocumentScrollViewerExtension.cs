@@ -1,29 +1,10 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace SerialMonitor.Ui
 {
     public static class FlowDocumentScrollViewerExtension
     {
-        public static void Clear(this FlowDocumentScrollViewer flowDocumentScrollViewer)
-        {
-            flowDocumentScrollViewer.Document.Blocks.Clear();
-        }
-
-        public static void AppendText(this FlowDocumentScrollViewer flowDocumentScrollViewer, string data, SolidColorBrush brush, int fontSize, FontStyle fontStyle)
-        {
-            var range = new TextRange(flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd, flowDocumentScrollViewer.Document.ContentEnd.DocumentEnd)
-            {
-                Text = data.Replace(Environment.NewLine, "\r")
-            };
-            range.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
-            range.ApplyPropertyValue(TextElement.FontStyleProperty, fontStyle);
-            range.ApplyPropertyValue(TextElement.FontSizeProperty, (double)fontSize);
-        }
-
         public static void ScrollToEnd(this FlowDocumentScrollViewer flowDocumentScrollViewer)
         {
             if (VisualTreeHelper.GetChildrenCount(flowDocumentScrollViewer) == 0)

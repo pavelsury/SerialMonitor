@@ -9,15 +9,15 @@ namespace SerialMonitor.Ui.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var connectionState = (EConnectionState)value;
+            var connectionState = (EConnectionStatus)value;
             switch (connectionState)
             {
-                case EConnectionState.Disconnected:
-                case EConnectionState.ConnectingShort: return "Connect";
-                case EConnectionState.ConnectingLong: return "Connecting...";
-                case EConnectionState.DisconnectingGracefully:
-                case EConnectionState.DisconnectingByFailure:
-                case EConnectionState.Connected: return "Disconnect";
+                case EConnectionStatus.Disconnected:
+                case EConnectionStatus.ConnectingShort: return "Connect";
+                case EConnectionStatus.ConnectingLong: return "Connecting...";
+                case EConnectionStatus.DisconnectingGracefully:
+                case EConnectionStatus.DisconnectingByFailure:
+                case EConnectionStatus.Connected: return "Disconnect";
                 default: throw new ArgumentOutOfRangeException();
             }
         }

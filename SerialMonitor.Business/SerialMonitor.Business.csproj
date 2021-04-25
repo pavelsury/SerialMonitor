@@ -45,28 +45,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Enums\EConnectionState.cs" />
+    <Compile Include="DataItem.cs" />
+    <Compile Include="Enums\EConnectionStatus.cs" />
     <Compile Include="Enums\EMessageType.cs" />
     <Compile Include="Enums\EReceivingNewline.cs" />
     <Compile Include="Enums\ESendingNewline.cs" />
+    <Compile Include="Enums\EViewMode.cs" />
     <Compile Include="Helpers\EncodingJsonConverter.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\IDictionaryExtensions.cs" />
     <Compile Include="Helpers\IEnumerableExtensions.cs" />
     <Compile Include="Helpers\IListExtensions.cs" />
     <Compile Include="Helpers\KeyValuePairExtensions.cs" />
+    <Compile Include="IConnectionStatusProvider.cs" />
     <Compile Include="IConsoleWriter.cs" />
     <Compile Include="IMainThreadRunner.cs" />
-    <Compile Include="IMessageLogger.cs" />
     <Compile Include="IUsbNotification.cs" />
     <Compile Include="MainThreadRunner.cs" />
-    <Compile Include="MessageLogger.cs" />
+    <Compile Include="ConsoleManager.cs" />
     <Compile Include="ModelFactory.cs" />
     <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="PortInfo.cs" />
     <Compile Include="PortSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PortManager.cs" />
+    <Compile Include="DataManager.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="UsbNotification.cs" />
   </ItemGroup>

@@ -10,8 +10,8 @@ namespace SerialMonitor.Business
         {
             Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
             _settingsManager = new SettingsManager();
-            _messageLogger = new MessageLogger(_settingsManager);
-            PortManager = new PortManager(_settingsManager, new MainThreadRunner(Dispatcher.CurrentDispatcher), _messageLogger, _usbNotification);
+            _consoleManager = new ConsoleManager(_settingsManager);
+            PortManager = new PortManager(_settingsManager, _consoleManager, new MainThreadRunner(Dispatcher.CurrentDispatcher), _usbNotification);
         }
 
         public async Task InitializeAsync()
@@ -21,8 +21,8 @@ namespace SerialMonitor.Business
 
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
         {
-            _messageLogger.ConsoleWriter = consoleWriter;
-            PortManager.Initialize(consoleWriter);
+            _consoleManager.Initialize(consoleWriter);
+            PortManager.Initialize();
         }
 
         private void OnShutdownStarted(object sender, EventArgs e)
@@ -35,7 +35,7 @@ namespace SerialMonitor.Business
         public PortManager PortManager { get; }
 
         private readonly SettingsManager _settingsManager;
-        private readonly MessageLogger _messageLogger;
+        private readonly ConsoleManager _consoleManager;
         private readonly UsbNotification _usbNotification = new UsbNotification();
     }
 }

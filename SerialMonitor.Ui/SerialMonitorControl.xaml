@@ -7,6 +7,7 @@
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:PortManager}"
              Name="Control"
@@ -57,7 +58,7 @@
             </ComboBox>
 
             <Button Name="ConnectButton" Click="OnConnectButtonClick" Margin="5 0 5 10" Padding="10 0 10 0" Width="90"
-                    Content="{Binding ConnectionState, Converter={StaticResource ConnectionStateToConnectTextConverter}}"
+                    Content="{Binding ConnectionStatus, Converter={StaticResource ConnectionStateToConnectTextConverter}}"
                     IsEnabled="{Binding SettingsManager.SelectedPort.IsAvailable, FallbackValue=False}"
                     Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
 
@@ -67,13 +68,28 @@
                         <Binding Path="ActualWidth" ElementName="TabControl"/>
                         <Binding Path="ActualWidth" ElementName="PortComboBox"/>
                         <Binding Path="ActualWidth" ElementName="ConnectButton"/>
-                        <Binding Path="ActualWidth" ElementName="ClearConsole"/>
+                        <Binding Path="ActualWidth" ElementName="ViewStackPanel"/>
                         <Binding Path="ActualWidth" ElementName="AutoScrollToggle"/>
+                        <Binding Path="ActualWidth" ElementName="ClearConsole"/>
                         <Binding Source="30"/>
                     </MultiBinding>
                 </Border.Width>
             </Border>
-            
+
+            <StackPanel Name="ViewStackPanel" Orientation="Horizontal">
+                <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Value"
+                          Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex1}" Text="Hex 1"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex2}" Text="Hex 2"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex4}" Text="Hex 4"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex8}" Text="Hex 8"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex16}" Text="Hex 16"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex32}" Text="Hex 32"/>
+                </ComboBox>
+            </StackPanel>
+
             <CheckBox Name="AutoScrollToggle" Margin="5 0 5 10" Padding="10 0 10 0"
                       Content="Auto scroll"
                       IsChecked="{Binding IsAutoscrollEnabled, ElementName=Control}"
@@ -97,8 +113,8 @@
                     Foreground="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static vs:CommonControlsColors.ButtonBorderBrushKey}}">
             <TabItem Header="Console">
-                <FlowDocumentScrollViewer Name="PortConsole" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                    <FlowDocument FontFamily="Consolas" FontSize="11"/>
+                <FlowDocumentScrollViewer Name="FlowDocumentScrollViewer" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <FlowDocument Name="FlowDocument" FontFamily="Consolas" FontSize="11"/>
                 </FlowDocumentScrollViewer>
             </TabItem>
 
