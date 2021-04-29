@@ -29,6 +29,25 @@ namespace SerialMonitor.Ui
             Text = i.ToString()
         }).ToList();
 
+        public static void OnTextBoxLostFocus(object sender)
+        {
+            var textBox = (TextBox)sender;
+            textBox.SetCurrentValue(TextBox.TextProperty, null);
+            var bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
+            bindingExpression?.UpdateTarget();
+        }
+
+        public static void OnKeyDown(Key key)
+        {
+            if (key == Key.Enter)
+            {
+                if (Keyboard.FocusedElement is UIElement elementWithFocus)
+                {
+                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                }
+            }
+        }
+
         private SettingsManager SettingsManager => (SettingsManager)DataContext;
 
         private void OnOutputFilenameTextBoxMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -48,24 +67,9 @@ namespace SerialMonitor.Ui
             bindingExpression?.UpdateTarget();
         }
 
-        private void OnTextBoxLostFocus(object sender, RoutedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            textBox.SetCurrentValue(TextBox.TextProperty, null);
-            var bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
-            bindingExpression?.UpdateTarget();
-        }
+        public void OnTextBoxLostFocus(object sender, RoutedEventArgs e) => OnTextBoxLostFocus(sender);
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                if (Keyboard.FocusedElement is UIElement elementWithFocus)
-                {
-                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                }
-            }
-        }
+        public void OnKeyDown(object sender, KeyEventArgs e) => OnKeyDown(e.Key);
 
         private void OnResetButtonClick(object sender, RoutedEventArgs e) => SettingsManager.ResetSelectedPortSettings();
     }

@@ -232,6 +232,11 @@ namespace SerialMonitor.Business
                 default: throw new ArgumentOutOfRangeException();
             }
 
+            if (SettingsManager.AppSettings.WriteCommandToConsole)
+            {
+                ConsoleManager.PrintInfoMessage($"Sent command> {text}");
+            }
+
             var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
 
             try

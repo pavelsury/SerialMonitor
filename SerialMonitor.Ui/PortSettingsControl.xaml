@@ -9,6 +9,7 @@
              xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
              xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:rules="clr-namespace:SerialMonitor.Ui.Rules"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:SettingsManager}"
              d:DesignHeight="600" d:DesignWidth="600"
@@ -75,7 +76,7 @@
                     <ComboBox.Text>
                         <Binding Path="SelectedPort.Settings.BaudRate" Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <ui:IntPositiveRule/>
+                                <rules:IntPositiveRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </ComboBox.Text>
@@ -202,7 +203,7 @@
                     <TextBox.Text>
                         <Binding Path="SelectedPort.Settings.ReadTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <ui:IntNonnegativeRule/>
+                                <rules:IntNonnegativeRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -218,33 +219,29 @@
                     <TextBox.Text>
                         <Binding Path="SelectedPort.Settings.WriteTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <ui:IntNonnegativeRule/>
+                                <rules:IntNonnegativeRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
                 </TextBox>
             </StackPanel>
 
-            <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <CheckBox IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
-                          Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
-                          Margin="195,0,0,0">
-                    <CheckBox.Content>
-                         <!--Quick and dirty way how to make checkbox's text to be on left side--> 
-                        <Label Content="Data Terminal Ready (DTR):" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                    </CheckBox.Content>
-                </CheckBox>
-            </StackPanel>
+            <CheckBox IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
+                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                      Margin="200,5,0,0">
+                <CheckBox.Content>
+                     <!--Quick and dirty way how to make checkbox's text to be on left side--> 
+                    <Label Content="Data Terminal Ready (DTR):" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                </CheckBox.Content>
+            </CheckBox>
 
-            <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <CheckBox IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
-                          Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
-                          Margin="195,0,0,0">
-                    <CheckBox.Content>
-                        <Label Content="Enable output to file:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                    </CheckBox.Content>
-                </CheckBox>
-            </StackPanel>
+            <CheckBox IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
+                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                      Margin="200,10,0,5">
+                <CheckBox.Content>
+                    <Label Content="Enable output to file:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                </CheckBox.Content>
+            </CheckBox>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <Label Content="Record file path:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>

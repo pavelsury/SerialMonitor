@@ -10,7 +10,8 @@ namespace SerialMonitor.Business
         {
             Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
             _settingsManager = new SettingsManager();
-            _consoleManager = new ConsoleManager(_settingsManager);
+            _fileOutputManager = new FileOutputManager(_settingsManager);
+            _consoleManager = new ConsoleManager(_settingsManager, _fileOutputManager);
             PortManager = new PortManager(_settingsManager, _consoleManager, new MainThreadRunner(Dispatcher.CurrentDispatcher), _usbNotification);
         }
 
@@ -35,6 +36,7 @@ namespace SerialMonitor.Business
         public PortManager PortManager { get; }
 
         private readonly SettingsManager _settingsManager;
+        private readonly FileOutputManager _fileOutputManager;
         private readonly ConsoleManager _consoleManager;
         private readonly UsbNotification _usbNotification = new UsbNotification();
     }

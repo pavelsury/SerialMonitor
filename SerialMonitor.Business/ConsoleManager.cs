@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Text;
 using SerialMonitor.Business.Enums;
@@ -10,28 +9,29 @@ namespace SerialMonitor.Business
 {
     public class ConsoleManager
     {
-        public ConsoleManager(SettingsManager settingsManager)
+        public ConsoleManager(SettingsManager settingsManager, FileOutputManager fileOutputManager)
         {
             _settingsManager = settingsManager;
+            _fileOutputManager = fileOutputManager;
         }
 
         public void Initialize(IConsoleWriter consoleWriter)
         {
             _consoleWriter = consoleWriter;
             _settingsManager.PropertyChanged += OnSettingsChanged;
-            UpdateHexCount();
         }
 
         public void ClearAll()
         {
             _dataItems.Clear();
             ClearConsole();
+            _fileOutputManager.WriteNewlineConditionally();
         }
 
         public void Write(DataItem dataItem)
         {
             InsertDataItem(dataItem);
-            PrintToConsole(dataItem);
+            PrintToConsole(dataItem, true);
         }
 
         private void InsertDataItem(DataItem dataItem)
@@ -60,7 +60,6 @@ namespace SerialMonitor.Business
                 message += Environment.NewLine;
             }
             Write(new DataItem(message, messageType));
-            //WriteMessageToFile(message);
         }
 
         public void PrintInfoMessage(string message) => PrintMessage(message, EMessageType.Info);
@@ -69,32 +68,44 @@ namespace SerialMonitor.Business
 
         public void PrintErrorMessage(string message) => PrintMessage(message, EMessageType.Error);
 
-        private void PrintToConsole(DataItem dataItem)
+        private void PrintToConsole(DataItem dataItem, bool writeToFile)
         {
             if (dataItem.IsStatusMessage)
             {
                 var text = _isLastNewline ? dataItem.Text : $"{Environment.NewLine}{dataItem.Text}";
-                PrintToConsole(text, dataItem.MessageType);
+                PrintToConsole(text, dataItem.MessageType, writeToFile);
                 return;
             }
 
-            if (_isHexOutput)
+            switch (_settingsManager.ViewMode)
             {
-                PrintHexToConsole(dataItem.HexData);
-            }
-            else
-            {
-                PrintToConsole(dataItem.Text, EMessageType.Data);
+                case EViewMode.Text: PrintToConsole(dataItem.Text, EMessageType.Data, writeToFile); return;
+                case EViewMode.Hex: PrintHexToConsole(dataItem.HexData, writeToFile); return;
+                case EViewMode.HexFixed: PrintFixedHexToConsole(dataItem.HexData, writeToFile); return;
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void PrintHexToConsole(List<string> hexData)
+        private void PrintHexToConsole(List<string> hexData, bool writeToFile)
         {
-            if (_hexCount == 0)
+            _hexStringBuilder.Clear();
+
+            foreach (var hex in hexData)
             {
-                throw new ArgumentOutOfRangeException();
+                AppendHex(_isLastNewline, hex);
+
+                _isLastNewline = hex == "0A";
+                if (_isLastNewline)
+                {
+                    _hexStringBuilder.AppendLine();
+                }
             }
 
+            PrintToConsole(_hexStringBuilder.ToString(), EMessageType.Data, writeToFile);
+        }
+
+        private void PrintFixedHexToConsole(List<string> hexData, bool writeToFile)
+        {
             _hexStringBuilder.Clear();
             if (_isLastNewline)
             {
@@ -103,76 +114,77 @@ namespace SerialMonitor.Business
 
             foreach (var hex in hexData)
             {
-                _hexStringBuilder.Append(_currentHexCount == 0 ? hex : $" {hex}");
+                AppendHex(_currentHexCount == 0, hex);
+
                 _currentHexCount++;
 
-                if (_currentHexCount == _hexCount)
+                if (_currentHexCount == _settingsManager.HexFixedColumns)
                 {
                     _hexStringBuilder.AppendLine();
                     _currentHexCount = 0;
                 }
             }
 
-            PrintToConsole(_hexStringBuilder.ToString(), EMessageType.Data);
+            PrintToConsole(_hexStringBuilder.ToString(), EMessageType.Data, writeToFile);
         }
 
-        private void PrintToConsole(string text, EMessageType messageType)
+        private void AppendHex(bool isFirst, string hex)
+        {
+            if (!isFirst)
+            {
+                _hexStringBuilder.Append(_settingsManager.HexSeparator);
+            }
+
+            if (_settingsManager.UseHexPrefix)
+            {
+                _hexStringBuilder.Append("0x");
+            }
+
+            _hexStringBuilder.Append(hex);
+        }
+
+        private void PrintToConsole(string text, EMessageType messageType, bool writeToFile)
         {
             _isLastNewline = text.EndsWith("\n");
-            _consoleWriter?.Write(text, messageType);
-        }
-
-        private void WriteMessageToFile(string message)
-        {
-            if (_settingsManager.SelectedPort.Settings.OutputToFileEnabled)
+            _consoleWriter.Write(text, messageType);
+            if (writeToFile)
             {
-                var file = _settingsManager.SelectedPort.Settings.OutputFilename;
-
-                if (!string.IsNullOrEmpty(file))
-                {
-                    File.AppendAllText(file, $@"{message}{Environment.NewLine}");
-                }
+                _fileOutputManager.Write(text);
             }
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SettingsManager.ViewMode))
+            switch (e.PropertyName)
             {
-                ReprintAll();
+                case nameof(SettingsManager.ViewMode):
+                    ReprintAll();
+                    return;
+
+                case nameof(SettingsManager.UseHexPrefix):
+                case nameof(SettingsManager.HexSeparator):
+                    if (_settingsManager.ViewMode == EViewMode.Hex ||
+                        _settingsManager.ViewMode == EViewMode.HexFixed)
+                    {
+                        ReprintAll();
+                    }
+                    return;
+
+                case nameof(SettingsManager.HexFixedColumns):
+                    if (_settingsManager.ViewMode == EViewMode.HexFixed)
+                    {
+                        ReprintAll();
+                    }
+                    return;
             }
         }
 
         private void ReprintAll()
         {
-            if (_consoleWriter == null)
-            {
-                return;
-            }
-
-            UpdateHexCount();
             ClearConsole();
-            _dataItems.ForEach(PrintToConsole);
-        }
 
-        private void UpdateHexCount()
-        {
-            switch (_settingsManager.ViewMode)
-            {
-                case EViewMode.Text:
-                    _hexCount = 0;
-                    _isHexOutput = false;
-                    return;
-                case EViewMode.Hex1: _hexCount = 1; break;
-                case EViewMode.Hex2: _hexCount = 2; break;
-                case EViewMode.Hex4: _hexCount = 4; break;
-                case EViewMode.Hex8: _hexCount = 8; break;
-                case EViewMode.Hex16: _hexCount = 16; break;
-                case EViewMode.Hex32: _hexCount = 32; break;
-                default: throw new ArgumentOutOfRangeException();
-            }
-
-            _isHexOutput = true;
+            _dataItems.ForEach(d => PrintToConsole(d, false));
+            _fileOutputManager.WriteNewlineConditionally();
         }
 
         private void ClearConsole()
@@ -183,10 +195,9 @@ namespace SerialMonitor.Business
         }
 
         private readonly SettingsManager _settingsManager;
+        private readonly FileOutputManager _fileOutputManager;
         private IConsoleWriter _consoleWriter;
         private readonly List<DataItem> _dataItems = new List<DataItem>();
-        private bool _isHexOutput;
-        private int _hexCount;
         private int _currentHexCount;
         private readonly StringBuilder _hexStringBuilder = new StringBuilder();
         private bool _isLastNewline = true;

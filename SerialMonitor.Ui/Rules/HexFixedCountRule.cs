@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace SerialMonitor.Ui
+namespace SerialMonitor.Ui.Rules
 {
-    public class IntPositiveRule : ValidationRule
+    public class HexFixedCountRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -15,9 +15,9 @@ namespace SerialMonitor.Ui
             }
         }
 
-        private static ValidationResult ValidateValue(int baudRate)
+        private static ValidationResult ValidateValue(int value)
         {
-            return baudRate > 0 ? ValidationResult.ValidResult : InvalidResult;
+            return value >= 1 && value <= 100 ? ValidationResult.ValidResult : InvalidResult;
         }
 
         private static readonly ValidationResult InvalidResult = new ValidationResult(false, null);

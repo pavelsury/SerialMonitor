@@ -79,8 +79,9 @@
     <Compile Include="GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IntNonnegativeRule.cs" />
-    <Compile Include="IntPositiveRule.cs" />
+    <Compile Include="Rules\IntNonnegativeRule.cs" />
+    <Compile Include="Rules\IntPositiveRule.cs" />
+    <Compile Include="Rules\HexFixedCountRule.cs" />
     <Compile Include="SerialMonitorControl.xaml.cs">
       <DependentUpon>SerialMonitorControl.xaml</DependentUpon>
     </Compile>

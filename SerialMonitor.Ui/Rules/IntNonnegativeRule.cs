@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace SerialMonitor.Ui
+namespace SerialMonitor.Ui.Rules
 {
     public class IntNonnegativeRule : ValidationRule
     {
@@ -15,9 +15,9 @@ namespace SerialMonitor.Ui
             }
         }
 
-        private static ValidationResult ValidateValue(int baudRate)
+        private static ValidationResult ValidateValue(int value)
         {
-            return baudRate >= 0 ? ValidationResult.ValidResult : InvalidResult;
+            return value >= 0 ? ValidationResult.ValidResult : InvalidResult;
         }
 
         private static readonly ValidationResult InvalidResult = new ValidationResult(false, null);

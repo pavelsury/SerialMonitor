@@ -79,14 +79,10 @@
             <StackPanel Name="ViewStackPanel" Orientation="Horizontal">
                 <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Value"
-                          Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          Margin="5 0 5 10" MinWidth="125" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex1}" Text="Hex 1"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex2}" Text="Hex 2"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex4}" Text="Hex 4"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex8}" Text="Hex 8"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex16}" Text="Hex 16"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex32}" Text="Hex 32"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.Hex}" Text="Hex"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.HexFixed}" Text="Hex fixed columns"/>
                 </ComboBox>
             </StackPanel>
 
@@ -130,14 +126,7 @@
             </TabItem>
 
             <TabItem Header="General settings">
-                <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="10">
-                    <ui:GeneralSettingsControl.IsEnabled>
-                        <MultiBinding Converter="{StaticResource AndConverter}">
-                            <Binding Path="SelectedPort" Converter="{StaticResource ObjectToBoolConverter}"/>
-                            <Binding Path="DataContext.IsConnected" ElementName="Control" Converter="{StaticResource BoolInverterConverter}"/>
-                        </MultiBinding>
-                    </ui:GeneralSettingsControl.IsEnabled>
-                </ui:GeneralSettingsControl>
+                <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="10"/>
             </TabItem>
         </TabControl>
     </DockPanel>

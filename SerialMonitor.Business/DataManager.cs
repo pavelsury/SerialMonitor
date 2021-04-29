@@ -45,6 +45,7 @@ namespace SerialMonitor.Business
 
                 if (dataLength <= 0)
                 {
+                    _isSpareCr = isLastCr;
                     return;
                 }
 
@@ -83,43 +84,6 @@ namespace SerialMonitor.Business
         private PortInfo SelectedPort => _settingsManager.SelectedPort;
 
         private EConnectionStatus ConnectionStatus => _connectionStatusProvider.ConnectionStatus;
-
-        //private void ProcessReceivedData(string text, byte[] buffer, int bytesCount)
-        //{
-        //    if (string.IsNullOrEmpty(text))
-        //    {
-        //        return;
-        //    }
-
-        //    lock (_receivedTextLock)
-        //    {
-        //        if (_receivedText == null)
-        //        {
-        //            _receivedText = text;
-        //            _mainThreadRunner.Run(WriteReceivedText);
-        //        }
-        //        else
-        //        {
-        //            _receivedText += text;
-        //        }
-        //    }
-
-        //    var filename = SelectedPort.Settings.OutputFilename;
-        //    if (!SelectedPort.Settings.OutputToFileEnabled || string.IsNullOrEmpty(filename))
-        //    {
-        //        return;
-        //    }
-
-        //    try
-        //    {
-        //        var content = SelectedPort.Settings.ReceivingNewline == EReceivingNewline.Lf ? text.Replace("\n", Environment.NewLine) : text;
-        //        File.AppendAllText(filename, content);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _mainThreadRunner.Run(() => _messageLogger.PrintWarningMessage($"Can't write to file: {filename}{Environment.NewLine}Exception: {e.Message}{Environment.NewLine}"));
-        //    }
-        //}
 
         private void ProcessReceivedData()
         {

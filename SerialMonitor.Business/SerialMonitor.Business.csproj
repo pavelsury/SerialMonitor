@@ -51,6 +51,7 @@
     <Compile Include="Enums\EReceivingNewline.cs" />
     <Compile Include="Enums\ESendingNewline.cs" />
     <Compile Include="Enums\EViewMode.cs" />
+    <Compile Include="FileOutputManager.cs" />
     <Compile Include="Helpers\EncodingJsonConverter.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\IDictionaryExtensions.cs" />

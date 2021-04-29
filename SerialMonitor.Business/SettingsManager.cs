@@ -19,8 +19,8 @@ namespace SerialMonitor.Business
             get => _selectedPort;
             set
             {
+                AppSettings.SelectedPort = value?.Name;
                 SetNotifyingProperty(ref _selectedPort, value);
-                AppSettings.SelectedPort = _selectedPort?.Name;
             }
         }
 
@@ -29,8 +29,38 @@ namespace SerialMonitor.Business
             get => _viewMode;
             set
             {
+                AppSettings.ViewMode = value;
                 SetNotifyingValueProperty(ref _viewMode, value);
-                AppSettings.ViewMode = _viewMode;
+            }
+        }
+
+        public bool UseHexPrefix
+        {
+            get => _useHexPrefix;
+            set
+            {
+                AppSettings.UseHexPrefix = value;
+                SetNotifyingValueProperty(ref _useHexPrefix, value);
+            }
+        }
+
+        public string HexSeparator
+        {
+            get => _hexSeparator;
+            set
+            {
+                AppSettings.HexSeparator = value;
+                SetNotifyingProperty(ref _hexSeparator, value);
+            }
+        }
+
+        public int HexFixedColumns
+        {
+            get => _hexFixedColumns;
+            set
+            {
+                AppSettings.HexFixedColumns = value;
+                SetNotifyingValueProperty(ref _hexFixedColumns, value);
             }
         }
 
@@ -75,6 +105,9 @@ namespace SerialMonitor.Business
                         appSettings.Validate();
                         AppSettings = appSettings;
                         ViewMode = AppSettings.ViewMode;
+                        UseHexPrefix = AppSettings.UseHexPrefix;
+                        HexSeparator = AppSettings.HexSeparator;
+                        HexFixedColumns = AppSettings.HexFixedColumns;
                     }
                 }
                 catch (JsonException)
@@ -87,5 +120,8 @@ namespace SerialMonitor.Business
 
         private PortInfo _selectedPort;
         private EViewMode _viewMode = EViewMode.Text;
+        private bool _useHexPrefix;
+        private string _hexSeparator;
+        private int _hexFixedColumns;
     }
 }

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
+             xmlns:rules="clr-namespace:SerialMonitor.Ui.Rules"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance business:SettingsManager}">
@@ -19,14 +20,52 @@
     </UserControl.Resources>
 
     <WrapPanel Orientation="Vertical">
+        <CheckBox IsChecked="{Binding AppSettings.AutoconnectEnabled}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Margin="200,0,0,0">
+            <CheckBox.Content>
+                <Label Content="Connect automatically:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
+        <CheckBox IsChecked="{Binding AppSettings.WriteCommandToConsole}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Margin="200,10,0,0">
+            <CheckBox.Content>
+                <Label Content="Write command to console:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
+        <CheckBox IsChecked="{Binding UseHexPrefix}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Margin="200,10,0,0">
+            <CheckBox.Content>
+                <Label Content="Use 0x hex prefix:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <CheckBox IsChecked="{Binding AppSettings.AutoconnectEnabled}" VerticalAlignment="Center"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
-                      Margin="195,0,0,0">
-                <CheckBox.Content>
-                    <Label Content="Connect automatically:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                </CheckBox.Content>
-            </CheckBox>
+            <Label Content="Hex separator:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <TextBox MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                     Text="{Binding HexSeparator, Mode=TwoWay}"
+                     KeyDown="OnKeyDown"
+                     VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource SettingsStackPanel}">
+            <Label Content="Hex fixed columns:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <TextBox MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                     LostFocus="OnTextBoxLostFocus"
+                     KeyDown="OnKeyDown"
+                     VerticalContentAlignment="Center">
+                <TextBox.Text>
+                    <Binding Path="HexFixedColumns" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <rules:HexFixedCountRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </StackPanel>
     </WrapPanel>
 </UserControl>
