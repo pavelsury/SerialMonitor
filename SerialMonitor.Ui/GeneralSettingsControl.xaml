@@ -6,6 +6,7 @@
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:rules="clr-namespace:SerialMonitor.Ui.Rules"
+             xmlns:ui="clr-namespace:SerialMonitor.Ui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance business:SettingsManager}">
@@ -16,6 +17,8 @@
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/SettingsStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <rules:HexFixedCountRule x:Key="HexFixedCountRule"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -36,7 +39,7 @@
             </CheckBox.Content>
         </CheckBox>
 
-        <CheckBox IsChecked="{Binding UseHexPrefix}" VerticalAlignment="Center"
+        <CheckBox IsChecked="{Binding HexPrefixEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                   Margin="200,10,0,0">
             <CheckBox.Content>
@@ -46,26 +49,17 @@
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Hex separator:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <TextBox MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
-                     Text="{Binding HexSeparator, Mode=TwoWay}"
-                     KeyDown="OnKeyDown"
-                     VerticalContentAlignment="Center"/>
+            <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                          TextEx="{Binding HexSeparator}"
+                          VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Hex fixed columns:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <TextBox MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
-                     LostFocus="OnTextBoxLostFocus"
-                     KeyDown="OnKeyDown"
-                     VerticalContentAlignment="Center">
-                <TextBox.Text>
-                    <Binding Path="HexFixedColumns" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <rules:HexFixedCountRule/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
+            <ui:TextBoxEx x:Name="HexFixedColumnsTextBox" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                          TextEx="{Binding HexFixedColumns}"
+                          ValidationRule="{StaticResource HexFixedCountRule}"
+                          VerticalContentAlignment="Center"/>
         </StackPanel>
     </WrapPanel>
 </UserControl>

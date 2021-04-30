@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Controls;
 
 namespace SerialMonitor.Ui
 {
@@ -10,9 +8,5 @@ namespace SerialMonitor.Ui
         {
             InitializeComponent();
         }
-
-        private void OnTextBoxLostFocus(object sender, RoutedEventArgs e) => PortSettingsControl.OnTextBoxLostFocus(sender);
-
-        private void OnKeyDown(object sender, KeyEventArgs e) => PortSettingsControl.OnKeyDown(e.Key);
     }
 }

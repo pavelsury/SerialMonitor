@@ -34,13 +34,13 @@ namespace SerialMonitor.Business
             }
         }
 
-        public bool UseHexPrefix
+        public bool HexPrefixEnabled
         {
-            get => _useHexPrefix;
+            get => _hexPrefixEnabled;
             set
             {
-                AppSettings.UseHexPrefix = value;
-                SetNotifyingValueProperty(ref _useHexPrefix, value);
+                AppSettings.HexPrefixEnabled = value;
+                SetNotifyingValueProperty(ref _hexPrefixEnabled, value);
             }
         }
 
@@ -105,7 +105,7 @@ namespace SerialMonitor.Business
                         appSettings.Validate();
                         AppSettings = appSettings;
                         ViewMode = AppSettings.ViewMode;
-                        UseHexPrefix = AppSettings.UseHexPrefix;
+                        HexPrefixEnabled = AppSettings.HexPrefixEnabled;
                         HexSeparator = AppSettings.HexSeparator;
                         HexFixedColumns = AppSettings.HexFixedColumns;
                     }
@@ -120,7 +120,7 @@ namespace SerialMonitor.Business
 
         private PortInfo _selectedPort;
         private EViewMode _viewMode = EViewMode.Text;
-        private bool _useHexPrefix;
+        private bool _hexPrefixEnabled;
         private string _hexSeparator;
         private int _hexFixedColumns;
     }

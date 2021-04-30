@@ -11,7 +11,7 @@ namespace SerialMonitor.Business
         public string SelectedPort { get; set; }
         public bool AutoconnectEnabled { get; set; }
         public bool WriteCommandToConsole { get; set; }
-        public bool UseHexPrefix { get; set; }
+        public bool HexPrefixEnabled { get; set; }
         public string HexSeparator { get; set; } = " ";
         public int HexFixedColumns { get; set; } = DefaultHexFixedColumns;
 
@@ -33,6 +33,6 @@ namespace SerialMonitor.Business
             }
         }
 
-        private const int DefaultHexFixedColumns = 8;
+        public const int DefaultHexFixedColumns = 8;
     }
 }

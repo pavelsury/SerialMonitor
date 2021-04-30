@@ -21,6 +21,8 @@
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/SettingsStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <rules:IntNonnegativeRule x:Key="IntNonnegativeRule"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -196,34 +198,18 @@
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <Label Content="Read Timeout:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <TextBox MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
-                         LostFocus="OnTextBoxLostFocus"
-                         KeyDown="OnKeyDown"
-                         VerticalContentAlignment="Center">
-                    <TextBox.Text>
-                        <Binding Path="SelectedPort.Settings.ReadTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:IntNonnegativeRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                              TextEx="{Binding SelectedPort.Settings.ReadTimeoutMs}"
+                              ValidationRule="{StaticResource IntNonnegativeRule}"
+                              VerticalContentAlignment="Center"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <Label Content="Write Timeout:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <TextBox MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
-                         LostFocus="OnTextBoxLostFocus"
-                         KeyDown="OnKeyDown"
-                         VerticalContentAlignment="Center">
-                    <TextBox.Text>
-                        <Binding Path="SelectedPort.Settings.WriteTimeoutMs" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:IntNonnegativeRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                              TextEx="{Binding SelectedPort.Settings.WriteTimeoutMs}"
+                              ValidationRule="{StaticResource IntNonnegativeRule}"
+                              VerticalContentAlignment="Center"/>
             </StackPanel>
 
             <CheckBox IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"

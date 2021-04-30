@@ -135,7 +135,7 @@ namespace SerialMonitor.Business
                 _hexStringBuilder.Append(_settingsManager.HexSeparator);
             }
 
-            if (_settingsManager.UseHexPrefix)
+            if (_settingsManager.HexPrefixEnabled)
             {
                 _hexStringBuilder.Append("0x");
             }
@@ -161,7 +161,7 @@ namespace SerialMonitor.Business
                     ReprintAll();
                     return;
 
-                case nameof(SettingsManager.UseHexPrefix):
+                case nameof(SettingsManager.HexPrefixEnabled):
                 case nameof(SettingsManager.HexSeparator):
                     if (_settingsManager.ViewMode == EViewMode.Hex ||
                         _settingsManager.ViewMode == EViewMode.HexFixed)

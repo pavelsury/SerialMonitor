@@ -29,25 +29,6 @@ namespace SerialMonitor.Ui
             Text = i.ToString()
         }).ToList();
 
-        public static void OnTextBoxLostFocus(object sender)
-        {
-            var textBox = (TextBox)sender;
-            textBox.SetCurrentValue(TextBox.TextProperty, null);
-            var bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
-            bindingExpression?.UpdateTarget();
-        }
-
-        public static void OnKeyDown(Key key)
-        {
-            if (key == Key.Enter)
-            {
-                if (Keyboard.FocusedElement is UIElement elementWithFocus)
-                {
-                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                }
-            }
-        }
-
         private SettingsManager SettingsManager => (SettingsManager)DataContext;
 
         private void OnOutputFilenameTextBoxMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -63,13 +44,19 @@ namespace SerialMonitor.Ui
         {
             var comboBox = (ComboBox)sender;
             comboBox.SetCurrentValue(ComboBox.TextProperty, null);
-            var bindingExpression = comboBox.GetBindingExpression(ComboBox.TextProperty);
-            bindingExpression?.UpdateTarget();
+            comboBox.GetBindingExpression(ComboBox.TextProperty)?.UpdateTarget();
         }
 
-        public void OnTextBoxLostFocus(object sender, RoutedEventArgs e) => OnTextBoxLostFocus(sender);
-
-        public void OnKeyDown(object sender, KeyEventArgs e) => OnKeyDown(e.Key);
+        public void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (Keyboard.FocusedElement is UIElement elementWithFocus)
+                {
+                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                }
+            }
+        }
 
         private void OnResetButtonClick(object sender, RoutedEventArgs e) => SettingsManager.ResetSelectedPortSettings();
     }
