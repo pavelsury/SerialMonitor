@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
+using SerialMonitor.Business;
 
 namespace SerialMonitor.Ui.Rules
 {
@@ -17,7 +18,7 @@ namespace SerialMonitor.Ui.Rules
 
         private static ValidationResult ValidateValue(int value)
         {
-            return value >= 1 && value <= 100 ? ValidationResult.ValidResult : InvalidResult;
+            return value >= AppSettings.DefaultHexFixedColumnsMin && value <= AppSettings.DefaultHexFixedColumnsMax ? ValidationResult.ValidResult : InvalidResult;
         }
 
         private static readonly ValidationResult InvalidResult = new ValidationResult(false, null);

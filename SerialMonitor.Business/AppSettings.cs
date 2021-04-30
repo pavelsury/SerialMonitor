@@ -27,12 +27,14 @@ namespace SerialMonitor.Business
                 HexSeparator = " ";
             }
 
-            if (HexFixedColumns < 1 || HexFixedColumns > 100)
+            if (HexFixedColumns < DefaultHexFixedColumnsMin || HexFixedColumns > DefaultHexFixedColumnsMax)
             {
                 HexFixedColumns = DefaultHexFixedColumns;
             }
         }
 
         public const int DefaultHexFixedColumns = 8;
+        public const int DefaultHexFixedColumnsMin = 1;
+        public const int DefaultHexFixedColumnsMax = 100;
     }
 }
