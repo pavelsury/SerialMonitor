@@ -81,7 +81,7 @@ namespace SerialMonitor.Business
             {
                 case EViewMode.Text: PrintToConsole(dataItem.Text, EMessageType.Data, writeToFile); return;
                 case EViewMode.Hex: PrintHexToConsole(dataItem.HexData, writeToFile); return;
-                case EViewMode.HexFixed: PrintFixedHexToConsole(dataItem.HexData, writeToFile); return;
+                case EViewMode.HexColumns: PrintFixedHexToConsole(dataItem.HexData, writeToFile); return;
                 default: throw new ArgumentOutOfRangeException();
             }
         }
@@ -164,14 +164,14 @@ namespace SerialMonitor.Business
                 case nameof(SettingsManager.HexPrefixEnabled):
                 case nameof(SettingsManager.HexSeparator):
                     if (_settingsManager.ViewMode == EViewMode.Hex ||
-                        _settingsManager.ViewMode == EViewMode.HexFixed)
+                        _settingsManager.ViewMode == EViewMode.HexColumns)
                     {
                         ReprintAll();
                     }
                     return;
 
                 case nameof(SettingsManager.HexFixedColumns):
-                    if (_settingsManager.ViewMode == EViewMode.HexFixed)
+                    if (_settingsManager.ViewMode == EViewMode.HexColumns)
                     {
                         ReprintAll();
                     }

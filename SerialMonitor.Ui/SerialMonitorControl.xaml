@@ -83,7 +83,7 @@
                           Margin="5 0 5 10" MinWidth="90" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Hex}" Text="Hex"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.HexFixed}" Text="Hex columns"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.HexColumns}" Text="Hex columns"/>
                 </ComboBox>
             </StackPanel>
 

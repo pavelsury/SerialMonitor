@@ -4,6 +4,6 @@
     {
         Text,
         Hex,
-        HexFixed
+        HexColumns
     }
 }
