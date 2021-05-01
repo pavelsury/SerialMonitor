@@ -85,13 +85,13 @@ namespace SerialMonitor.Business
         {
             return Task.Run(() =>
             {
-                if (!File.Exists(_settingsFilename))
-                {
-                    return;
-                }
-
                 try
                 {
+                    if (!File.Exists(_settingsFilename))
+                    {
+                        return;
+                    }
+
                     var serializationSettings = new JsonSerializerSettings
                     {
                         Error = (s, e) => e.ErrorContext.Handled =
@@ -104,14 +104,17 @@ namespace SerialMonitor.Business
                     {
                         appSettings.Validate();
                         AppSettings = appSettings;
-                        ViewMode = AppSettings.ViewMode;
-                        HexPrefixEnabled = AppSettings.HexPrefixEnabled;
-                        HexSeparator = AppSettings.HexSeparator;
-                        HexFixedColumns = AppSettings.HexFixedColumns;
                     }
                 }
                 catch (JsonException)
                 { }
+                finally
+                {
+                    ViewMode = AppSettings.ViewMode;
+                    HexPrefixEnabled = AppSettings.HexPrefixEnabled;
+                    HexSeparator = AppSettings.HexSeparator;
+                    HexFixedColumns = AppSettings.HexFixedColumns;
+                }
             });
         }
 

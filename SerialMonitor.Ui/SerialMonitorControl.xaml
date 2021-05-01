@@ -38,8 +38,9 @@
                     <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
                 </MultiBinding>
             </DockPanel.IsEnabled>
-            <Button Name="SendButton" Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <TextBox Name="MessageTextBox" KeyUp="OnMessageTextBoxKeyUp" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
+            <Label Content="Command:" DockPanel.Dock="Left" Padding="5,0,5,0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <Button Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+            <TextBox Name="MessageTextBox" KeyUp="OnMessageTextBoxKeyUp" VerticalContentAlignment="Center" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
         </DockPanel>
 
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
