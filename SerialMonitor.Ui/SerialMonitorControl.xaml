@@ -80,10 +80,10 @@
             <StackPanel Name="ViewStackPanel" Orientation="Horizontal">
                 <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Value"
-                          Margin="5 0 5 10" MinWidth="125" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          Margin="5 0 5 10" MinWidth="90" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Hex}" Text="Hex"/>
-                    <ui:ComboPair Value="{x:Static enums:EViewMode.HexFixed}" Text="Hex fixed columns"/>
+                    <ui:ComboPair Value="{x:Static enums:EViewMode.HexFixed}" Text="Hex columns"/>
                 </ComboBox>
             </StackPanel>
 

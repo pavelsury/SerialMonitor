@@ -55,7 +55,7 @@
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Hex fixed columns:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <Label Content="Hex columns:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
             <ui:TextBoxEx x:Name="HexFixedColumnsTextBox" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding HexFixedColumns}"
                           ValidationRule="{StaticResource HexFixedCountRule}"
