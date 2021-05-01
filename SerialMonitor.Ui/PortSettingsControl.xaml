@@ -217,7 +217,7 @@
                       Margin="200,5,0,0">
                 <CheckBox.Content>
                      <!--Quick and dirty way how to make checkbox's text to be on left side--> 
-                    <Label Content="Data Terminal Ready (DTR):" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                    <Label Content="Data Terminal Ready (DTR):" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </CheckBox.Content>
             </CheckBox>
 
@@ -225,7 +225,7 @@
                       Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                       Margin="200,10,0,5">
                 <CheckBox.Content>
-                    <Label Content="Enable output to file:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                    <Label Content="Enable output to file:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </CheckBox.Content>
             </CheckBox>
 

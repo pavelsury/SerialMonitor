@@ -27,7 +27,7 @@
                   Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                   Margin="200,0,0,0">
             <CheckBox.Content>
-                <Label Content="Connect automatically:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Connect automatically:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
@@ -35,7 +35,7 @@
                   Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                   Margin="200,10,0,0">
             <CheckBox.Content>
-                <Label Content="Write command to console:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Write command to console:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
@@ -43,7 +43,7 @@
                   Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                   Margin="200,10,0,0">
             <CheckBox.Content>
-                <Label Content="Use 0x hex prefix:" Margin="-210,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Hex 0x prefix:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
