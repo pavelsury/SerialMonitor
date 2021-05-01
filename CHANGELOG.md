@@ -2,6 +2,12 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.6.0 (1.5.2021)
+### Added
+-   Hex data view
+### Changed
+-   Small fixes
+
 ## v1.5.0 (14.4.2021)
 ### Added
 -   Autoconnection

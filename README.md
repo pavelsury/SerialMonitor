@@ -12,6 +12,6 @@ Features
 - [x] Redirect output from serial port to file.
 - [x] Save port settings
 - [x] Autoconnection
-- [ ] Raw hex data visualisation
+- [x] Hex data view
 - [ ] Pipes IPC
 - [ ] Write data from file to serial port.
