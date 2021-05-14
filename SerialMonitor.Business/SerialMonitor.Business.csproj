@@ -66,6 +66,7 @@
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="ModelFactory.cs" />
     <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="PipeManager.cs" />
     <Compile Include="PortInfo.cs" />
     <Compile Include="PortSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

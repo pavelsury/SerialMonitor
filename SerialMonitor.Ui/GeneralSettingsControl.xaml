@@ -39,9 +39,17 @@
             </CheckBox.Content>
         </CheckBox>
 
-        <CheckBox IsChecked="{Binding HexPrefixEnabled}" VerticalAlignment="Center"
+        <CheckBox IsChecked="{Binding PipeEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                   Margin="200,10,0,0">
+            <CheckBox.Content>
+                <Label Content="Pipe IPC:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
+        <CheckBox IsChecked="{Binding HexPrefixEnabled}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Margin="200,10,0,5">
             <CheckBox.Content>
                 <Label Content="Hex 0x prefix:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>

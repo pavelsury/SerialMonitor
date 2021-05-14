@@ -54,6 +54,16 @@ namespace SerialMonitor.Business
             }
         }
 
+        public bool PipeEnabled
+        {
+            get => _pipeEnabled;
+            set
+            {
+                AppSettings.PipeEnabled = value;
+                SetNotifyingValueProperty(ref _pipeEnabled, value);
+            }
+        }
+
         public int HexFixedColumns
         {
             get => _hexFixedColumns;
@@ -114,6 +124,7 @@ namespace SerialMonitor.Business
                     HexPrefixEnabled = AppSettings.HexPrefixEnabled;
                     HexSeparator = AppSettings.HexSeparator;
                     HexFixedColumns = AppSettings.HexFixedColumns;
+                    PipeEnabled = AppSettings.PipeEnabled;
                 }
             });
         }
@@ -126,5 +137,6 @@ namespace SerialMonitor.Business
         private bool _hexPrefixEnabled;
         private string _hexSeparator;
         private int _hexFixedColumns;
+        private bool _pipeEnabled;
     }
 }

@@ -14,6 +14,7 @@ namespace SerialMonitor.Business
         public bool HexPrefixEnabled { get; set; }
         public string HexSeparator { get; set; } = " ";
         public int HexFixedColumns { get; set; } = DefaultHexFixedColumns;
+        public bool PipeEnabled { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public EViewMode ViewMode { get; set; } = EViewMode.Text;
