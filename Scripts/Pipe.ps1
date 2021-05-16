@@ -18,4 +18,8 @@ function Send-NamedPipeMessage
     $pipe.Dispose()
 }
 
-Send-NamedPipeMessage -PipeName "SerialMonitorPipe$portName" -Message $message
+try {
+    Send-NamedPipeMessage -PipeName "SerialMonitorPipe$portName" -Message $message
+} catch {
+    exit 1
+}
