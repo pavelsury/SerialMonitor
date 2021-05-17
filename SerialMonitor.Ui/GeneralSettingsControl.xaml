@@ -31,7 +31,15 @@
             </CheckBox.Content>
         </CheckBox>
 
-        <CheckBox IsChecked="{Binding AppSettings.WriteCommandToConsole}" VerticalAlignment="Center"
+        <CheckBox IsChecked="{Binding WriteMessageToConsole}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Margin="200,10,0,0">
+            <CheckBox.Content>
+                <Label Content="Write message to console:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
+        <CheckBox IsChecked="{Binding WriteCommandToConsole}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
                   Margin="200,10,0,0">
             <CheckBox.Content>

@@ -29,7 +29,7 @@ namespace SerialMonitor.Business
             }
         }
 
-        public void WriteNewlineConditionally()
+        public void EnsureNewline()
         {
             if (!_isLastNewline)
             {

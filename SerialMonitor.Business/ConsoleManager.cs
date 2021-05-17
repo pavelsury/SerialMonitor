@@ -25,7 +25,7 @@ namespace SerialMonitor.Business
         {
             _dataItems.Clear();
             ClearConsole();
-            _fileOutputManager.WriteNewlineConditionally();
+            _fileOutputManager.EnsureNewline();
         }
 
         public void Write(DataItem dataItem)
@@ -63,6 +63,7 @@ namespace SerialMonitor.Business
         }
 
         public void PrintInfoMessage(string message) => PrintMessage(message, EMessageType.Info);
+        public void PrintCommand(string message) => PrintMessage(message, EMessageType.Command);
 
         public void PrintWarningMessage(string message) => PrintMessage(message, EMessageType.Warning);
 
@@ -70,20 +71,45 @@ namespace SerialMonitor.Business
 
         private void PrintToConsole(DataItem dataItem, bool writeToFile)
         {
-            if (dataItem.IsStatusMessage)
+            if (dataItem.MessageType == EMessageType.Data)
             {
-                var text = _isLastNewline ? dataItem.Text : $"{Environment.NewLine}{dataItem.Text}";
-                PrintToConsole(text, dataItem.MessageType, writeToFile);
-                return;
+                switch (_settingsManager.ViewMode)
+                {
+                    case EViewMode.Text:
+                        PrintToConsole(dataItem.Text, EMessageType.Data, writeToFile);
+                        return;
+
+                    case EViewMode.Hex:
+                        PrintHexToConsole(dataItem.HexData, writeToFile);
+                        return;
+                    
+                    case EViewMode.HexColumns:
+                        PrintFixedHexToConsole(dataItem.HexData, writeToFile);
+                        return;
+                    
+                    default: throw new ArgumentOutOfRangeException();
+                }
             }
 
-            switch (_settingsManager.ViewMode)
+            if (dataItem.MessageType == EMessageType.Command)
             {
-                case EViewMode.Text: PrintToConsole(dataItem.Text, EMessageType.Data, writeToFile); return;
-                case EViewMode.Hex: PrintHexToConsole(dataItem.HexData, writeToFile); return;
-                case EViewMode.HexColumns: PrintFixedHexToConsole(dataItem.HexData, writeToFile); return;
-                default: throw new ArgumentOutOfRangeException();
+                if (!_settingsManager.AppSettings.WriteCommandToConsole)
+                {
+                    EnsureNewline(writeToFile);
+                    return;
+                }
             }
+            else
+            {
+                if (!_settingsManager.AppSettings.WriteMessageToConsole)
+                {
+                    EnsureNewline(writeToFile);
+                    return;
+                }
+            }
+
+            var text = _isLastNewline ? dataItem.Text : $"{Environment.NewLine}{dataItem.Text}";
+            PrintToConsole(text, dataItem.MessageType, writeToFile);
         }
 
         private void PrintHexToConsole(List<string> hexData, bool writeToFile)
@@ -158,6 +184,8 @@ namespace SerialMonitor.Business
             switch (e.PropertyName)
             {
                 case nameof(SettingsManager.ViewMode):
+                case nameof(SettingsManager.WriteMessageToConsole):
+                case nameof(SettingsManager.WriteCommandToConsole):
                     ReprintAll();
                     return;
 
@@ -184,7 +212,15 @@ namespace SerialMonitor.Business
             ClearConsole();
 
             _dataItems.ForEach(d => PrintToConsole(d, false));
-            _fileOutputManager.WriteNewlineConditionally();
+            _fileOutputManager.EnsureNewline();
+        }
+
+        public void EnsureNewline(bool writeToFile)
+        {
+            if (!_isLastNewline)
+            {
+                PrintToConsole(Environment.NewLine, EMessageType.Info, writeToFile);
+            }
         }
 
         private void ClearConsole()

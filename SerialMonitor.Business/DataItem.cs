@@ -28,7 +28,6 @@ namespace SerialMonitor.Business
         }
 
         public EMessageType MessageType { get; }
-        public bool IsStatusMessage => MessageType != EMessageType.Data;
 
         public List<byte> Data { get; }
 

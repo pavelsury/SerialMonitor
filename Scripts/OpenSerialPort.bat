@@ -1,4 +1,4 @@
 @echo off
 set PortToOpen=%1
-set THIS_PATH=%~dp0\
-powershell -ExecutionPolicy Bypass -File "%THIS_PATH%pipe.ps1" %PortToOpen% connect
+set ThisPath=%~dp0
+powershell -ExecutionPolicy Bypass -File "%ThisPath%\pipe.ps1" %PortToOpen% connect

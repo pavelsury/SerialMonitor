@@ -10,6 +10,7 @@ namespace SerialMonitor.Business
     {
         public string SelectedPort { get; set; }
         public bool AutoconnectEnabled { get; set; }
+        public bool WriteMessageToConsole { get; set; } = true;
         public bool WriteCommandToConsole { get; set; }
         public bool HexPrefixEnabled { get; set; }
         public string HexSeparator { get; set; } = " ";
