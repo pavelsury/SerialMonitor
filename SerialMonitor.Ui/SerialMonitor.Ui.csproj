@@ -48,7 +48,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutControl.xaml.cs">
+      <DependentUpon>AboutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextBoxEx.cs" />
+    <Page Include="AboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Converters\Converters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -2,5 +2,6 @@
 /.vs/
 /bin/
 /obj/
+/_deploy/
 *.csproj.user
 Thumbs.db

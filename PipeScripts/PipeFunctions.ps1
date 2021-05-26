@@ -1,8 +1,33 @@
-param($portName, $message)
+function Open-SerialMonitorPort
+{
+    Param($PortName)
+    Send-SerialMonitorMessage -PortName $PortName -Message connect
+}
+
+function Close-SerialMonitorPort
+{
+    param($PortName)
+    Send-SerialMonitorMessage -PortName $PortName -Message disconnect
+}
+
+function Send-SerialMonitorMessage
+{
+    Param($PortName, $Message)
+    
+    Try
+    {
+        Send-NamedPipeMessage -PipeName "SerialMonitorPipe$PortName" -Message $Message
+    }
+    Catch
+    {
+        Write-Output $_.Exception.Message
+        exit 1
+    }
+}
 
 function Send-NamedPipeMessage
 {
-    param(
+    Param(
     [String]$PipeName,           # The named pipe to send the message on.
     [string]$Message,            # The message to send the named pipe on.
     [int]$ConnectTimeout = 1000  # The number of milliseconds before the connection times out
@@ -16,10 +41,4 @@ function Send-NamedPipeMessage
     $pipe.Write($bRequest, 0, $bRequest.Length); 
     $pipe.WaitForPipeDrain();
     $pipe.Dispose()
-}
-
-try {
-    Send-NamedPipeMessage -PipeName "SerialMonitorPipe$portName" -Message $message
-} catch {
-    exit 1
 }

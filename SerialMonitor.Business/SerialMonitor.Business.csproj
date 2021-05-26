@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="AppVersion.cs" />
     <Compile Include="DataItem.cs" />
     <Compile Include="Enums\EConnectionStatus.cs" />
     <Compile Include="Enums\EMessageType.cs" />

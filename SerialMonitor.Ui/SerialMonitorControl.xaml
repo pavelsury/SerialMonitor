@@ -129,6 +129,10 @@
             <TabItem Header="General settings">
                 <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="10"/>
             </TabItem>
+
+            <TabItem Header="About">
+                <ui:AboutControl Margin="10"/>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </UserControl>
