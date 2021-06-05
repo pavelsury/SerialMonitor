@@ -1,17 +1,14 @@
 # SerialMonitor2
-This is a fork of Egor Grushko's SerialMonitor extension:
+This is a fork of Egor Grushko's SerialMonitor extension.\
+This Visual Studio extension allows you to debug programs that work with serial port.
 
-This extension for Visual Studio allows you debug programs that work with serial port.
-
-Features
-- [x] Read data from serial port.
-- [x] Write data to serial port.
-- [x] A lot of settings.
-- [x] Userfriendly interface.
-- [x] Support Visual Studio color scheme.
-- [x] Redirect output from serial port to file.
-- [x] Save port settings
-- [x] Autoconnection
-- [x] Hex data view
-- [ ] Pipes IPC
-- [ ] Write data from file to serial port.
+## Features
+- Read data from serial port.
+- Write data to serial port.
+- A lot of settings.
+- Userfriendly interface.
+- Support Visual Studio color scheme.
+- Redirect output from serial port to file.
+- Save port settings
+- Autoconnection
+- Hex data view
