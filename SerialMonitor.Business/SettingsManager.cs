@@ -49,7 +49,7 @@ namespace SerialMonitor.Business
             get => _writeCommandToConsole;
             set
             {
-                AppSettings.WriteCommandToConsole = true;
+                AppSettings.WriteCommandToConsole = value;
                 SetNotifyingValueProperty(ref _writeCommandToConsole, value);
             }
         }
@@ -156,8 +156,8 @@ namespace SerialMonitor.Business
 
         private PortInfo _selectedPort;
         private EViewMode _viewMode = EViewMode.Text;
-        private bool _writeCommandToConsole;
         private bool _writeMessageToConsole;
+        private bool _writeCommandToConsole;
         private bool _hexPrefixEnabled;
         private string _hexSeparator;
         private int _hexFixedColumns;

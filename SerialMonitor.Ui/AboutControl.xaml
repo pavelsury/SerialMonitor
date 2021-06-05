@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="Control">
@@ -15,20 +17,38 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <FlowDocumentScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-            <FlowDocument FontFamily="Consolas" PagePadding="0,0,10,0">
+        <FlowDocumentScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"
+                                  Foreground="{DynamicResource {x:Static platformUi:EnvironmentColors.ToolWindowTextBrushKey}}">
+            <FlowDocument FontFamily="Consolas"
+                          PagePadding="0,0,10,0"
+                          TextAlignment="Left">
                 <Paragraph Margin="0">
                     <Run FontSize="16">Serial Monitor 2</Run>
                 </Paragraph>
-                <Paragraph Margin="0,4,0,0" FontSize="12">
+                
+                <Paragraph Margin="0,6,0,0" FontSize="12">
                     <Run>Version:</Run>
                     <Run Text="{x:Static business:AppVersion.Version}"/>
                     <LineBreak/>
                     <Run>GitHub:</Run>
                     <Hyperlink ToolTip="https://github.com/pavelsury/SerialMonitor2"
                                NavigateUri="https://github.com/pavelsury/SerialMonitor2"
+                               Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                                RequestNavigate="OnRequestNavigate">github.com/pavelsury/SerialMonitor2</Hyperlink>
                 </Paragraph>
+
+                <Paragraph Margin="0,20,0,0" FontSize="12">
+                    <Run FontWeight="Bold">Releases</Run>
+                    <LineBreak/>
+                    <Run>1.6.0 - Hex data view + small fixes</Run>
+                    <LineBreak/>
+                    <Run>1.5.0 - Autoconnection + port reading refactoring</Run>
+                    <LineBreak/>
+                    <Run>1.4.0 - Port settings save + big refactoring</Run>
+                    <LineBreak/>
+                    <Run>1.3.0 - Rebuild extension for VS2017 &amp; VS2019 + add font style settings</Run>
+                </Paragraph>
+                
                 <Paragraph Margin="0,20,0,0" FontSize="12">
                     <Run FontWeight="Bold">Notes</Run>
                     <LineBreak/>
@@ -40,6 +60,7 @@
                     <Run>To give it a try, first download all scripts from</Run>
                     <Hyperlink NavigateUri="{Binding ScriptsLink, ElementName=Control}"
                                ToolTip="{Binding ScriptsLink, ElementName=Control}"
+                               Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                                RequestNavigate="OnRequestNavigate">here</Hyperlink><Run>.</Run>
                     <LineBreak/>
                     <Run>Then open command line and type 'OpenSerialPort COM3' or 'CloseSerialPort COM3' where COM3 is an example of a port which is currently selected in this Serial Monitor 2 extension.</Run>
@@ -51,8 +72,10 @@
         </FlowDocumentScrollViewer>
 
         <TextBox Grid.Row="1" Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat='Copyright © {0:yyyy} Pavel Surý &amp; Egor Grushko', Mode=OneWay}"
+                 Background="Transparent"
                  IsReadOnly="True"
                  BorderThickness="0"
-                 Margin="0,5,0,0"/>
+                 Margin="0,5,0,0"
+                 Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"/>
     </Grid>
 </UserControl>
