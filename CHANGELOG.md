@@ -2,6 +2,12 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.7.0 (6.6.2021)
+### Added
+-   Pipe IPC
+### Changed
+-   Small fixes
+
 ## v1.6.0 (1.5.2021)
 ### Added
 -   Hex data view

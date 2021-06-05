@@ -40,6 +40,8 @@
                 <Paragraph Margin="0,20,0,0" FontSize="12">
                     <Run FontWeight="Bold">Releases</Run>
                     <LineBreak/>
+                    <Run>1.7.0 - Pipe IPC + small fixes</Run>
+                    <LineBreak/>
                     <Run>1.6.0 - Hex data view + small fixes</Run>
                     <LineBreak/>
                     <Run>1.5.0 - Autoconnection + port reading refactoring</Run>
