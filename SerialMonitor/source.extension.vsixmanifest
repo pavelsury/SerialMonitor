@@ -7,7 +7,6 @@
     <MoreInfo>https://github.com/pavelsury/SerialMonitor2</MoreInfo>
     <License>LICENSE.txt</License>
     <Icon>Resources\SerialMonitorIcon.png</Icon>
-    <PreviewImage>Resources\SerialMonitorPreview.png</PreviewImage>
     <Tags>serial, port, com, monitor, com port, serial port</Tags>
   </Metadata>
   <Installation>
