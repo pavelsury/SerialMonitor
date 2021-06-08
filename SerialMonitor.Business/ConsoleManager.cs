@@ -18,7 +18,7 @@ namespace SerialMonitor.Business
         public void Initialize(IConsoleWriter consoleWriter)
         {
             _consoleWriter = consoleWriter;
-            _settingsManager.PropertyChanged += OnSettingsChanged;
+            _settingsManager.PropertyChanged += OnSettingsManagerChanged;
         }
 
         public void ClearAll()
@@ -179,7 +179,7 @@ namespace SerialMonitor.Business
             }
         }
 
-        private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {

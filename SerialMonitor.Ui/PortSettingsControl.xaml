@@ -61,7 +61,11 @@
                 </Border.Width>
             </Border>
 
-            <Button Name="ResetButton" Content="Reset to defaults" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,10"
+            <Button Name="ResetButton" Content="Reset to defaults"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Margin="0,0,0,10"
+                    Padding="10,3,10,3"
                     Click="OnResetButtonClick"
                     Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
         </WrapPanel>

@@ -24,6 +24,16 @@ namespace SerialMonitor.Business
             }
         }
 
+        public bool AutoswitchEnabled
+        {
+            get => _autoswitchEnabled;
+            set
+            {
+                AppSettings.AutoswitchEnabled = value;
+                SetNotifyingValueProperty(ref _autoswitchEnabled, value);
+            }
+        }
+
         public EViewMode ViewMode
         {
             get => _viewMode;
@@ -140,6 +150,7 @@ namespace SerialMonitor.Business
                 { }
                 finally
                 {
+                    AutoswitchEnabled = AppSettings.AutoswitchEnabled;
                     ViewMode = AppSettings.ViewMode;
                     WriteMessageToConsole = AppSettings.WriteMessageToConsole;
                     WriteCommandToConsole = AppSettings.WriteCommandToConsole;
@@ -155,6 +166,7 @@ namespace SerialMonitor.Business
         private readonly string _settingsFilename;
 
         private PortInfo _selectedPort;
+        private bool _autoswitchEnabled;
         private EViewMode _viewMode = EViewMode.Text;
         private bool _writeMessageToConsole;
         private bool _writeCommandToConsole;

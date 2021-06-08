@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,7 @@ namespace SerialMonitor.Business
             }
 
             _usbNotification.DeviceChanged += OnUsbDevicesChanged;
+            SettingsManager.PropertyChanged += OnSettingsManagerChanged;
             UpdatePorts();
         }
 
@@ -60,16 +62,23 @@ namespace SerialMonitor.Business
                 OnPropertyChanged(nameof(IsConnectionChanging));
                 OnPropertyChanged(nameof(IsConnectingLong));
                 OnPropertyChanged(nameof(IsConnected));
+                if (_connectionStatus == EConnectionStatus.Disconnected && HandleAutoswitch())
+                {
+                    HandleAutoconnect();
+                }
             });
         }
 
         public bool IsDisconnected => _connectionStatus == EConnectionStatus.Disconnected;
+        
         public bool IsConnectionChanging =>
             _connectionStatus == EConnectionStatus.ConnectingShort ||
             _connectionStatus == EConnectionStatus.ConnectingLong ||
             _connectionStatus == EConnectionStatus.DisconnectingGracefully ||
             _connectionStatus == EConnectionStatus.DisconnectingByFailure;
+        
         public bool IsConnectingLong => _connectionStatus == EConnectionStatus.ConnectingLong;
+        
         public bool IsConnected => _connectionStatus == EConnectionStatus.Connected;
 
         public void Connect()
@@ -312,13 +321,40 @@ namespace SerialMonitor.Business
                 return;
             }
 
-            if (SettingsManager.AppSettings.AutoconnectEnabled && IsDisconnected)
+            var portChanged = HandleAutoswitch();
+            if (portChanged)
             {
-                if (!wasSelectedPortAvailable && SelectedPort.IsAvailable)
+                wasSelectedPortAvailable = false;
+            }
+
+            if (!wasSelectedPortAvailable)
+            {
+                HandleAutoconnect();
+            }
+        }
+
+        private void HandleAutoconnect()
+        {
+            if (SettingsManager.AppSettings.AutoconnectEnabled && IsDisconnected && SelectedPort.IsAvailable)
+            {
+                Connect();
+            }
+        }
+
+        private bool HandleAutoswitch()
+        {
+            var oldSelectedPort = SelectedPort;
+            
+            if (SettingsManager.AutoswitchEnabled && !SelectedPort.IsAvailable)
+            {
+                var port = Ports.FirstOrDefault(p => p.IsAvailable);
+                if (port != null)
                 {
-                    Connect();
+                    SelectedPort = port;
                 }
             }
+
+            return SelectedPort != oldSelectedPort;
         }
 
         private PortInfo CreatePortInfo(string portName, bool isAvailable)
@@ -331,6 +367,17 @@ namespace SerialMonitor.Business
             };
             Ports.AddSorted(portInfo);
             return portInfo;
+        }
+
+        private void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SettingsManager.AutoswitchEnabled))
+            {
+                if (SettingsManager.AutoswitchEnabled)
+                {
+                    UpdatePorts();
+                }
+            }
         }
 
         private readonly IMainThreadRunner _mainThreadRunner;

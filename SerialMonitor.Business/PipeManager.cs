@@ -19,7 +19,12 @@ namespace SerialMonitor.Business
             _settingsManager = settingsManager;
             _consoleManager = consoleManager;
             _mainThreadRunner = mainThreadRunner;
+        }
+
+        public void Initialize()
+        {
             _settingsManager.PropertyChanged += OnSettingsManagerChanged;
+            UpdatePipe();
         }
 
         private void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)

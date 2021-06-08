@@ -24,6 +24,7 @@ namespace SerialMonitor.Business
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
         {
             _consoleManager.Initialize(consoleWriter);
+            _pipeManager.Initialize();
             PortManager.Initialize();
         }
 
