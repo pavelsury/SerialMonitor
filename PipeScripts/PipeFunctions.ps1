@@ -10,6 +10,20 @@ function Close-SerialMonitorPort
     Send-SerialMonitorMessage -PortName $PortName -Message disconnect
 }
 
+function Find-SerialMonitorPort
+{
+    Try
+    {
+        $port = ([System.IO.Directory]::GetFiles("\\.\\pipe\\", "SerialMonitorPipe*") | Select-String -Pattern 'SerialMonitorPipe.*' | select-object -First 1).Matches.Value -replace "SerialMonitorPipe"
+        return $port
+    }
+    Catch
+    {
+        Write-Output $_.Exception.Message
+        exit 1
+    }
+}
+
 function Send-SerialMonitorMessage
 {
     Param($PortName, $Message)
