@@ -14,13 +14,7 @@ namespace SerialMonitor.Ui
         {
             InitializeComponent();
             FlowDocument.Blocks.Add(_paragraph);
-            _dataBrush = TryFindResource(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.TextBoxTextBrushKey) as SolidColorBrush ?? Brushes.Black;
-        }
-
-        public void CreateDefaultResources()
-        {
-            Resources.Add(Microsoft.VisualStudio.PlatformUI.CommonControlsColors.ButtonBorderBrushKey, new SolidColorBrush(Colors.LightGray));
-            Resources.Add(Microsoft.VisualStudio.PlatformUI.ThemedDialogColors.SelectedItemActiveBrushKey, new SolidColorBrush(Colors.LightSkyBlue));
+            _dataBrush = (SolidColorBrush)TryFindResource(ResourceKeys.TextBoxTextBrushKey);
         }
 
         public static readonly DependencyProperty IsAutoscrollEnabledProperty = DependencyProperty.Register(

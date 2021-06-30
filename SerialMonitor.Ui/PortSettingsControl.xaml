@@ -3,12 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
-             xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:rules="clr-namespace:SerialMonitor.Ui.Rules"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:SettingsManager}"
@@ -34,12 +32,12 @@
         
         <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBlock Name="PortTextBlock" VerticalAlignment="Center" Margin="0,0,20,10"
-                       Foreground="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}">
+                       Foreground="{DynamicResource {x:Static ui:ResourceKeys.WindowPanelTextBrushKey}}">
                 <Run Text="Settings for port: "/>
                 <Run Text="{Binding SelectedPort.Name, FallbackValue='no COM port available'}" FontWeight="Bold">
                     <Run.Style>
                         <Style TargetType="{x:Type Run}">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static ui:ResourceKeys.WindowPanelTextBrushKey}}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding SelectedPort}" Value="{x:Null}">
                                     <Setter Property="Foreground" Value="DarkOrange"/>
@@ -67,14 +65,14 @@
                     Margin="0,0,0,10"
                     Padding="10,3,10,3"
                     Click="OnResetButtonClick"
-                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+                    Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
         </WrapPanel>
 
         <WrapPanel Grid.Row="1" Orientation="Vertical">
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Baud Rate:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Baud Rate:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox Name="BaudRateComboBox" MinWidth="100" MaxWidth="100" IsEditable="True"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"
+                      Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}"
                       VerticalContentAlignment="Center"
                       LostFocus="OnComboBoxLostFocus"
                       KeyDown="OnKeyDown"
@@ -110,18 +108,18 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Receive new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Receive new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.ReceivingNewline}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:EReceivingNewline.Crlf}" Text="CR + LF"/>
                     <ui:ComboPair Value="{x:Static enums:EReceivingNewline.Lf}" Text="LF"/>
                 </ComboBox>
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Send new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Send new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.SendingNewline}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.None}" Text="None"/>
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.Crlf}" Text="CR + LF"/>
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.Lf}" Text="LF"/>
@@ -129,10 +127,10 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Data bits:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Data bits:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.DataBits}"
                           SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPairInt Value="5"/>
                     <ui:ComboPairInt Value="6"/>
                     <ui:ComboPairInt Value="7"/>
@@ -141,25 +139,25 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Encoding:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Encoding:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox ItemsSource="{Binding Encodings, ElementName=Control}"
                           SelectedValue="{Binding SelectedPort.Settings.Encoding}"
                           SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Output Font Size:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Output Font Size:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox ItemsSource="{Binding FontSizes, ElementName=Control}"
                           SelectedValue="{Binding SelectedPort.Settings.FontSize}"
                           SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}"/>
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Output Font Style:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Output Font Style:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.FontStyle}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static FontStyles.Normal}" Text="Normal"/>
                     <ui:ComboPair Value="{x:Static FontStyles.Italic}" Text="Italic"/>
                     <ui:ComboPair Value="{x:Static FontStyles.Oblique}" Text="Oblique"/>
@@ -167,9 +165,9 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Handshake:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Handshake:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.Handshake}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static ports:Handshake.None}" Text="None"/>
                     <ui:ComboPair Value="{x:Static ports:Handshake.XOnXOff}" Text="XOnXOff"/>
                     <ui:ComboPair Value="{x:Static ports:Handshake.RequestToSend}" Text="RequestToSend"/>
@@ -178,9 +176,9 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Parity:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Parity:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.Parity}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static ports:Parity.None}" Text="None"/>
                     <ui:ComboPair Value="{x:Static ports:Parity.Odd}" Text="Odd"/>
                     <ui:ComboPair Value="{x:Static ports:Parity.Even}" Text="Even"/>
@@ -191,9 +189,9 @@
 
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Stop bits:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Stop bits:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.StopBits}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static ports:StopBits.One}" Text="1"/>
                     <ui:ComboPair Value="{x:Static ports:StopBits.OnePointFive}" Text="1.5"/>
                     <ui:ComboPair Value="{x:Static ports:StopBits.Two}" Text="2"/>
@@ -201,46 +199,46 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Read Timeout:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                <Label Content="Read Timeout:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                               TextEx="{Binding SelectedPort.Settings.ReadTimeoutMs}"
                               ValidationRule="{StaticResource IntNonnegativeRule}"
                               VerticalContentAlignment="Center"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Write Timeout:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+                <Label Content="Write Timeout:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                               TextEx="{Binding SelectedPort.Settings.WriteTimeoutMs}"
                               ValidationRule="{StaticResource IntNonnegativeRule}"
                               VerticalContentAlignment="Center"/>
             </StackPanel>
 
             <CheckBox IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                      Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                       Margin="200,5,0,0">
                 <CheckBox.Content>
                      <!--Quick and dirty way how to make checkbox's text to be on left side--> 
-                    <Label Content="Data Terminal Ready (DTR):" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                    <Label Content="Data Terminal Ready (DTR):" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </CheckBox.Content>
             </CheckBox>
 
             <CheckBox IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                      Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                       Margin="200,10,0,5">
                 <CheckBox.Content>
-                    <Label Content="Enable output to file:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                    <Label Content="Enable output to file:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </CheckBox.Content>
             </CheckBox>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Record file path:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Record file path:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <TextBox Name="OutputFilenameTextBox"
                          Text="{Binding SelectedPort.Settings.OutputFilename}"
                          IsEnabled="{Binding SelectedPort.Settings.OutputToFileEnabled}"
                          MouseDoubleClick="OnOutputFilenameTextBoxMouseDoubleClick" VerticalContentAlignment="Center"
                          KeyDown="OnKeyDown"
-                         MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"/>
+                         MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"/>
             </StackPanel>
         </WrapPanel>
     </Grid>

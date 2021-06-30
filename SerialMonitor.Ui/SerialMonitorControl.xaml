@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
-             xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance business:PortManager}"
@@ -38,16 +36,16 @@
                     <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
                 </MultiBinding>
             </DockPanel.IsEnabled>
-            <Label Content="Command:" DockPanel.Dock="Left" Padding="5,0,5,0" VerticalAlignment="Center" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <Button Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
-            <TextBox Name="MessageTextBox" KeyUp="OnMessageTextBoxKeyUp" VerticalContentAlignment="Center" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
+            <Label Content="Command:" DockPanel.Dock="Left" Padding="5,0,5,0" VerticalAlignment="Center" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <Button Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
+            <TextBox Name="MessageTextBox" KeyUp="OnMessageTextBoxKeyUp" VerticalContentAlignment="Center" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
         </DockPanel>
 
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
             <ComboBox Name="PortComboBox" ItemsSource="{Binding Ports}"
                       SelectedValue="{Binding SettingsManager.SelectedPort}"
                       IsEnabled="{Binding IsDisconnected}"
-                      Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                      Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type business:PortInfo}">
                         <StackPanel Orientation="Horizontal">
@@ -61,7 +59,7 @@
             <Button Name="ConnectButton" Click="OnConnectButtonClick" Margin="5 0 5 10" Padding="10 0 10 0" Width="90"
                     Content="{Binding ConnectionStatus, Converter={StaticResource ConnectionStateToConnectTextConverter}}"
                     IsEnabled="{Binding SettingsManager.SelectedPort.IsAvailable, FallbackValue=False}"
-                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}"/>
+                    Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
 
             <Border>
                 <Border.Width>
@@ -78,9 +76,9 @@
             </Border>
 
             <StackPanel Name="ViewStackPanel" Orientation="Horizontal">
-                <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Value"
-                          Margin="5 0 5 10" MinWidth="90" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                          Margin="5 0 5 10" MinWidth="90" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
                     <ui:ComboPair Value="{x:Static enums:EViewMode.Hex}" Text="Hex"/>
                     <ui:ComboPair Value="{x:Static enums:EViewMode.HexColumns}" Text="Hex columns"/>
@@ -92,10 +90,10 @@
                       IsChecked="{Binding IsAutoscrollEnabled, ElementName=Control}"
                       IsEnabled="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource ObjectToBoolInvertedConverter}}"
                       VerticalAlignment="Center"
-                      Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"/>
+                      Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"/>
 
             <Button Name="ClearConsole" Content="Clear" Click="OnClearButtonClick" Margin="5 0 5 10" Padding="10 0 10 0"
-                    Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ButtonStyleKey}}">
+                    Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource AndConverter}">
                         <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
@@ -107,8 +105,8 @@
 
         <TabControl Name="TabControl" Margin="10 0 10 10"
                     Background="Transparent"
-                    Foreground="{DynamicResource {x:Static vs:ThemedDialogColors.WindowPanelTextBrushKey}}"
-                    BorderBrush="{DynamicResource {x:Static vs:CommonControlsColors.ButtonBorderBrushKey}}">
+                    Foreground="{DynamicResource {x:Static ui:ResourceKeys.WindowPanelTextBrushKey}}"
+                    BorderBrush="{DynamicResource {x:Static ui:ResourceKeys.ButtonBorderBrushKey}}">
             <TabItem Header="Console">
                 <FlowDocumentScrollViewer Name="FlowDocumentScrollViewer" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <FlowDocument Name="FlowDocument" FontFamily="Consolas" FontSize="11"/>

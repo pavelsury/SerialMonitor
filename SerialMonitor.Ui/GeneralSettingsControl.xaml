@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:rules="clr-namespace:SerialMonitor.Ui.Rules"
              xmlns:ui="clr-namespace:SerialMonitor.Ui"
@@ -24,63 +23,63 @@
 
     <WrapPanel Orientation="Vertical">
         <CheckBox IsChecked="{Binding AppSettings.AutoconnectEnabled}" VerticalAlignment="Center"
-                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Margin="220,0,0,0">
             <CheckBox.Content>
-                <Label Content="Connect automatically:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Connect automatically:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding AutoswitchEnabled}" VerticalAlignment="Center"
-                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Margin="220,10,0,0">
             <CheckBox.Content>
-                <Label Content="Switch to available port automatically:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Switch to available port automatically:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding WriteMessageToConsole}" VerticalAlignment="Center"
-                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Margin="220,10,0,0">
             <CheckBox.Content>
-                <Label Content="Write message to console:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Write message to console:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding WriteCommandToConsole}" VerticalAlignment="Center"
-                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Margin="220,10,0,0">
             <CheckBox.Content>
-                <Label Content="Write command to console:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Write command to console:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding PipeEnabled}" VerticalAlignment="Center"
-                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Margin="220,10,0,0">
             <CheckBox.Content>
-                <Label Content="Pipe IPC:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Pipe IPC:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding HexPrefixEnabled}" VerticalAlignment="Center"
-                  Style="{DynamicResource {x:Static vsshell:VsResourceKeys.CheckBoxStyleKey}}"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Margin="220,10,0,5">
             <CheckBox.Content>
-                <Label Content="Hex 0x prefix:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Hex 0x prefix:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Hex separator:" Width="130" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+            <Label Content="Hex separator:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding HexSeparator}"
                           VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Hex columns:" Width="130" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx x:Name="HexFixedColumnsTextBox" Width="100" Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"
+            <Label Content="Hex columns:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx x:Name="HexFixedColumnsTextBox" Width="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding HexFixedColumns}"
                           ValidationRule="{StaticResource HexFixedCountRule}"
                           VerticalContentAlignment="Center"/>

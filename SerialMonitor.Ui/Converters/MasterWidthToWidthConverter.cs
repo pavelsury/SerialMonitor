@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SerialMonitor.Ui.Converters
 {

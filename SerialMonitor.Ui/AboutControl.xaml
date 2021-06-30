@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:ui="clr-namespace:SerialMonitor.Ui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="Control">
@@ -18,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <FlowDocumentScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"
-                                  Foreground="{DynamicResource {x:Static platformUi:EnvironmentColors.ToolWindowTextBrushKey}}">
+                                  Foreground="{DynamicResource {x:Static ui:ResourceKeys.ToolWindowTextBrushKey}}">
             <FlowDocument FontFamily="Consolas"
                           PagePadding="0,0,10,0"
                           TextAlignment="Left">
@@ -33,7 +32,7 @@
                     <Run>GitHub:</Run>
                     <Hyperlink ToolTip="https://github.com/pavelsury/SerialMonitor2"
                                NavigateUri="https://github.com/pavelsury/SerialMonitor2"
-                               Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogHyperlinkStyleKey}}"
+                               Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                                RequestNavigate="OnRequestNavigate">github.com/pavelsury/SerialMonitor2</Hyperlink>
                 </Paragraph>
 
@@ -64,7 +63,7 @@
                     <Run>To give it a try, first download all scripts from</Run>
                     <Hyperlink NavigateUri="{Binding ScriptsLink, ElementName=Control}"
                                ToolTip="{Binding ScriptsLink, ElementName=Control}"
-                               Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ThemedDialogHyperlinkStyleKey}}"
+                               Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                                RequestNavigate="OnRequestNavigate">here</Hyperlink><Run>.</Run>
                     <LineBreak/>
                     <Run>Then open command line and type 'OpenSerialPort COM3' or 'CloseSerialPort COM3' where COM3 is an example of a port which is currently selected in this Serial Monitor 2 extension.</Run>
@@ -80,6 +79,6 @@
                  IsReadOnly="True"
                  BorderThickness="0"
                  Margin="0,5,0,0"
-                 Style="{DynamicResource {x:Static vsshell:VsResourceKeys.TextBoxStyleKey}}"/>
+                 Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"/>
     </Grid>
 </UserControl>
