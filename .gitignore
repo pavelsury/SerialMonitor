@@ -1,7 +1,7 @@
 /packages/
 /.vs/
-/bin/
-/obj/
+bin
+obj
 /_deploy/
 *.csproj.user
 Thumbs.db
