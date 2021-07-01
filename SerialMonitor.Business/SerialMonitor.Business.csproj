@@ -1,85 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CB6DE9B9-5F21-4556-B255-DC71D1288201}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SerialMonitor.Business</RootNamespace>
+    <TargetFramework>net472</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>SerialMonitor2.Business</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AppSettings.cs" />
-    <Compile Include="AppVersion.cs" />
-    <Compile Include="DataItem.cs" />
-    <Compile Include="Enums\EConnectionStatus.cs" />
-    <Compile Include="Enums\EMessageType.cs" />
-    <Compile Include="Enums\EReceivingNewline.cs" />
-    <Compile Include="Enums\ESendingNewline.cs" />
-    <Compile Include="Enums\EViewMode.cs" />
-    <Compile Include="FileOutputManager.cs" />
-    <Compile Include="Helpers\EncodingJsonConverter.cs" />
-    <Compile Include="Helpers\FileHelper.cs" />
-    <Compile Include="Helpers\IDictionaryExtensions.cs" />
-    <Compile Include="Helpers\IEnumerableExtensions.cs" />
-    <Compile Include="Helpers\IListExtensions.cs" />
-    <Compile Include="Helpers\KeyValuePairExtensions.cs" />
-    <Compile Include="IConnectionStatusProvider.cs" />
-    <Compile Include="IConsoleWriter.cs" />
-    <Compile Include="IMainThreadRunner.cs" />
-    <Compile Include="IUsbNotification.cs" />
-    <Compile Include="MainThreadRunner.cs" />
-    <Compile Include="ConsoleManager.cs" />
-    <Compile Include="ModelFactory.cs" />
-    <Compile Include="NotifyPropertyChanged.cs" />
-    <Compile Include="PipeManager.cs" />
-    <Compile Include="PortInfo.cs" />
-    <Compile Include="PortSettings.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PortManager.cs" />
-    <Compile Include="DataManager.cs" />
-    <Compile Include="SettingsManager.cs" />
-    <Compile Include="UsbNotification.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>8.0.3</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
