@@ -5,6 +5,7 @@
     <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>SerialMonitor2</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 using SerialMonitor.Business;
 using SerialMonitor.Ui;
 
-namespace TestApp
+namespace SerialMonitor.App
 {
     public partial class App : Application
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TestApp
+namespace SerialMonitor.App
 {
     public partial class MainWindow : Window
     {
