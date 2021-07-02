@@ -4,9 +4,10 @@
     <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <AssemblyName>SerialMonitor2.Ui</AssemblyName>
+    <Configurations>Debug;Release;Deploy</Configurations>
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj"/>
+    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj" />
   </ItemGroup>
 </Project>

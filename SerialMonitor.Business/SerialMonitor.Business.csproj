@@ -4,14 +4,15 @@
     <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <AssemblyName>SerialMonitor2.Business</AssemblyName>
+    <Configurations>Debug;Release;Deploy</Configurations>
   </PropertyGroup>
   
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <PackageReference Include="Newtonsoft.Json" Version="8.0.3"/>
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net5'))">
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
-    <PackageReference Include="System.IO.Ports" Version="5.0.1"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>
 </Project>

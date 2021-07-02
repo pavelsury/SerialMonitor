@@ -6,10 +6,11 @@
     <OutputType>WinExe</OutputType>
     <AssemblyName>SerialMonitor2</AssemblyName>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <Configurations>Debug;Release;Deploy</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj"/>
-    <ProjectReference Include="..\SerialMonitor.Ui\SerialMonitor.Ui.csproj"/>
+    <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj" />
+    <ProjectReference Include="..\SerialMonitor.Ui\SerialMonitor.Ui.csproj" />
   </ItemGroup>
 </Project>
