@@ -3,5 +3,5 @@
 bin
 obj
 /_deploy/
-*.csproj.user
+*.user
 Thumbs.db

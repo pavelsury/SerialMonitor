@@ -40,11 +40,6 @@ namespace SerialMonitor.Business
 
         protected bool SetNotifyingProperty<T>(ref T? field, T? value, [CallerMemberName] string propertyName = "") where T: struct
         {
-            if (ReferenceEquals(field, value))
-            {
-                return false;
-            }
-
             if (field?.Equals(value) == true)
             {
                 return false;

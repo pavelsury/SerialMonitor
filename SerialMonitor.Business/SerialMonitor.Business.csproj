@@ -1,13 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>SerialMonitor2.Business</AssemblyName>
   </PropertyGroup>
   
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.3"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net5'))">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+    <PackageReference Include="System.IO.Ports" Version="5.0.1"/>
   </ItemGroup>
 </Project>
