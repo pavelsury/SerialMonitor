@@ -105,16 +105,15 @@
 
         <TabControl Name="TabControl" Margin="10 0 10 10"
                     Background="Transparent"
-                    Foreground="{DynamicResource {x:Static ui:ResourceKeys.WindowPanelTextBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static ui:ResourceKeys.ButtonBorderBrushKey}}">
             <TabItem Header="Console">
-                <FlowDocumentScrollViewer Name="FlowDocumentScrollViewer" Margin="0 0 0 10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <FlowDocumentScrollViewer Name="FlowDocumentScrollViewer" Margin="0,0,0,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     <FlowDocument Name="FlowDocument" FontFamily="Consolas" FontSize="11"/>
                 </FlowDocumentScrollViewer>
             </TabItem>
 
             <TabItem Header="Port settings">
-                <ui:PortSettingsControl DataContext="{Binding SettingsManager}" Margin="10">
+                <ui:PortSettingsControl DataContext="{Binding SettingsManager}" Margin="5">
                     <ui:PortSettingsControl.IsEnabled>
                         <MultiBinding Converter="{StaticResource AndConverter}">
                             <Binding Path="SelectedPort" Converter="{StaticResource ObjectToBoolConverter}"/>
@@ -125,11 +124,11 @@
             </TabItem>
 
             <TabItem Header="General settings">
-                <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="10"/>
+                <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="5,10,5,5"/>
             </TabItem>
 
             <TabItem Header="About">
-                <ui:AboutControl Margin="10"/>
+                <ui:AboutControl Margin="5"/>
             </TabItem>
         </TabControl>
     </DockPanel>

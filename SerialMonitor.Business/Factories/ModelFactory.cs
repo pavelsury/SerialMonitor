@@ -9,16 +9,16 @@ namespace SerialMonitor.Business
         public ModelFactory()
         {
             Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
-            _settingsManager = new SettingsManager();
-            var fileOutputManager = new FileOutputManager(_settingsManager);
-            _consoleManager = new ConsoleManager(_settingsManager, fileOutputManager);
-            PortManager = new PortManager(_settingsManager, _consoleManager, _mainThreadRunner, _usbNotification);
-            _pipeManager = new PipeManager(PortManager, _settingsManager, _consoleManager, _mainThreadRunner);
+            SettingsManager = new SettingsManager();
+            var fileOutputManager = new FileOutputManager(SettingsManager);
+            _consoleManager = new ConsoleManager(SettingsManager, fileOutputManager);
+            PortManager = new PortManager(SettingsManager, _consoleManager, _mainThreadRunner, _usbNotification);
+            _pipeManager = new PipeManager(PortManager, SettingsManager, _consoleManager, _mainThreadRunner);
         }
 
         public async Task InitializeAsync()
         {
-            await _settingsManager.LoadAsync();
+            await SettingsManager.LoadAsync();
         }
 
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
@@ -30,14 +30,14 @@ namespace SerialMonitor.Business
 
         private void OnShutdownStarted(object sender, EventArgs e)
         {
-            _settingsManager.Save();
+            SettingsManager.Save();
             PortManager.Dispose();
             _usbNotification.Dispose();
         }
 
+        public SettingsManager SettingsManager { get; }
         public PortManager PortManager { get; }
 
-        private readonly SettingsManager _settingsManager;
         private readonly ConsoleManager _consoleManager;
         private readonly PipeManager _pipeManager;
         private readonly MainThreadRunner _mainThreadRunner = new MainThreadRunner(Dispatcher.CurrentDispatcher);

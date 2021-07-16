@@ -18,6 +18,8 @@ namespace SerialMonitor.Business
         public int HexFixedColumns { get; set; } = DefaultHexFixedColumns;
         public bool PipeEnabled { get; set; }
 
+        public StandaloneAppSettings StandaloneAppSettings { get; set; } = new StandaloneAppSettings();
+
         [JsonConverter(typeof(StringEnumConverter))]
         public EViewMode ViewMode { get; set; } = EViewMode.Text;
         public Dictionary<string, PortSettings> PortsSettingsMap { get; set; } = new Dictionary<string, PortSettings>();
@@ -33,6 +35,11 @@ namespace SerialMonitor.Business
             if (HexFixedColumns < DefaultHexFixedColumnsMin || HexFixedColumns > DefaultHexFixedColumnsMax)
             {
                 HexFixedColumns = DefaultHexFixedColumns;
+            }
+
+            if (StandaloneAppSettings == null)
+            {
+                StandaloneAppSettings = new StandaloneAppSettings();
             }
         }
 

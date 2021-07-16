@@ -18,6 +18,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/SettingsStyle.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/CheckBoxStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <rules:IntNonnegativeRule x:Key="IntNonnegativeRule"/>
@@ -30,7 +31,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+        <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="10,0,0,10">
             <TextBlock Name="PortTextBlock" VerticalAlignment="Center" Margin="0,0,20,10"
                        Foreground="{DynamicResource {x:Static ui:ResourceKeys.WindowPanelTextBrushKey}}">
                 <Run Text="Settings for port: "/>
@@ -54,7 +55,7 @@
                         <Binding Path="ActualWidth" ElementName="Control"/>
                         <Binding Path="ActualWidth" ElementName="PortTextBlock"/>
                         <Binding Path="ActualWidth" ElementName="ResetButton"/>
-                        <Binding Source="20"/>
+                        <Binding Source="30"/>
                     </MultiBinding>
                 </Border.Width>
             </Border>
@@ -216,18 +217,26 @@
 
             <CheckBox IsChecked="{Binding SelectedPort.Settings.DTREnabled}" VerticalAlignment="Center"
                       Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                      Margin="200,5,0,0">
+                      Padding="4,0,0,0"
+                      Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxSmallMarginKey}}">
                 <CheckBox.Content>
                      <!--Quick and dirty way how to make checkbox's text to be on left side--> 
-                    <Label Content="Data Terminal Ready (DTR):" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                    <Label Content="Data Terminal Ready (DTR):"
+                           Padding="0"
+                           Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextSmallMarginKey}}"
+                           Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </CheckBox.Content>
             </CheckBox>
 
             <CheckBox IsChecked="{Binding SelectedPort.Settings.OutputToFileEnabled}" VerticalAlignment="Center"
                       Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                      Margin="200,10,0,5">
+                      Padding="4,0,0,0"
+                      Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxSmallMarginKey}}">
                 <CheckBox.Content>
-                    <Label Content="Enable output to file:" Margin="-212,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                    <Label Content="Enable output to file:"
+                           Padding="0"
+                           Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextSmallMarginKey}}"
+                           Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </CheckBox.Content>
             </CheckBox>
 

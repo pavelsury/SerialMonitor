@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Thickness x:Key="CheckBoxMargin">218,0,0,10</Thickness>
+    <Thickness x:Key="CheckBoxTextMargin">-228,0,0,0</Thickness>
+    <Thickness x:Key="CheckBoxSmallMargin">198,0,0,10</Thickness>
+    <Thickness x:Key="CheckBoxTextSmallMargin">-208,0,0,0</Thickness>
+</ResourceDictionary>

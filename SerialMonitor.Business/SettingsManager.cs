@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Newtonsoft.Json;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
@@ -94,6 +95,26 @@ namespace SerialMonitor.Business
             }
         }
 
+        public Color BackgroundColor
+        {
+            get => _backgroundColor;
+            set
+            {
+                AppSettings.StandaloneAppSettings.BackgroundColor = value;
+                SetNotifyingValueProperty(ref _backgroundColor, value);
+            }
+        }
+
+        public Color ForegroundColor
+        {
+            get => _foregroundColor;
+            set
+            {
+                AppSettings.StandaloneAppSettings.ForegroundColor = value;
+                SetNotifyingValueProperty(ref _foregroundColor, value);
+            }
+        }
+
         public int HexFixedColumns
         {
             get => _hexFixedColumns;
@@ -136,6 +157,7 @@ namespace SerialMonitor.Business
                     {
                         Error = (s, e) => e.ErrorContext.Handled =
                             e.CurrentObject is AppSettings ||
+                            e.CurrentObject is StandaloneAppSettings ||
                             e.CurrentObject is PortSettings
                     };
 
@@ -158,6 +180,8 @@ namespace SerialMonitor.Business
                     HexSeparator = AppSettings.HexSeparator;
                     HexFixedColumns = AppSettings.HexFixedColumns;
                     PipeEnabled = AppSettings.PipeEnabled;
+                    BackgroundColor = AppSettings.StandaloneAppSettings.BackgroundColor;
+                    ForegroundColor = AppSettings.StandaloneAppSettings.ForegroundColor;
                 }
             });
         }
@@ -174,5 +198,7 @@ namespace SerialMonitor.Business
         private string _hexSeparator;
         private int _hexFixedColumns;
         private bool _pipeEnabled;
+        private Color _backgroundColor;
+        private Color _foregroundColor;
     }
 }

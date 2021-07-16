@@ -42,20 +42,30 @@ namespace SerialMonitor.Ui
 
         private void OnComboBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            var comboBox = (ComboBox)sender;
-            comboBox.SetCurrentValue(ComboBox.TextProperty, null);
-            comboBox.GetBindingExpression(ComboBox.TextProperty)?.UpdateTarget();
+            UpdateComboBoxTextProperty((ComboBox)sender);
         }
 
         public void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                if (Keyboard.FocusedElement is UIElement elementWithFocus)
+                switch (Keyboard.FocusedElement)
                 {
-                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                    case ComboBox c:
+                        UpdateComboBoxTextProperty(c);
+                        break;
+
+                    case TextBox t:
+                        t.SelectAll();
+                        break;
                 }
             }
+        }
+
+        private void UpdateComboBoxTextProperty(ComboBox comboBox)
+        {
+            comboBox.SetCurrentValue(ComboBox.TextProperty, null);
+            comboBox.GetBindingExpression(ComboBox.TextProperty)?.UpdateTarget();
         }
 
         private void OnResetButtonClick(object sender, RoutedEventArgs e) => SettingsManager.ResetSelectedPortSettings();

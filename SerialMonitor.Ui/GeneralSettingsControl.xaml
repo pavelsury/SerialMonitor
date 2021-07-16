@@ -15,58 +15,84 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/SettingsStyle.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/CheckBoxStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <rules:HexFixedCountRule x:Key="HexFixedCountRule"/>
+            <rules:ColorRule x:Key="ColorRule"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <WrapPanel Orientation="Vertical">
         <CheckBox IsChecked="{Binding AppSettings.AutoconnectEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                  Margin="220,0,0,0">
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
             <CheckBox.Content>
-                <Label Content="Connect automatically:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Connect automatically:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding AutoswitchEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                  Margin="220,10,0,0">
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
             <CheckBox.Content>
-                <Label Content="Switch to available port automatically:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Switch to available port automatically:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding WriteMessageToConsole}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                  Margin="220,10,0,0">
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
             <CheckBox.Content>
-                <Label Content="Write message to console:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Write message to console:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding WriteCommandToConsole}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                  Margin="220,10,0,0">
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
             <CheckBox.Content>
-                <Label Content="Write command to console:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Write command to console:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding PipeEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                  Margin="220,10,0,0">
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
             <CheckBox.Content>
-                <Label Content="Pipe IPC:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Pipe IPC:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding HexPrefixEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
-                  Margin="220,10,0,5">
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
             <CheckBox.Content>
-                <Label Content="Hex 0x prefix:" Margin="-232,0,0,0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Hex 0x prefix:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             </CheckBox.Content>
         </CheckBox>
 
@@ -79,9 +105,27 @@
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Hex columns:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx x:Name="HexFixedColumnsTextBox" Width="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <ui:TextBoxEx Width="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding HexFixedColumns}"
                           ValidationRule="{StaticResource HexFixedCountRule}"
+                          VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource SettingsStackPanel}"
+                    Visibility="{Binding Source={x:Static business:AppInfo.IsStandaloneApp}, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
+            <Label Content="App background color:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+                          TextEx="{Binding BackgroundColor}"
+                          ValidationRule="{StaticResource ColorRule}"
+                          VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource SettingsStackPanel}"
+                    Visibility="{Binding Source={x:Static business:AppInfo.IsStandaloneApp}, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
+            <Label Content="App text color:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+                          TextEx="{Binding ForegroundColor}"
+                          ValidationRule="{StaticResource ColorRule}"
                           VerticalContentAlignment="Center"/>
         </StackPanel>
     </WrapPanel>

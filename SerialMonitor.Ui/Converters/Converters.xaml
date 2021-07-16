@@ -12,4 +12,5 @@
     <converters:ObjectToObjectsConverter x:Key="ObjectToObjectsConverter"/>
     <converters:MasterWidthToWidthConverter x:Key="MasterWidthToWidthConverter"/>
     <converters:ConnectionStateToConnectTextConverter x:Key="ConnectionStateToConnectTextConverter"/>
+    <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
 </ResourceDictionary>

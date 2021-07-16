@@ -48,6 +48,25 @@ namespace SerialMonitor.Ui
 
         protected override void OnLostFocus(RoutedEventArgs e)
         {
+            UpdateTextProperties();
+            base.OnLostFocus(e);
+        }        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (Keyboard.FocusedElement is UIElement elementWithFocus)
+                {
+                    UpdateTextProperties();
+                    SelectAll();
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
+
+
+        private void UpdateTextProperties()
+        {
             if (Validation.GetHasError(this))
             {
                 SetCurrentValue(TextInnerProperty, TextEx);
@@ -55,23 +74,11 @@ namespace SerialMonitor.Ui
             }
             else
             {
-                SetCurrentValue(TextExProperty, TextInner);
+                var textInner = TextInner;
+                SetCurrentValue(TextExProperty, null);
+                SetCurrentValue(TextExProperty, textInner);
                 GetBindingExpression(TextExProperty)?.UpdateSource();
             }
-            base.OnLostFocus(e);
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                if (Keyboard.FocusedElement is UIElement elementWithFocus)
-                {
-                    elementWithFocus.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                }
-            }
-
-            base.OnKeyDown(e);
         }
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)

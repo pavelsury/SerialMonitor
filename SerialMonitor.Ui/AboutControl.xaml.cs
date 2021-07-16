@@ -9,7 +9,7 @@ namespace SerialMonitor.Ui
     {
         public AboutControl()
         {
-            ScriptsLink = $"https://github.com/pavelsury/SerialMonitor2/releases/download/v{AppVersion.Version}/PipeScripts_v{AppVersion.Version}.zip";
+            ScriptsLink = $"https://github.com/pavelsury/SerialMonitor2/releases/download/v{AppInfo.Version}/PipeScripts_v{AppInfo.Version}.zip";
             InitializeComponent();
         }
 

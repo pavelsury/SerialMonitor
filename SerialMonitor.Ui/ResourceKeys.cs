@@ -14,5 +14,9 @@
         public static object SelectedItemActiveTextBrushKey { get; set; }
         public static object ToolWindowTextBrushKey { get; set; }
         public static object TextBoxTextBrushKey { get; set; }
+        public static string CheckBoxMarginKey { get; set; } = "CheckBoxMargin";
+        public static string CheckBoxTextMarginKey { get; set; } = "CheckBoxTextMargin";
+        public static string CheckBoxSmallMarginKey { get; set; } = "CheckBoxSmallMargin";
+        public static string CheckBoxTextSmallMarginKey { get; set; } = "CheckBoxTextSmallMargin";
     }
 }
