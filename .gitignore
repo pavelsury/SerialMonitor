@@ -2,6 +2,6 @@
 /.vs/
 bin
 obj
-/_deploy/
+/_publish/
 *.user
 Thumbs.db

@@ -4,7 +4,7 @@
     <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <AssemblyName>SerialMonitor2.Ui</AssemblyName>
-    <Configurations>Debug;Release;Deploy</Configurations>
+    <Configurations>Debug;Release;Publish</Configurations>
   </PropertyGroup>
   
   <ItemGroup>

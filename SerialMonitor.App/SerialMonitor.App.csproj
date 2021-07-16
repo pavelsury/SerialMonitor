@@ -6,7 +6,7 @@
     <OutputType>WinExe</OutputType>
     <AssemblyName>SerialMonitor2</AssemblyName>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-    <Configurations>Debug;Release;Deploy</Configurations>
+    <Configurations>Debug;Release;Publish</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
