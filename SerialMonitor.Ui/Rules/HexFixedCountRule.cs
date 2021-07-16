@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 using SerialMonitor.Business;
+using SerialMonitor.Business.Data;
 
 namespace SerialMonitor.Ui.Rules
 {

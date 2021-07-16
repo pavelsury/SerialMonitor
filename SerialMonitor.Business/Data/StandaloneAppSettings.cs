@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace SerialMonitor.Business
+namespace SerialMonitor.Business.Data
 {
     public class StandaloneAppSettings
     {

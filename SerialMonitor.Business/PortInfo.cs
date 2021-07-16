@@ -1,4 +1,5 @@
 ﻿using System;
+using SerialMonitor.Business.Data;
 
 namespace SerialMonitor.Business
 {

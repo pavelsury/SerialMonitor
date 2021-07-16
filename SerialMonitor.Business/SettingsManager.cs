@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Newtonsoft.Json;
+using SerialMonitor.Business.Data;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 

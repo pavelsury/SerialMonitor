@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using SerialMonitor.Business;
+using SerialMonitor.Business.Data;
 using SerialMonitor.Business.Enums;
 
 namespace SerialMonitor.Ui

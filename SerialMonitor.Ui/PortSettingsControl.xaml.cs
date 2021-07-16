@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using SerialMonitor.Business;
+using SerialMonitor.Business.Data;
 
 namespace SerialMonitor.Ui
 {

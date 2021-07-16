@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO.Ports;
 using System.Text;
 using System.Windows;
@@ -8,7 +7,7 @@ using Newtonsoft.Json.Converters;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
-namespace SerialMonitor.Business
+namespace SerialMonitor.Business.Data
 {
     public class PortSettings
     {
