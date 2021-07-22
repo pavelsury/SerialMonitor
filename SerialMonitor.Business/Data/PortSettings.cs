@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.IO.Ports;
 using System.Text;
-using System.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SerialMonitor.Business.Enums;
@@ -32,8 +31,6 @@ namespace SerialMonitor.Business.Data
         public Encoding Encoding { get; set; } = Encoding.GetEncoding(0);
         
         public int FontSize { get; set; } = DefaultFontSize;
-        
-        public FontStyle FontStyle { get; set; } = FontStyles.Normal;
         
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(Parity.None)]

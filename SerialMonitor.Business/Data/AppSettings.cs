@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SerialMonitor.Business.Enums;
@@ -17,6 +18,7 @@ namespace SerialMonitor.Business.Data
         public string HexSeparator { get; set; } = " ";
         public int HexFixedColumns { get; set; } = DefaultHexFixedColumns;
         public bool PipeEnabled { get; set; }
+        public FontStyle FontStyle { get; set; } = FontStyles.Normal;
 
         public StandaloneAppSettings StandaloneAppSettings { get; set; } = new StandaloneAppSettings();
 

@@ -156,16 +156,6 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Output Font Style:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <ComboBox SelectedValue="{Binding SelectedPort.Settings.FontStyle}" SelectedValuePath="Value"
-                          VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
-                    <ui:ComboPair Value="{x:Static FontStyles.Normal}" Text="Normal"/>
-                    <ui:ComboPair Value="{x:Static FontStyles.Italic}" Text="Italic"/>
-                    <ui:ComboPair Value="{x:Static FontStyles.Oblique}" Text="Oblique"/>
-                </ComboBox>
-            </StackPanel>
-
-            <StackPanel Style="{StaticResource SettingsStackPanel}">
                 <Label Content="Handshake:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.Handshake}" SelectedValuePath="Value"
                           VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">

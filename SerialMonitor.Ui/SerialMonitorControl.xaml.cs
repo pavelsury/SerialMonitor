@@ -73,7 +73,7 @@ namespace SerialMonitor.Ui
             _paragraph.Inlines.Add(new Run(text)
             {
                 Foreground = brush,
-                FontStyle = SelectedPortSettings.FontStyle,
+                FontStyle = PortManager.SettingsManager.AppSettings.FontStyle,
                 FontSize = SelectedPortSettings.FontSize
             });
 

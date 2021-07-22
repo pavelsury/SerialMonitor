@@ -111,6 +111,16 @@
                           VerticalContentAlignment="Center"/>
         </StackPanel>
 
+        <StackPanel Style="{StaticResource SettingsStackPanel}">
+            <Label Content="Output Font Style:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ComboBox SelectedValue="{Binding AppSettings.FontStyle}" SelectedValuePath="Value"
+                      VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                <ui:ComboPair Value="{x:Static FontStyles.Normal}" Text="Normal"/>
+                <ui:ComboPair Value="{x:Static FontStyles.Italic}" Text="Italic"/>
+                <ui:ComboPair Value="{x:Static FontStyles.Oblique}" Text="Oblique"/>
+            </ComboBox>
+        </StackPanel>
+
         <StackPanel Style="{StaticResource SettingsStackPanel}"
                     Visibility="{Binding Source={x:Static business:AppInfo.IsStandaloneApp}, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
             <Label Content="App background color:" Width="130" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
