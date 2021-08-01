@@ -2,7 +2,7 @@
 
 namespace SerialMonitor.Business
 {
-    public interface IUsbNotification
+    public interface IUsbNotification : IDisposable
     {
         event EventHandler<bool> DeviceChanged;
     }

@@ -19,35 +19,33 @@ namespace SerialMonitor.Business
             IMainThreadRunner mainThreadRunner,
             IUsbNotification usbNotification)
         {
+            _settingsManager = settingsManager;
             _mainThreadRunner = mainThreadRunner;
             ConsoleManager = consoleManager;
             _usbNotification = usbNotification;
-            SettingsManager = settingsManager;
             
             _serialPort = new SerialPort();
         }
 
         public void Initialize()
         {
-            _dataManager = new DataManager(SettingsManager, ConsoleManager, this, _mainThreadRunner);
+            _dataManager = new DataManager(_settingsManager, ConsoleManager, this, _mainThreadRunner);
 
-            foreach (var portName in SettingsManager.AppSettings.PortsSettingsMap.Keys)
+            foreach (var portName in _settingsManager.AppSettings.PortsSettingsMap.Keys)
             {
                 CreatePortInfo(portName, false);
             }
 
-            var selectedPortName = SettingsManager.AppSettings.SelectedPort;
+            var selectedPortName = _settingsManager.AppSettings.SelectedPort;
             if (!string.IsNullOrWhiteSpace(selectedPortName))
             {
                 SelectedPort = Ports.SingleOrDefault(p => p.Name == selectedPortName) ?? CreatePortInfo(selectedPortName, false);
             }
 
             _usbNotification.DeviceChanged += OnUsbDevicesChanged;
-            SettingsManager.PropertyChanged += OnSettingsManagerChanged;
+            _settingsManager.PropertyChanged += OnSettingsManagerChanged;
             UpdatePorts();
         }
-
-        public SettingsManager SettingsManager { get; }
 
         public ConsoleManager ConsoleManager { get; }
         
@@ -276,8 +274,8 @@ namespace SerialMonitor.Business
 
         private PortInfo SelectedPort
         {
-            get => SettingsManager.SelectedPort;
-            set => SettingsManager.SelectedPort = value;
+            get => _settingsManager.SelectedPort;
+            set => _settingsManager.SelectedPort = value;
         }
 
         private void OnUsbDevicesChanged(object sender, bool e) => UpdatePorts();
@@ -335,7 +333,7 @@ namespace SerialMonitor.Business
 
         private void HandleAutoconnect()
         {
-            if (SettingsManager.AppSettings.AutoconnectEnabled && IsDisconnected && SelectedPort.IsAvailable)
+            if (_settingsManager.AppSettings.AutoconnectEnabled && IsDisconnected && SelectedPort.IsAvailable)
             {
                 Connect();
             }
@@ -345,7 +343,7 @@ namespace SerialMonitor.Business
         {
             var oldSelectedPort = SelectedPort;
             
-            if (SettingsManager.AutoswitchEnabled && !SelectedPort.IsAvailable)
+            if (_settingsManager.AutoswitchEnabled && !SelectedPort.IsAvailable)
             {
                 var port = Ports.FirstOrDefault(p => p.IsAvailable);
                 if (port != null)
@@ -363,7 +361,7 @@ namespace SerialMonitor.Business
             {
                 Name = portName,
                 IsAvailable = isAvailable,
-                Settings = SettingsManager.GetSettings(portName)
+                Settings = _settingsManager.GetSettings(portName)
             };
             Ports.AddSorted(portInfo);
             return portInfo;
@@ -373,13 +371,14 @@ namespace SerialMonitor.Business
         {
             if (e.PropertyName == nameof(SettingsManager.AutoswitchEnabled))
             {
-                if (SettingsManager.AutoswitchEnabled)
+                if (_settingsManager.AutoswitchEnabled)
                 {
                     UpdatePorts();
                 }
             }
         }
 
+        private readonly SettingsManager _settingsManager;
         private readonly IMainThreadRunner _mainThreadRunner;
         private readonly IUsbNotification _usbNotification;
         private SerialPort _serialPort;

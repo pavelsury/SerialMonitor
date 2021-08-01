@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
-using SerialMonitor.Business.Factories;
+using SerialMonitor.Win.Business.Factories;
 using Task = System.Threading.Tasks.Task;
 
 namespace SerialMonitor

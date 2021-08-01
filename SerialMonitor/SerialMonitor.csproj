@@ -103,9 +103,13 @@
       <Project>{cb6de9b9-5f21-4556-b255-dc71d1288201}</Project>
       <Name>SerialMonitor.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SerialMonitor.Ui\SerialMonitor.Ui.csproj">
+    <ProjectReference Include="..\SerialMonitor.Win.Ui\SerialMonitor.Win.Ui.csproj">
       <Project>{788c4516-156a-40ae-bf34-fd1158ed1b97}</Project>
-      <Name>SerialMonitor.Ui</Name>
+      <Name>SerialMonitor.Win.Ui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SerialMonitor.Win.Business\SerialMonitor.Win.Business.csproj">
+      <Project>{471781d2-18fc-4304-9de6-f334ea23204b}</Project>
+      <Name>SerialMonitor.Win.Business</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -115,8 +119,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Publish (
-dotnet publish $(SolutionDir)SerialMonitor.App\SerialMonitor.App.csproj /p:TargetFramework=net5.0-windows /p:PublishProfile=FolderProfile_Framework_Dependent.pubxml
-dotnet publish $(SolutionDir)SerialMonitor.App\SerialMonitor.App.csproj /p:TargetFramework=net5.0-windows /p:PublishProfile=FolderProfile_Self_Contained.pubxml
+dotnet publish $(SolutionDir)SerialMonitor.Win.App\SerialMonitor.Win.App.csproj /p:TargetFramework=net5.0-windows /p:PublishProfile=FolderProfile_Framework_Dependent.pubxml
+dotnet publish $(SolutionDir)SerialMonitor.Win.App\SerialMonitor.Win.App.csproj /p:TargetFramework=net5.0-windows /p:PublishProfile=FolderProfile_Self_Contained.pubxml
 powershell -ExecutionPolicy Bypass -File $(SolutionDir)BuildScripts\Publish.ps1 $(SolutionDir)
 )</PostBuildEvent>
   </PropertyGroup>

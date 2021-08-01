@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SerialMonitor.Business.Enums;
@@ -18,7 +17,8 @@ namespace SerialMonitor.Business.Data
         public string HexSeparator { get; set; } = " ";
         public int HexFixedColumns { get; set; } = DefaultHexFixedColumns;
         public bool PipeEnabled { get; set; }
-        public FontStyle FontStyle { get; set; } = FontStyles.Normal;
+        public int FontSize { get; set; } = DefaultFontSize;
+        public string FontStyle { get; set; }
 
         public StandaloneAppSettings StandaloneAppSettings { get; set; } = new StandaloneAppSettings();
 
@@ -39,6 +39,11 @@ namespace SerialMonitor.Business.Data
                 HexFixedColumns = DefaultHexFixedColumns;
             }
 
+            if (FontSize < DefaultFontSizeMin || FontSize > DefaultFontSizeMax)
+            {
+                FontSize = DefaultFontSize;
+            }
+
             if (StandaloneAppSettings == null)
             {
                 StandaloneAppSettings = new StandaloneAppSettings();
@@ -48,5 +53,8 @@ namespace SerialMonitor.Business.Data
         public const int DefaultHexFixedColumns = 8;
         public const int DefaultHexFixedColumnsMin = 1;
         public const int DefaultHexFixedColumnsMax = 100;
+        public const int DefaultFontSizeMin = 6;
+        public const int DefaultFontSizeMax = 72;
+        private const int DefaultFontSize = 11;
     }
 }

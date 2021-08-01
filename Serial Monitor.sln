@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.App", "SerialMonitor.App\SerialMonitor.App.csproj", "{E5EC1111-F9EF-4413-AD32-312FFD1B4C6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.Win.App", "SerialMonitor.Win.App\SerialMonitor.Win.App.csproj", "{E5EC1111-F9EF-4413-AD32-312FFD1B4C6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialMonitor", "SerialMonitor\SerialMonitor.csproj", "{4C0D63C8-0406-431A-8173-C0EEFAD1625F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.Business", "SerialMonitor.Business\SerialMonitor.Business.csproj", "{CB6DE9B9-5F21-4556-B255-DC71D1288201}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.Ui", "SerialMonitor.Ui\SerialMonitor.Ui.csproj", "{788C4516-156A-40AE-BF34-FD1158ED1B97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.Win.Ui", "SerialMonitor.Win.Ui\SerialMonitor.Win.Ui.csproj", "{788C4516-156A-40AE-BF34-FD1158ED1B97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.Win.Business", "SerialMonitor.Win.Business\SerialMonitor.Win.Business.csproj", "{471781D2-18FC-4304-9DE6-F334EA23204B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,12 @@ Global
 		{788C4516-156A-40AE-BF34-FD1158ED1B97}.Publish|Any CPU.Build.0 = Debug|Any CPU
 		{788C4516-156A-40AE-BF34-FD1158ED1B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{788C4516-156A-40AE-BF34-FD1158ED1B97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{471781D2-18FC-4304-9DE6-F334EA23204B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{471781D2-18FC-4304-9DE6-F334EA23204B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{471781D2-18FC-4304-9DE6-F334EA23204B}.Publish|Any CPU.ActiveCfg = Debug|Any CPU
+		{471781D2-18FC-4304-9DE6-F334EA23204B}.Publish|Any CPU.Build.0 = Debug|Any CPU
+		{471781D2-18FC-4304-9DE6-F334EA23204B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{471781D2-18FC-4304-9DE6-F334EA23204B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

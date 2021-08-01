@@ -69,6 +69,51 @@ namespace SerialMonitor.Business
 
         public void PrintErrorMessage(string message) => PrintMessage(message, EMessageType.Error);
 
+        public void EnsureNewline(bool writeToFile)
+        {
+            if (!_isLastNewline)
+            {
+                PrintToConsole(Environment.NewLine, EMessageType.Info, writeToFile);
+            }
+        }
+
+        protected void ReprintAll()
+        {
+            ClearConsole();
+
+            _dataItems.ForEach(d => PrintToConsole(d, false));
+            _fileOutputManager.EnsureNewline();
+        }
+
+        protected virtual void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(SettingsManager.ViewMode):
+                case nameof(SettingsManager.WriteMessageToConsole):
+                case nameof(SettingsManager.WriteCommandToConsole):
+                case nameof(SettingsManager.FontSize):
+                    ReprintAll();
+                    return;
+
+                case nameof(SettingsManager.HexPrefixEnabled):
+                case nameof(SettingsManager.HexSeparator):
+                    if (_settingsManager.ViewMode == EViewMode.Hex ||
+                        _settingsManager.ViewMode == EViewMode.HexColumns)
+                    {
+                        ReprintAll();
+                    }
+                    return;
+
+                case nameof(SettingsManager.HexFixedColumns):
+                    if (_settingsManager.ViewMode == EViewMode.HexColumns)
+                    {
+                        ReprintAll();
+                    }
+                    return;
+            }
+        }
+
         private void PrintToConsole(DataItem dataItem, bool writeToFile)
         {
             if (dataItem.MessageType == EMessageType.Data)
@@ -176,50 +221,6 @@ namespace SerialMonitor.Business
             if (writeToFile)
             {
                 _fileOutputManager.Write(text);
-            }
-        }
-
-        private void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(SettingsManager.ViewMode):
-                case nameof(SettingsManager.WriteMessageToConsole):
-                case nameof(SettingsManager.WriteCommandToConsole):
-                    ReprintAll();
-                    return;
-
-                case nameof(SettingsManager.HexPrefixEnabled):
-                case nameof(SettingsManager.HexSeparator):
-                    if (_settingsManager.ViewMode == EViewMode.Hex ||
-                        _settingsManager.ViewMode == EViewMode.HexColumns)
-                    {
-                        ReprintAll();
-                    }
-                    return;
-
-                case nameof(SettingsManager.HexFixedColumns):
-                    if (_settingsManager.ViewMode == EViewMode.HexColumns)
-                    {
-                        ReprintAll();
-                    }
-                    return;
-            }
-        }
-
-        private void ReprintAll()
-        {
-            ClearConsole();
-
-            _dataItems.ForEach(d => PrintToConsole(d, false));
-            _fileOutputManager.EnsureNewline();
-        }
-
-        public void EnsureNewline(bool writeToFile)
-        {
-            if (!_isLastNewline)
-            {
-                PrintToConsole(Environment.NewLine, EMessageType.Info, writeToFile);
             }
         }
 

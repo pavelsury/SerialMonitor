@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
-    <UseWPF>true</UseWPF>
+    <TargetFrameworks>net472;net5.0</TargetFrameworks>
     <AssemblyName>SerialMonitor2.Business</AssemblyName>
     <Configurations>Debug;Release;Publish</Configurations>
   </PropertyGroup>

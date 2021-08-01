@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using Newtonsoft.Json;
 using SerialMonitor.Business.Data;
 using SerialMonitor.Business.Enums;
@@ -96,26 +95,6 @@ namespace SerialMonitor.Business
             }
         }
 
-        public Color BackgroundColor
-        {
-            get => _backgroundColor;
-            set
-            {
-                AppSettings.StandaloneAppSettings.BackgroundColor = value;
-                SetNotifyingValueProperty(ref _backgroundColor, value);
-            }
-        }
-
-        public Color ForegroundColor
-        {
-            get => _foregroundColor;
-            set
-            {
-                AppSettings.StandaloneAppSettings.ForegroundColor = value;
-                SetNotifyingValueProperty(ref _foregroundColor, value);
-            }
-        }
-
         public int HexFixedColumns
         {
             get => _hexFixedColumns;
@@ -123,6 +102,16 @@ namespace SerialMonitor.Business
             {
                 AppSettings.HexFixedColumns = value;
                 SetNotifyingValueProperty(ref _hexFixedColumns, value);
+            }
+        }
+
+        public int FontSize
+        {
+            get => _fontSize;
+            set
+            {
+                AppSettings.FontSize = value;
+                SetNotifyingValueProperty(ref _fontSize, value);
             }
         }
 
@@ -165,7 +154,6 @@ namespace SerialMonitor.Business
                     var appSettings = JsonConvert.DeserializeObject<AppSettings>(FileHelper.ReadAllText(_settingsFilename), serializationSettings);
                     if (appSettings != null)
                     {
-                        appSettings.Validate();
                         AppSettings = appSettings;
                     }
                 }
@@ -173,18 +161,23 @@ namespace SerialMonitor.Business
                 { }
                 finally
                 {
-                    AutoswitchEnabled = AppSettings.AutoswitchEnabled;
-                    ViewMode = AppSettings.ViewMode;
-                    WriteMessageToConsole = AppSettings.WriteMessageToConsole;
-                    WriteCommandToConsole = AppSettings.WriteCommandToConsole;
-                    HexPrefixEnabled = AppSettings.HexPrefixEnabled;
-                    HexSeparator = AppSettings.HexSeparator;
-                    HexFixedColumns = AppSettings.HexFixedColumns;
-                    PipeEnabled = AppSettings.PipeEnabled;
-                    BackgroundColor = AppSettings.StandaloneAppSettings.BackgroundColor;
-                    ForegroundColor = AppSettings.StandaloneAppSettings.ForegroundColor;
+                    OnSettingsLoaded();
                 }
             });
+        }
+
+        protected virtual void OnSettingsLoaded()
+        {
+            AppSettings.Validate();
+            AutoswitchEnabled = AppSettings.AutoswitchEnabled;
+            ViewMode = AppSettings.ViewMode;
+            WriteMessageToConsole = AppSettings.WriteMessageToConsole;
+            WriteCommandToConsole = AppSettings.WriteCommandToConsole;
+            HexPrefixEnabled = AppSettings.HexPrefixEnabled;
+            HexSeparator = AppSettings.HexSeparator;
+            HexFixedColumns = AppSettings.HexFixedColumns;
+            PipeEnabled = AppSettings.PipeEnabled;
+            FontSize = AppSettings.FontSize;
         }
 
         private readonly string _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SerialMonitor2");
@@ -199,7 +192,6 @@ namespace SerialMonitor.Business
         private string _hexSeparator;
         private int _hexFixedColumns;
         private bool _pipeEnabled;
-        private Color _backgroundColor;
-        private Color _foregroundColor;
+        private int _fontSize;
     }
 }

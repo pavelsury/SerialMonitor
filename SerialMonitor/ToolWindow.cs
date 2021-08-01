@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
-using SerialMonitor.Business;
-using SerialMonitor.Ui;
+using SerialMonitor.Win.Business.Factories;
+using SerialMonitor.Win.Ui;
 
 namespace SerialMonitor
 {
@@ -13,7 +13,7 @@ namespace SerialMonitor
         {
             Caption = "Serial Monitor 2";
             InitializeResourceKeys();
-            var serialMonitorControl = new SerialMonitorControl { DataContext = modelFactory.PortManager };
+            var serialMonitorControl = new SerialMonitorControl { DataContext = modelFactory };
             modelFactory.SetConsoleWriter(serialMonitorControl);
             Content = serialMonitorControl;
         }

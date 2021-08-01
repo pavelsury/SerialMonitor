@@ -1,10 +1,8 @@
-﻿using System.Windows.Media;
-
-namespace SerialMonitor.Business.Data
+﻿namespace SerialMonitor.Business.Data
 {
     public class StandaloneAppSettings
     {
-        public Color BackgroundColor { get; set; } = Colors.White;
-        public Color ForegroundColor { get; set; } = Colors.Black;
+        public string BackgroundColor { get; set; }
+        public string ForegroundColor { get; set; }
     }
 }

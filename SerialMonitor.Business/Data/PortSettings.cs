@@ -30,8 +30,6 @@ namespace SerialMonitor.Business.Data
         [JsonProperty("EncodingCodePage")]
         public Encoding Encoding { get; set; } = Encoding.GetEncoding(0);
         
-        public int FontSize { get; set; } = DefaultFontSize;
-        
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(Parity.None)]
         public Parity Parity { get; set; } = Parity.None;
@@ -58,11 +56,6 @@ namespace SerialMonitor.Business.Data
                 DataBits = DefaultDataBits;
             }
 
-            if (FontSize < DefaultFontSizeMin || FontSize > DefaultFontSizeMax)
-            {
-                FontSize = DefaultFontSize;
-            }
-
             if (Encoding == null)
             {
                 Encoding = Encoding.GetEncoding(0);
@@ -79,12 +72,8 @@ namespace SerialMonitor.Business.Data
             }
         }
 
-        public const int DefaultFontSizeMin = 6;
-        public const int DefaultFontSizeMax = 72;
-
         private const int DefaultBaudRate = 9600;
         private const int DefaultDataBits = 8;
-        private const int DefaultFontSize = 11;
         private const int DefaultReadTimeoutMs = 500;
         private const int DefaultWriteTimeoutMs = 500;
     }
