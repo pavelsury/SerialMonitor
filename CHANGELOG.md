@@ -2,6 +2,12 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.9.0 (14.8.2021)
+### Added
+-   Available as a standalone application
+### Changed
+-   Small fixes
+
 ## v1.8.0 (9.6.2021)
 ### Added
 -   Automatically switch to available port

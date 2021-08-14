@@ -34,6 +34,8 @@
             <Paragraph Margin="0,20,0,0" FontSize="12">
                 <Run FontWeight="Bold">Releases</Run>
                 <LineBreak/>
+                <Run>1.9.0 - Available as a standalone application</Run>
+                <LineBreak/>
                 <Run>1.8.0 - Automatically switch to available port + small fixes</Run>
                 <LineBreak/>
                 <Run>1.7.0 - Pipe IPC + small fixes</Run>
@@ -87,7 +89,7 @@
                            ToolTip="{Binding DownloadNoFrameworkLink, ElementName=Control}"
                            Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                            RequestNavigate="OnRequestNavigate">SerialMonitor2_without_framework.exe</Hyperlink>
-                <Run>is pretty small but it doesn't contain .NET framework. Means, you can be asked to download and install .NET framework in case your Windows doesn't have it installed already.</Run>
+                <Run>is pretty small but it doesn't contain .NET framework. Means, you can be asked to download and install .NET framework in case your Windows doesn't have it installed yet.</Run>
                 <LineBreak/>
                 <LineBreak/>
                 <Run>Command line options:</Run>
