@@ -48,7 +48,7 @@
             </Paragraph>
             
             <Paragraph Margin="0,20,0,0" FontSize="12">
-                <Run FontWeight="Bold">Notes</Run>
+                <Run FontWeight="Bold">Notes on Pipe IPC</Run>
                 <LineBreak/>
                 <Run>Pipe IPC stands for "Pipe Inter Process Communication"</Run>
                 <LineBreak/>
@@ -65,6 +65,35 @@
                 <LineBreak/>
                 <LineBreak/>
                 <Run>This Pipe IPC feature comes in handy when you are developing for Arduino or other similar device and you need to close the port temporarily in order to upload new firmware into the device.</Run>
+                <LineBreak/>
+                <LineBreak/>
+
+                <Run FontWeight="Bold">Notes on standalone app</Run>
+                <LineBreak/>
+                <Run>Serial Monitor 2 can now be run as a standalone application.</Run>
+                <LineBreak/>
+                <LineBreak/>
+                <Run>You can choose from two versions:</Run>
+                <LineBreak/>
+                <Run>-</Run>
+                <Hyperlink NavigateUri="{Binding DownloadLink, ElementName=Control}"
+                           ToolTip="{Binding DownloadLink, ElementName=Control}"
+                           Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
+                           RequestNavigate="OnRequestNavigate">SerialMonitor2.exe</Hyperlink>
+                <Run>contains everything to run the app but is little bit bigger.</Run>
+                <LineBreak/>
+                <Run>-</Run>
+                <Hyperlink NavigateUri="{Binding DownloadNoFrameworkLink, ElementName=Control}"
+                           ToolTip="{Binding DownloadNoFrameworkLink, ElementName=Control}"
+                           Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
+                           RequestNavigate="OnRequestNavigate">SerialMonitor2_without_framework.exe</Hyperlink>
+                <Run>is pretty small but it doesn't contain .NET framework. Means, you can be asked to download and install .NET framework in case your Windows doesn't have it installed already.</Run>
+                <LineBreak/>
+                <LineBreak/>
+                <Run>Command line options:</Run>
+                <LineBreak/>
+                <Run FontStyle="Italic">-settings_file="your settings filename"</Run>
+
                 <LineBreak/>
                 <LineBreak/>
                 <Run Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat='Copyright © {0:yyyy} Pavel Surý &amp; Egor Grushko', Mode=OneWay}"/>

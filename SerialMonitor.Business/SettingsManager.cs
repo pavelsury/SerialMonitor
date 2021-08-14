@@ -10,11 +10,6 @@ namespace SerialMonitor.Business
 {
     public class SettingsManager : NotifyPropertyChanged
     {
-        public SettingsManager()
-        {
-            _settingsFilename = Path.Combine(_settingsFolder, "Settings.json");
-        }
-
         public PortInfo SelectedPort
         {
             get => _selectedPort;
@@ -126,18 +121,22 @@ namespace SerialMonitor.Business
             SelectedPort.Settings = portSettings;
         }
 
-        public void Save()
-        {
-            Directory.CreateDirectory(_settingsFolder);
-            FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
-        }
+        public void Save() => FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
 
-        public Task LoadAsync()
+        public Task LoadAsync(string settingsFilename = null)
         {
             return Task.Run(() =>
             {
                 try
                 {
+                    _settingsFilename = settingsFilename;
+                    if (_settingsFilename == null)
+                    {
+                        var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SerialMonitor2");
+                        _settingsFilename = Path.Combine(settingsFolder, "Settings.json");
+                        Directory.CreateDirectory(settingsFolder);
+                    }
+
                     if (!File.Exists(_settingsFilename))
                     {
                         return;
@@ -180,9 +179,7 @@ namespace SerialMonitor.Business
             FontSize = AppSettings.FontSize;
         }
 
-        private readonly string _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SerialMonitor2");
-        private readonly string _settingsFilename;
-
+        private string _settingsFilename;
         private PortInfo _selectedPort;
         private bool _autoswitchEnabled;
         private EViewMode _viewMode = EViewMode.Text;

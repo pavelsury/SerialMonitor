@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using SerialMonitor.Business;
+using SerialMonitor.Business.Helpers;
 using SerialMonitor.Win.Business;
 using SerialMonitor.Win.Business.Factories;
 using SerialMonitor.Win.Ui;
@@ -14,7 +15,7 @@ namespace SerialMonitor.Win.App
         {
             AppInfo.IsStandaloneApp = true;
             InitializeResourceKeys();
-            await FactoryBuilder.InitializeAsync();
+            await FactoryBuilder.InitializeAsync(e.Args.GetOptionalArgument("settings_file"));
             _modelFactory = FactoryBuilder.ModelFactory;
             _modelFactory.SettingsManager.PropertyChanged += OnSettingsManagerChanged;
             UpdateForegroundResources();

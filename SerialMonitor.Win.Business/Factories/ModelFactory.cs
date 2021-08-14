@@ -16,9 +16,9 @@ namespace SerialMonitor.Win.Business.Factories
             _pipeManager = new PipeManager(PortManager, SettingsManager, ConsoleManager, _mainThreadRunner);
         }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(string settingsFilename = null)
         {
-            await SettingsManager.LoadAsync();
+            await SettingsManager.LoadAsync(settingsFilename);
         }
 
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
