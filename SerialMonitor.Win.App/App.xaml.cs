@@ -6,6 +6,7 @@ using SerialMonitor.Business.Helpers;
 using SerialMonitor.Win.Business;
 using SerialMonitor.Win.Business.Factories;
 using SerialMonitor.Win.Ui;
+using SerialMonitor.Win.Ui.Factories;
 
 namespace SerialMonitor.Win.App
 {
@@ -15,17 +16,16 @@ namespace SerialMonitor.Win.App
         {
             AppInfo.IsStandaloneApp = true;
             InitializeResourceKeys();
-            await FactoryBuilder.InitializeAsync(e.Args.GetOptionalArgument("settings_file"));
-            _modelFactory = FactoryBuilder.ModelFactory;
+            await BusinessFactoryBuilder.InitializeAsync(e.Args.GetOptionalArgument("settings_file"));
+            await UiFactoryBuilder.InitializeAsync();
+            _modelFactory = BusinessFactoryBuilder.ModelFactory;
             _modelFactory.SettingsManager.PropertyChanged += OnSettingsManagerChanged;
             UpdateForegroundResources();
 
-            var serialMonitorControl = new SerialMonitorControl { DataContext = _modelFactory };
-            _modelFactory.SetConsoleWriter(serialMonitorControl);
             new MainWindow
             {
                 DataContext = _modelFactory.SettingsManager,
-                Content = serialMonitorControl
+                Content = UiFactoryBuilder.UiFactory.SerialMonitorControl
             }.Show();
         }
 

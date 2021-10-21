@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
 using SerialMonitor.Win.Business.Factories;
+using SerialMonitor.Win.Ui.Factories;
 using Task = System.Threading.Tasks.Task;
 
 namespace SerialMonitor
@@ -48,13 +49,14 @@ namespace SerialMonitor
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            await FactoryBuilder.InitializeAsync();
+            await BusinessFactoryBuilder.InitializeAsync();
+            await UiFactoryBuilder.InitializeAsync();
             await CommandHelper.InitializeAsync(this);
         }
 
         protected override WindowPane InstantiateToolWindow(Type toolWindowType)
         {
-            return toolWindowType == typeof(ToolWindow) ? new ToolWindow(FactoryBuilder.ModelFactory) : base.InstantiateToolWindow(toolWindowType);
+            return toolWindowType == typeof(ToolWindow) ? new ToolWindow(UiFactoryBuilder.UiFactory) : base.InstantiateToolWindow(toolWindowType);
         }
     }
 }

@@ -11,8 +11,9 @@ namespace SerialMonitor.Win.Ui
 {
     public partial class SerialMonitorControl : UserControl, IConsoleWriter
     {
-        public SerialMonitorControl()
+        public SerialMonitorControl(ModelFactory modelFactory)
         {
+            DataContext = modelFactory;
             InitializeComponent();
             FlowDocument.Blocks.Add(_paragraph);
             _dataBrush = (SolidColorBrush)TryFindResource(ResourceKeys.TextBoxTextBrushKey);

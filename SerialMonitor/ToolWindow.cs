@@ -1,21 +1,19 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
-using SerialMonitor.Win.Business.Factories;
 using SerialMonitor.Win.Ui;
+using SerialMonitor.Win.Ui.Factories;
 
 namespace SerialMonitor
 {
     [Guid("decfc908-9657-44ef-beea-8eecc6efceab")]
     public class ToolWindow : ToolWindowPane
     {
-        public ToolWindow(ModelFactory modelFactory) : base(null)
+        public ToolWindow(UiFactory uiFactory) : base(null)
         {
             Caption = "Serial Monitor 2";
             InitializeResourceKeys();
-            var serialMonitorControl = new SerialMonitorControl { DataContext = modelFactory };
-            modelFactory.SetConsoleWriter(serialMonitorControl);
-            Content = serialMonitorControl;
+            Content = uiFactory.SerialMonitorControl;
         }
 
         private static void InitializeResourceKeys()
