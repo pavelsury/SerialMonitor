@@ -15,9 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialMonitor.Win.Business"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SerialMonitorShared", "SerialMonitorShared\SerialMonitorShared.shproj", "{105F1C57-D75C-4ED0-A497-3488B3781F8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialMonitor_VS64", "SerialMonitor_VS64\SerialMonitor_VS64.csproj", "{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SerialMonitorShared\SerialMonitorShared.projitems*{105f1c57-d75c-4ed0-a497-3488b3781f8f}*SharedItemsImports = 13
+		SerialMonitorShared\SerialMonitorShared.projitems*{20bf560c-7cbe-438a-9cee-cca13fd6ad08}*SharedItemsImports = 4
 		SerialMonitorShared\SerialMonitorShared.projitems*{4c0d63c8-0406-431a-8173-c0eefad1625f}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +59,12 @@ Global
 		{471781D2-18FC-4304-9DE6-F334EA23204B}.Publish|Any CPU.Build.0 = Debug|Any CPU
 		{471781D2-18FC-4304-9DE6-F334EA23204B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{471781D2-18FC-4304-9DE6-F334EA23204B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}.Publish|Any CPU.ActiveCfg = Debug|Any CPU
+		{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}.Publish|Any CPU.Build.0 = Debug|Any CPU
+		{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20BF560C-7CBE-438A-9CEE-CCA13FD6AD08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
