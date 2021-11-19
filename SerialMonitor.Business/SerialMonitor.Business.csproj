@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;net5.0</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
     <AssemblyName>SerialMonitor2.Business</AssemblyName>
-    <Configurations>Debug;Release;Publish</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net5'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6'))">
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>

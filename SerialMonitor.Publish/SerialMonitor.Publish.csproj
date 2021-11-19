@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;dotnet publish $(SolutionDir)SerialMonitor.Win.App\SerialMonitor.Win.App.csproj /p:TargetFramework=net6.0-windows /p:PublishProfile=FolderProfile_Framework_Dependent.pubxml&#xD;&#xA;dotnet publish $(SolutionDir)SerialMonitor.Win.App\SerialMonitor.Win.App.csproj /p:TargetFramework=net6.0-windows /p:PublishProfile=FolderProfile_Self_Contained.pubxml&#xD;&#xA;powershell -ExecutionPolicy Bypass -File $(SolutionDir)BuildScripts\Publish.ps1 $(SolutionDir)&#xD;&#xA;)" />
+  </Target>
+
+</Project>

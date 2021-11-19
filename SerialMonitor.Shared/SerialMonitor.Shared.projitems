@@ -6,7 +6,7 @@
     <SharedGUID>105f1c57-d75c-4ed0-a497-3488b3781f8f</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>SerialMonitorShared</Import_RootNamespace>
+    <Import_RootNamespace>SerialMonitor.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\VSPackage.resx" />
