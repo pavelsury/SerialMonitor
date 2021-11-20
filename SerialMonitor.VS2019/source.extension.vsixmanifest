@@ -6,7 +6,7 @@
     <Description xml:space="preserve">Serial Port Monitor for Visual Studio</Description>
     <MoreInfo>https://github.com/pavelsury/SerialMonitor2</MoreInfo>
     <License>LICENSE.txt</License>
-    <Icon>Resources\SerialMonitorIcon.png</Icon>
+    <Icon>SerialMonitorIcon.png</Icon>
     <Tags>serial, port, com, monitor, com port, serial port</Tags>
   </Metadata>
   <Installation>
