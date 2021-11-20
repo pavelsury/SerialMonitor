@@ -15,12 +15,12 @@ This Visual Studio extension allows you to debug programs that work with serial 
 - Pipe IPC
 - Automatically switch to available port
 - Available as a standalone application
+- VS2022 support
 
 ## What's coming next
-- VS2022 support
-- Make the standalone app cross-platform
 - Send-command variables (like %NOW%, %NOW_UTC%, %NOW_DATE%, %NOW_TIME%, ...)
 - Text color settings
+- Make the standalone app cross-platform
 
 ## Notes on Pipe IPC
 Pipe IPC stands for "Pipe Inter Process Communication".\

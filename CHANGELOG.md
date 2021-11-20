@@ -2,6 +2,12 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.10.0 (20.11.2021)
+### Added
+-   VS2022 support
+### Changed
+-   Standalone application targets .NET 6
+
 ## v1.9.0 (14.8.2021)
 ### Added
 -   Available as a standalone application
