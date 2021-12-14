@@ -2,6 +2,10 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.10.1 (14.12.2021)
+### Changed
+-   Fix DtrEnable not set
+
 ## v1.10.0 (20.11.2021)
 ### Added
 -   VS2022 support
