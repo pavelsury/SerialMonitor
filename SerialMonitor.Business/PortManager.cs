@@ -108,6 +108,7 @@ namespace SerialMonitor.Business
                         _serialPort.Handshake = SelectedPort.Settings.Handshake;
                         _serialPort.Parity = SelectedPort.Settings.Parity;
                         _serialPort.StopBits = SelectedPort.Settings.StopBits;
+                        _serialPort.DtrEnable = SelectedPort.Settings.DTREnabled;
                         _serialPort.ReadTimeout = SelectedPort.Settings.ReadTimeoutMs;
                         _serialPort.WriteTimeout = SelectedPort.Settings.WriteTimeoutMs;
                         _serialPort.Open();
