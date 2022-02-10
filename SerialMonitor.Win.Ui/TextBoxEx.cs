@@ -50,7 +50,9 @@ namespace SerialMonitor.Win.Ui
         {
             UpdateTextProperties();
             base.OnLostFocus(e);
-        }        protected override void OnKeyDown(KeyEventArgs e)
+        }
+        
+        protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -63,7 +65,6 @@ namespace SerialMonitor.Win.Ui
 
             base.OnKeyDown(e);
         }
-
 
         private void UpdateTextProperties()
         {

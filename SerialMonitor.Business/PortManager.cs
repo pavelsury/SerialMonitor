@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -79,6 +80,12 @@ namespace SerialMonitor.Business
         
         public bool IsConnected => _connectionStatus == EConnectionStatus.Connected;
 
+        public bool IsFileSending
+        {
+            get => _isFileSending;
+            set => SetNotifyingValueProperty(ref _isFileSending, value);
+        }
+
         public void Connect()
         {
             if (!IsDisconnected)
@@ -147,6 +154,107 @@ namespace SerialMonitor.Business
         }
 
         public void Disconnect() => Disconnect(false);
+
+        public void SendText(string text)
+        {
+            string newline;
+            switch (SelectedPort.Settings.SendingNewline)
+            {
+                case ESendingNewline.None:
+                    newline = string.Empty;
+                    break;
+                case ESendingNewline.Crlf:
+                    newline = "\r\n";
+                    break;
+                case ESendingNewline.Lf:
+                    newline = "\n";
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+
+            ConsoleManager.PrintCommand($"Sent command: {text}");
+
+            var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
+
+            try
+            {
+                _serialPort.Write(data, 0, data.Length);
+            }
+            catch (Exception e)
+            {
+                ConsoleManager.PrintWarningMessage(e.Message);
+            }
+        }
+
+        public async void SendFileAsync(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                return;
+            }
+
+            IsFileSending = true;
+
+            ConsoleManager.PrintCommand($"Sent file: {filename}");
+
+            _settingsManager.AppSettings.SendFileLastFolder = Path.GetDirectoryName(filename);
+
+            try
+            {
+                var data = File.ReadAllBytes(filename);
+                var batchDelayMs = Math.Max(0, _settingsManager.AppSettings.SendFileBatchDelayMs);
+                var batchSize = Math.Max(0, _settingsManager.AppSettings.SendFileBatchByteSize);
+                if (batchSize == 0)
+                {
+                    batchSize = data.Length;
+                }
+
+                var batchesCount = Math.DivRem(data.Length, batchSize, out var remainderCount);
+
+                for (var i = 0; i < batchesCount; i++)
+                {
+                    _serialPort.Write(data, i * batchSize, batchSize);
+
+                    var needToDelay = batchDelayMs > 0 && (i + 1 < batchesCount || remainderCount > 0);
+                    if (needToDelay)
+                    {
+                        await Task.Delay(batchDelayMs);
+                    }
+                }
+
+                if (remainderCount > 0)
+                {
+                    _serialPort.Write(data, batchesCount * batchSize, remainderCount);
+                }
+            }
+            catch (Exception e)
+            {
+                ConsoleManager.PrintWarningMessage(e.Message);
+            }
+            finally
+            {
+                IsFileSending = false;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_serialPort == null)
+            {
+                return;
+            }
+
+            _usbNotification.DeviceChanged -= OnUsbDevicesChanged;
+
+            try
+            {
+                _serialPort.Dispose();
+            }
+            catch (Exception)
+            { }
+            
+            _serialPort = null;
+        }
 
         private void Disconnect(bool isFailure)
         {
@@ -221,56 +329,6 @@ namespace SerialMonitor.Business
                     _dataManager.ProcessReceivedData(buffer, bytesCount);
                 }
             }
-        }
-
-        public void SendText(string text)
-        {
-            string newline;
-            switch (SelectedPort.Settings.SendingNewline)
-            {
-                case ESendingNewline.None:
-                    newline = string.Empty;
-                    break;
-                case ESendingNewline.Crlf:
-                    newline = "\r\n";
-                    break;
-                case ESendingNewline.Lf:
-                    newline = "\n";
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-            }
-
-            ConsoleManager.PrintCommand($"Sent command: {text}");
-
-            var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
-
-            try
-            {
-                _serialPort.Write(data, 0, data.Length);
-            }
-            catch (Exception e)
-            {
-                ConsoleManager.PrintWarningMessage(e.Message);
-            }
-        }
-
-        public void Dispose()
-        {
-            if (_serialPort == null)
-            {
-                return;
-            }
-
-            _usbNotification.DeviceChanged -= OnUsbDevicesChanged;
-
-            try
-            {
-                _serialPort.Dispose();
-            }
-            catch (Exception)
-            { }
-            
-            _serialPort = null;
         }
 
         private PortInfo SelectedPort
@@ -386,5 +444,6 @@ namespace SerialMonitor.Business
         private EConnectionStatus _connectionStatus;
         private DataManager _dataManager;
         private Task _portTask = Task.CompletedTask;
+        private bool _isFileSending;
     }
 }

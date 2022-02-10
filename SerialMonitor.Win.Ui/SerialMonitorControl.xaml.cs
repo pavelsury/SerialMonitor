@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Microsoft.Win32;
 using SerialMonitor.Business;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Win.Business.Factories;
@@ -88,6 +90,35 @@ namespace SerialMonitor.Win.Ui
         private void OnClearButtonClick(object sender, RoutedEventArgs e) => PortManager.ConsoleManager.ClearAll();
 
         private void OnSendButtonClick(object sender, RoutedEventArgs e) => PortManager.SendText(MessageTextBox.Text);
+
+        private void OnSendFileButtonClick(object sender, RoutedEventArgs e)
+        {
+            string filename = null;
+            var text = MessageTextBox.Text;
+            
+            if (!string.IsNullOrWhiteSpace(text) && File.Exists(text))
+            {
+                filename = text;
+            }
+
+            if (filename == null)
+            {
+                var openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = ModelFactory.SettingsManager.AppSettings.SendFileLastFolder
+                };
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    filename = openFileDialog.FileName;
+                }
+            }
+
+            if (filename != null)
+            {
+                PortManager.SendFileAsync(filename);
+            }
+        }
 
         private void OnMessageTextBoxKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {

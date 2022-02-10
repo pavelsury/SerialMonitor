@@ -19,6 +19,9 @@ namespace SerialMonitor.Business.Data
         public bool PipeEnabled { get; set; }
         public int FontSize { get; set; } = DefaultFontSize;
         public string FontStyle { get; set; }
+        public string SendFileLastFolder { get; set; }
+        public int SendFileBatchByteSize { get; set; }
+        public int SendFileBatchDelayMs { get; set; }
 
         public StandaloneAppSettings StandaloneAppSettings { get; set; } = new StandaloneAppSettings();
 
