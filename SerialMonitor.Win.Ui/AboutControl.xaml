@@ -99,6 +99,8 @@
                 <Run>Command line options:</Run>
                 <LineBreak/>
                 <Run FontStyle="Italic">-settings_file="your settings filename"</Run>
+                <LineBreak/>
+                <Run FontStyle="Italic">-port=selected COM port name</Run>
 
                 <LineBreak/>
                 <LineBreak/>

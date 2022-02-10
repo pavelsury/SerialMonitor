@@ -41,3 +41,4 @@ You can choose from two versions:
 Command line options:
 \
 *-settings_file="your settings filename"*
+*-port=selected COM port name*

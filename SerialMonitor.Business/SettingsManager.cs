@@ -123,7 +123,7 @@ namespace SerialMonitor.Business
 
         public void Save() => FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
 
-        public Task LoadAsync(string settingsFilename = null)
+        public Task LoadAsync(string settingsFilename, string selectedPort)
         {
             return Task.Run(() =>
             {
@@ -160,6 +160,10 @@ namespace SerialMonitor.Business
                 { }
                 finally
                 {
+                    if (!string.IsNullOrEmpty(selectedPort))
+                    {
+                        AppSettings.SelectedPort = selectedPort;
+                    }
                     OnSettingsLoaded();
                 }
             });

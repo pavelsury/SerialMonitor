@@ -16,7 +16,11 @@ namespace SerialMonitor.Win.App
         {
             AppInfo.IsStandaloneApp = true;
             InitializeResourceKeys();
-            await BusinessFactoryBuilder.InitializeAsync(e.Args.GetOptionalArgument("settings_file"));
+            
+            await BusinessFactoryBuilder.InitializeAsync(
+                e.Args.GetOptionalArgument("settings_file"),
+                e.Args.GetOptionalArgument("port"));
+
             await UiFactoryBuilder.InitializeAsync();
             _modelFactory = BusinessFactoryBuilder.ModelFactory;
             _modelFactory.SettingsManager.PropertyChanged += OnSettingsManagerChanged;
