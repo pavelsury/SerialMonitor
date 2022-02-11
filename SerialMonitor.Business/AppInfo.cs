@@ -2,7 +2,7 @@
 {
     public class AppInfo
     {
-        public static string Version = "1.10.1";
+        public static string Version = "1.11.0";
         public static bool IsStandaloneApp { get; set; }
     }
 }
