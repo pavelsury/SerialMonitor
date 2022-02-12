@@ -157,6 +157,11 @@ namespace SerialMonitor.Business
 
         public void SendText(string text)
         {
+            if (_settingsManager.AppSettings.ClearConsoleBeforeCommandSent)
+            {
+                ConsoleManager.ClearAll();
+            }
+
             string newline;
             switch (SelectedPort.Settings.SendingNewline)
             {
@@ -191,6 +196,11 @@ namespace SerialMonitor.Business
             if (!File.Exists(filename))
             {
                 return;
+            }
+
+            if (_settingsManager.AppSettings.ClearConsoleBeforeCommandSent)
+            {
+                ConsoleManager.ClearAll();
             }
 
             IsFileSending = true;

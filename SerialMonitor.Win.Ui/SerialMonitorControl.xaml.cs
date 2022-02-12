@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using SerialMonitor.Business;
@@ -120,12 +121,15 @@ namespace SerialMonitor.Win.Ui
             }
         }
 
-        private void OnMessageTextBoxKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void OnMessageTextBoxKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 PortManager.SendText(MessageTextBox.Text);
-                MessageTextBox.Text = string.Empty;
+                if (e.KeyboardDevice.Modifiers != ModifierKeys.Control)
+                {
+                    MessageTextBox.Text = string.Empty;
+                }
             }
         }
 
