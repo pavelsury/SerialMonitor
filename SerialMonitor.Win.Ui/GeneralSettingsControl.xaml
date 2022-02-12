@@ -87,6 +87,18 @@
             </CheckBox.Content>
         </CheckBox>
 
+        <CheckBox IsChecked="{Binding ShowDotForNonPrintableAscii}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
+            <CheckBox.Content>
+                <Label Content="Show . for non-printable ascii:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
         <CheckBox IsChecked="{Binding HexPrefixEnabled}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Padding="4,0,0,0"

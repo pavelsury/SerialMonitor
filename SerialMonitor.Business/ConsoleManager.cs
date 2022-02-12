@@ -111,6 +111,13 @@ namespace SerialMonitor.Business
                         ReprintAll();
                     }
                     return;
+
+                case nameof(SettingsManager.ShowDotForNonPrintableAscii):
+                    if (_settingsManager.ViewMode == EViewMode.Text)
+                    {
+                        ReprintAll();
+                    }
+                    return;
             }
         }
 
@@ -121,7 +128,8 @@ namespace SerialMonitor.Business
                 switch (_settingsManager.ViewMode)
                 {
                     case EViewMode.Text:
-                        PrintToConsole(dataItem.Text, EMessageType.Data, writeToFile);
+                        var dataText = _settingsManager.ShowDotForNonPrintableAscii ? dataItem.TextDotted : dataItem.Text;
+                        PrintToConsole(dataText, EMessageType.Data, writeToFile);
                         return;
 
                     case EViewMode.Hex:

@@ -90,6 +90,16 @@ namespace SerialMonitor.Business
             }
         }
 
+        public bool ShowDotForNonPrintableAscii
+        {
+            get => _showDotForNonPrintableAscii;
+            set
+            {
+                AppSettings.ShowDotForNonPrintableAscii = value;
+                SetNotifyingValueProperty(ref _showDotForNonPrintableAscii, value);
+            }
+        }
+
         public int HexFixedColumns
         {
             get => _hexFixedColumns;
@@ -180,6 +190,7 @@ namespace SerialMonitor.Business
             HexSeparator = AppSettings.HexSeparator;
             HexFixedColumns = AppSettings.HexFixedColumns;
             PipeEnabled = AppSettings.PipeEnabled;
+            ShowDotForNonPrintableAscii = AppSettings.ShowDotForNonPrintableAscii;
             FontSize = AppSettings.FontSize;
         }
 
@@ -193,6 +204,7 @@ namespace SerialMonitor.Business
         private string _hexSeparator;
         private int _hexFixedColumns;
         private bool _pipeEnabled;
+        private bool _showDotForNonPrintableAscii;
         private int _fontSize;
     }
 }

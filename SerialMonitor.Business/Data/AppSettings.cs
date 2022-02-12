@@ -17,6 +17,7 @@ namespace SerialMonitor.Business.Data
         public string HexSeparator { get; set; } = " ";
         public int HexFixedColumns { get; set; } = DefaultHexFixedColumns;
         public bool PipeEnabled { get; set; }
+        public bool ShowDotForNonPrintableAscii { get; set; }
         public int FontSize { get; set; } = DefaultFontSize;
         public string FontStyle { get; set; }
         public string SendFileLastFolder { get; set; }

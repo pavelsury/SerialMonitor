@@ -13,6 +13,7 @@ namespace SerialMonitor.Business
             MessageType = EMessageType.Data;
             Data = new List<byte>(data);
             _consoleText = settingsManager.SelectedPort.Settings.Encoding.GetString(data, 0, data.Length);
+            _consoleTextDotted = GetDottedText(data, settingsManager);
             HexData = BitConverter.ToString(data).Split('-').ToList();
         }
 
@@ -34,6 +35,7 @@ namespace SerialMonitor.Business
         public List<string> HexData { get; }
 
         public string Text => _stringBuilder?.ToString() ?? _consoleText;
+        public string TextDotted => _stringBuilderDotted?.ToString() ?? _consoleTextDotted;
 
         public void Append(DataItem dataItem)
         {
@@ -45,7 +47,13 @@ namespace SerialMonitor.Business
                 _stringBuilder = new StringBuilder(_consoleText);
             }
 
+            if (_stringBuilderDotted == null)
+            {
+                _stringBuilderDotted = new StringBuilder(_consoleTextDotted);
+            }
+
             _stringBuilder.Append(dataItem.Text);
+            _stringBuilderDotted.Append(dataItem.TextDotted);
         }
 
         public void Freeze()
@@ -56,9 +64,28 @@ namespace SerialMonitor.Business
                 _stringBuilder.Clear();
                 _stringBuilder = null;
             }
+
+            if (_stringBuilderDotted != null)
+            {
+                _consoleTextDotted = _stringBuilderDotted.ToString();
+                _stringBuilderDotted.Clear();
+                _stringBuilderDotted = null;
+            }
         }
 
+        private static string GetDottedText(byte[] data, SettingsManager settingsManager)
+        {
+            var dataConverted = data.Select(ConvertNonPrintableAscii).ToArray();
+            return settingsManager.SelectedPort.Settings.Encoding.GetString(dataConverted, 0, dataConverted.Length);
+        }
+
+        private static byte ConvertNonPrintableAscii(byte value) => IsPrintableAscii(value) ? value : (byte)'.';
+        
+        private static bool IsPrintableAscii(byte value) => value >= 33 && value <= 126;
+
         private string _consoleText;
+        private string _consoleTextDotted;
         private StringBuilder _stringBuilder;
+        private StringBuilder _stringBuilderDotted;
     }
 }
