@@ -2,6 +2,12 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.12.0 (17.4.2022)
+### Added
+-   Command variables (%NOW%, %UTC_NOW%, ...)
+-   New option: Show . for non-printable ascii
+-   New option: Clear console before command sent
+
 ## v1.11.0 (11.2.2022)
 ### Added
 -   File send

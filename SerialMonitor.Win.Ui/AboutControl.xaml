@@ -34,6 +34,8 @@
             <Paragraph Margin="0,20,0,0" FontSize="12">
                 <Run FontWeight="Bold">Releases</Run>
                 <LineBreak/>
+                <Run>1.12.0 - Command variables (%NOW%, %UTC_NOW%, ...)</Run>
+                <LineBreak/>
                 <Run>1.11.0 - Send file</Run>
                 <LineBreak/>
                 <Run>1.10.1 - Bug fixing</Run>
@@ -103,6 +105,13 @@
                 <Run FontStyle="Italic">-settings_file="your settings filename"</Run>
                 <LineBreak/>
                 <Run FontStyle="Italic">-port=selected COM port name</Run>
+                <LineBreak/>
+                <LineBreak/>
+
+                <Run FontWeight="Bold">Other notes</Run>
+                <LineBreak/>
+                <Run>When sending command, press Ctrl+Enter to send it without erasing.</Run>
+                <LineBreak/>
 
                 <LineBreak/>
                 <LineBreak/>
