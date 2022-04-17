@@ -46,4 +46,7 @@ Command line options:
 *-port=selected COM port name*
 
 ## Other notes
-When sending command, press Ctrl+Enter to send it without erasing.
+- when sending command, press Ctrl+Enter to send it without erasing
+- command variables:
+  - local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%
+  - utc time: %UTC_NOW%, %UTC_NOW_DATE%, %UTC_NOW_TIME%, %UTC_NOW_YEAR%, %UTC_NOW_MONTH%, %UTC_NOW_DAY%, %UTC_NOW_HOUR%, %UTC_NOW_MINUTE%, %UTC_NOW_SECOND%

@@ -34,7 +34,7 @@
             <Paragraph Margin="0,20,0,0" FontSize="12">
                 <Run FontWeight="Bold">Releases</Run>
                 <LineBreak/>
-                <Run>1.12.0 - Command variables (%NOW%, %UTC_NOW%, ...)</Run>
+                <Run>1.12.0 - Command variables (see list below)</Run>
                 <LineBreak/>
                 <Run>1.11.0 - Send file</Run>
                 <LineBreak/>
@@ -110,8 +110,13 @@
 
                 <Run FontWeight="Bold">Other notes</Run>
                 <LineBreak/>
-                <Run>When sending command, press Ctrl+Enter to send it without erasing.</Run>
+                <Run>- when sending command, press Ctrl+Enter to send it without erasing</Run>
                 <LineBreak/>
+                <Run>- command variables:</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - utc time: %UTC_NOW%, %UTC_NOW_DATE%, %UTC_NOW_TIME%, %UTC_NOW_YEAR%, %UTC_NOW_MONTH%, %UTC_NOW_DAY%, %UTC_NOW_HOUR%, %UTC_NOW_MINUTE%, %UTC_NOW_SECOND%</Run>
 
                 <LineBreak/>
                 <LineBreak/>
