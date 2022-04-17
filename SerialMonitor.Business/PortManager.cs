@@ -162,6 +162,11 @@ namespace SerialMonitor.Business
                 ConsoleManager.ClearAll();
             }
 
+            if (_settingsManager.AppSettings.ResolveCommandVariables)
+            {
+                text = _commandVariablesResolver.Resolve(text);
+            }
+
             string newline;
             switch (SelectedPort.Settings.SendingNewline)
             {
@@ -455,5 +460,6 @@ namespace SerialMonitor.Business
         private DataManager _dataManager;
         private Task _portTask = Task.CompletedTask;
         private bool _isFileSending;
+        private readonly CommandVariablesResolver _commandVariablesResolver = new CommandVariablesResolver();
     }
 }
