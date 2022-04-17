@@ -112,7 +112,7 @@
                 <LineBreak/>
                 <Run>- when sending command, press Ctrl+Enter to send it without erasing</Run>
                 <LineBreak/>
-                <Run>- command variables:</Run>
+                <Run>- command variables</Run>
                 <LineBreak/>
                 <Run xml:space="preserve">  - local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%</Run>
                 <LineBreak/>
