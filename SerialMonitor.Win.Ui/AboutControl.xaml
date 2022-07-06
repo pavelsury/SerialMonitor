@@ -116,6 +116,8 @@
                 <LineBreak/>
                 <Run xml:space="preserve">  - local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%</Run>
                 <LineBreak/>
+                <Run xml:space="preserve">  - winter time: %WINTER_NOW%, %WINTER_NOW_DATE%, %WINTER_NOW_TIME%, %WINTER_NOW_YEAR%, %WINTER_NOW_MONTH%, %WINTER_NOW_DAY%, %WINTER_NOW_HOUR%, %WINTER_NOW_MINUTE%, %WINTER_NOW_SECOND%</Run>
+                <LineBreak/>
                 <Run xml:space="preserve">  - utc time: %UTC_NOW%, %UTC_NOW_DATE%, %UTC_NOW_TIME%, %UTC_NOW_YEAR%, %UTC_NOW_MONTH%, %UTC_NOW_DAY%, %UTC_NOW_HOUR%, %UTC_NOW_MINUTE%, %UTC_NOW_SECOND%</Run>
 
                 <LineBreak/>
