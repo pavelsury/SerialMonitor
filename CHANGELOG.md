@@ -2,6 +2,10 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.13.0 (6.7.2022)
+### Added
+-   Winter time command variables (%WINTER_NOW%, %WINTER_NOW_DATE%, ...)
+
 ## v1.12.0 (17.4.2022)
 ### Added
 -   Command variables (%NOW%, %UTC_NOW%, ...)
