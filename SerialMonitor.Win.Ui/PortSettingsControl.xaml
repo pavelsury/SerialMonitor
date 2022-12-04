@@ -109,7 +109,7 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Receive new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Receive EOL:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.ReceivingNewline}" SelectedValuePath="Value"
                           VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:EReceivingNewline.Crlf}" Text="CR + LF"/>
@@ -118,7 +118,7 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Send new line:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Send EOL:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SelectedPort.Settings.SendingNewline}" SelectedValuePath="Value"
                           VerticalContentAlignment="Center" MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.None}" Text="None"/>

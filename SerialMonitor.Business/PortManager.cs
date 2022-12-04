@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -43,8 +44,11 @@ namespace SerialMonitor.Business
                 SelectedPort = Ports.SingleOrDefault(p => p.Name == selectedPortName) ?? CreatePortInfo(selectedPortName, false);
             }
 
-            _usbNotification.DeviceChanged += OnUsbDevicesChanged;
+            _usbNotification.PortArrived += OnPortArrived;
+            _usbNotification.PortRemoved += OnPortRemoved;
             _settingsManager.PropertyChanged += OnSettingsManagerChanged;
+            
+            _availablePortNames = SerialPort.GetPortNames().ToHashSet();
             UpdatePorts();
         }
 
@@ -259,7 +263,8 @@ namespace SerialMonitor.Business
                 return;
             }
 
-            _usbNotification.DeviceChanged -= OnUsbDevicesChanged;
+            _usbNotification.PortArrived -= OnPortArrived;
+            _usbNotification.PortRemoved -= OnPortRemoved;
 
             try
             {
@@ -335,6 +340,7 @@ namespace SerialMonitor.Business
                         {
                             ConsoleManager.PrintWarningMessage($"{SelectedPort.Name} reading failed!{Environment.NewLine}{e.GetType()}: {e.Message}");
                         }
+                        Disconnect();
                     });
                     return;
                 }
@@ -352,14 +358,23 @@ namespace SerialMonitor.Business
             set => _settingsManager.SelectedPort = value;
         }
 
-        private void OnUsbDevicesChanged(object sender, bool e) => UpdatePorts();
+        private void OnPortArrived(object sender, string portName)
+        {
+            _availablePortNames.Add(portName);
+            UpdatePorts();
+        }
+
+        private void OnPortRemoved(object sender, string portName)
+        {
+            _availablePortNames.Remove(portName);
+            UpdatePorts();
+        }
 
         private void UpdatePorts()
         {
             var wasSelectedPortAvailable = SelectedPort?.IsAvailable == true;
-            var portNames = SerialPort.GetPortNames();
             
-            foreach (var portName in portNames)
+            foreach (var portName in _availablePortNames)
             {
                 var portInfo = Ports.SingleOrDefault(p => p.Name == portName);
                 if (portInfo == null)
@@ -379,7 +394,7 @@ namespace SerialMonitor.Business
 
             foreach (var portInfo in Ports)
             {
-                portInfo.IsAvailable = portNames.Any(n => n == portInfo.Name);
+                portInfo.IsAvailable = _availablePortNames.Any(n => n == portInfo.Name);
             }
 
             if (SelectedPort == null)
@@ -460,6 +475,7 @@ namespace SerialMonitor.Business
         private DataManager _dataManager;
         private Task _portTask = Task.CompletedTask;
         private bool _isFileSending;
+        private HashSet<string> _availablePortNames;
         private readonly CommandVariablesResolver _commandVariablesResolver = new CommandVariablesResolver();
     }
 }

@@ -4,6 +4,7 @@ namespace SerialMonitor.Business
 {
     public interface IUsbNotification : IDisposable
     {
-        event EventHandler<bool> DeviceChanged;
+        event EventHandler<string> PortRemoved;
+        event EventHandler<string> PortArrived;
     }
 }

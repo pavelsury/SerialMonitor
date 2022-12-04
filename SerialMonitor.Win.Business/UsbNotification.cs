@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 using SerialMonitor.Business;
@@ -15,7 +16,8 @@ namespace SerialMonitor.Win.Business
             new WindowInteropHelper(_window).EnsureHandle();
         }
 
-        public event EventHandler<bool> DeviceChanged;
+        public event EventHandler<string> PortRemoved;
+        public event EventHandler<string> PortArrived;
 
         public void Dispose()
         {
@@ -25,7 +27,8 @@ namespace SerialMonitor.Win.Business
             }
 
             _isDisposed = true;
-            DeviceChanged = null;
+            PortRemoved = null;
+            PortArrived = null;
 
             if (_buffer != IntPtr.Zero)
             {
@@ -47,17 +50,20 @@ namespace SerialMonitor.Win.Business
 
         private IntPtr HwndHandler(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
-            if (!_isDisposed && msg == WmDeviceChange)
+            if (msg == WmDeviceChange && !_isDisposed)
             {
+                EventHandler<string> portEvent = null;
+
                 switch ((int)wparam)
                 {
-                    case DbtDeviceRemoveComplete:
-                        DeviceChanged?.Invoke(this, false);
-                        break;
+                    case DbtDeviceRemoveComplete: portEvent = PortRemoved; break;
+                    case DbtDeviceArrival: portEvent = PortArrived; break;
+                }
 
-                    case DbtDeviceArrival:
-                        DeviceChanged?.Invoke(this, true);
-                        break;
+                var portName = GetPortName(lparam);
+                if (portName != null)
+                {
+                    portEvent?.Invoke(this, portName);
                 }
             }
 
@@ -82,6 +88,21 @@ namespace SerialMonitor.Win.Business
             RegisterDeviceNotification(windowHandle, _buffer, 0);
         }
 
+        private static string GetPortName(IntPtr lparam)
+        {
+            var dbh = (DevBroadcastHdr)Marshal.PtrToStructure(lparam, typeof(DevBroadcastHdr));
+            if (dbh?.dbch_devicetype != 3)
+            {
+                return null;
+            }
+
+            const int sizeOfDbh = 12;
+            var portNameBytes = new byte[dbh.dbch_size - sizeOfDbh];
+            Marshal.Copy(lparam + sizeOfDbh, portNameBytes, 0, portNameBytes.Length);
+            var portName = Encoding.Unicode.GetString(portNameBytes).TrimEnd('\0');
+            return portName;
+        }
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr RegisterDeviceNotification(IntPtr recipient, IntPtr notificationFilter, int flags);
 
@@ -96,6 +117,14 @@ namespace SerialMonitor.Win.Business
             internal int Reserved;
             internal Guid ClassGuid;
             internal short Name;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal class DevBroadcastHdr
+        {
+            public int dbch_size;
+            public int dbch_devicetype;
+            public int dbch_reserved;
         }
 
         private readonly Window _window;
