@@ -124,7 +124,16 @@
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.None}" Text="None"/>
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.Crlf}" Text="CR + LF"/>
                     <ui:ComboPair Value="{x:Static enums:ESendingNewline.Lf}" Text="LF"/>
+                    <ui:ComboPair Value="{x:Static enums:ESendingNewline.Custom}" Text="Custom"/>
                 </ComboBox>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource SettingsStackPanel}">
+                <Label Content="Send custom EOL:" MinWidth="110" MaxWidth="110" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <ui:TextBoxEx MinWidth="100" MaxWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+                              TextEx="{Binding SelectedPort.Settings.SendingCustomNewline}"
+                              VerticalContentAlignment="Center"
+                              IsEnabled="{Binding SelectedPort.Settings.SendingNewline, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static enums:ESendingNewline.Custom}}"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">

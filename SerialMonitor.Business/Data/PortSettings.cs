@@ -17,6 +17,8 @@ namespace SerialMonitor.Business.Data
         
         [JsonConverter(typeof(StringEnumConverter))]
         public ESendingNewline SendingNewline { get; set; } = ESendingNewline.None;
+
+        public string SendingCustomNewline { get; set; } = string.Empty;
         
         public int DataBits { get; set; } = DefaultDataBits;
         

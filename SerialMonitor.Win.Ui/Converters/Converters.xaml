@@ -7,6 +7,7 @@
     <converters:BoolToObjectsConverter x:Key="BoolToObjectsConverter"/>
     <converters:BoolToVisibilityCollapsedConverter x:Key="BoolToVisibilityCollapsedConverter"/>
     <converters:BoolToVisibilityCollapsedInvertedConverter x:Key="BoolToVisibilityCollapsedInvertedConverter"/>
+    <converters:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
     <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter"/>
     <converters:ObjectToBoolInvertedConverter x:Key="ObjectToBoolInvertedConverter"/>
     <converters:ObjectToObjectsConverter x:Key="ObjectToObjectsConverter"/>

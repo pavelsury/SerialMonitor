@@ -4,6 +4,7 @@
     {
         None,
         Crlf,
-        Lf
+        Lf,
+        Custom
     }
 }

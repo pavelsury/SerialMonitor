@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SerialMonitor.Business.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace SerialMonitor.Business
 {
     public class CommandVariablesResolver
     {
-        public string Resolve(string text)
+        public string ResolveTextVariables(string text)
         {
             if (!ContainsVariableDelimiter(text))
             {
@@ -19,19 +20,19 @@ namespace SerialMonitor.Business
 
             foreach (var (localTimeName, winterTimeName, utcTimeName, resolver) in _timeResolvers)
             {
-                text = text.Replace($"%{localTimeName}%", resolver(localNow));
+                text = text.Replace(MakeVar(localTimeName), resolver(localNow));
                 if (!ContainsVariableDelimiter(text))
                 {
                     return text;
                 }
 
-                text = text.Replace($"%{winterTimeName}%", resolver(winterNow));
+                text = text.Replace(MakeVar(winterTimeName), resolver(winterNow));
                 if (!ContainsVariableDelimiter(text))
                 {
                     return text;
                 }
 
-                text = text.Replace($"%{utcTimeName}%", resolver(utcNow));
+                text = text.Replace(MakeVar(utcTimeName), resolver(utcNow));
                 if (!ContainsVariableDelimiter(text))
                 {
                     return text;
@@ -41,7 +42,30 @@ namespace SerialMonitor.Business
             return text;
         }
 
-        private static bool ContainsVariableDelimiter(string text) => text.Contains("%");
+        private static bool ContainsVariableDelimiter(string text) => text.Contains('%');
+
+        private static string MakeVar(string varName) => $"%{varName}%";
+
+        public bool IsEolOverridden(string text)
+        {
+            if (!ContainsVariableDelimiter(text))
+            {
+                return false;
+            }
+
+            return _eolMapping.Any(p => text.EndsWith(MakeVar(p.Key)));
+        }
+
+        public string ResolveEolVariables(string text)
+        {
+            if (!ContainsVariableDelimiter(text))
+            {
+                return text;
+            }
+
+            _eolMapping.ForEach(p => text = text.Replace(MakeVar(p.Key), p.Value));
+            return text;
+        }
 
         private static DateTime GetWinterTime(DateTime localNow)
         {
@@ -51,7 +75,7 @@ namespace SerialMonitor.Business
             }
 
             var today = localNow.Date;
-            var rule = TimeZoneInfo.Local.GetAdjustmentRules().Where(x => today >= x.DateStart && today <= x.DateEnd).First();
+            var rule = TimeZoneInfo.Local.GetAdjustmentRules().First(x => today >= x.DateStart && today <= x.DateEnd);
             return localNow - rule.DaylightDelta;
         }
 
@@ -66,6 +90,14 @@ namespace SerialMonitor.Business
             ("NOW_HOUR", "WINTER_NOW_HOUR", "UTC_NOW_HOUR", d => d.Hour.ToString(System.Globalization.CultureInfo.InvariantCulture)),
             ("NOW_MINUTE", "WINTER_NOW_MINUTE", "UTC_NOW_MINUTE", d => d.Minute.ToString(System.Globalization.CultureInfo.InvariantCulture)),
             ("NOW_SECOND", "WINTER_NOW_SECOND", "UTC_NOW_SECOND", d => d.Second.ToString(System.Globalization.CultureInfo.InvariantCulture))
+        };
+
+        private Dictionary<string, string> _eolMapping = new Dictionary<string, string> 
+        {
+            { "EOL_SKIP", "" },
+            { "EOL_CR", "\r" },
+            { "EOL_LF", "\n" },
+            { "EOL_CRLF", "\r\n" },
         };
     }
 }

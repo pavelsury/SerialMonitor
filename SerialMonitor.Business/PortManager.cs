@@ -25,7 +25,7 @@ namespace SerialMonitor.Business
             _mainThreadRunner = mainThreadRunner;
             ConsoleManager = consoleManager;
             _usbNotification = usbNotification;
-            
+
             _serialPort = new SerialPort();
         }
 
@@ -47,13 +47,13 @@ namespace SerialMonitor.Business
             _usbNotification.PortArrived += OnPortArrived;
             _usbNotification.PortRemoved += OnPortRemoved;
             _settingsManager.PropertyChanged += OnSettingsManagerChanged;
-            
+
             _availablePortNames = SerialPort.GetPortNames().ToHashSet();
             UpdatePorts();
         }
 
         public ConsoleManager ConsoleManager { get; }
-        
+
         public ObservableCollection<PortInfo> Ports { get; set; } = new ObservableCollection<PortInfo>();
 
         public EConnectionStatus ConnectionStatus
@@ -73,15 +73,15 @@ namespace SerialMonitor.Business
         }
 
         public bool IsDisconnected => _connectionStatus == EConnectionStatus.Disconnected;
-        
+
         public bool IsConnectionChanging =>
             _connectionStatus == EConnectionStatus.ConnectingShort ||
             _connectionStatus == EConnectionStatus.ConnectingLong ||
             _connectionStatus == EConnectionStatus.DisconnectingGracefully ||
             _connectionStatus == EConnectionStatus.DisconnectingByFailure;
-        
+
         public bool IsConnectingLong => _connectionStatus == EConnectionStatus.ConnectingLong;
-        
+
         public bool IsConnected => _connectionStatus == EConnectionStatus.Connected;
 
         public bool IsFileSending
@@ -166,29 +166,35 @@ namespace SerialMonitor.Business
                 ConsoleManager.ClearAll();
             }
 
-            if (_settingsManager.AppSettings.ResolveCommandVariables)
+            bool isEolOverridden = IsEolOverridden(text);
+
+            if (!isEolOverridden && SelectedPort.Settings.SendingNewline == ESendingNewline.Custom)
             {
-                text = _commandVariablesResolver.Resolve(text);
+                text += SelectedPort.Settings.SendingCustomNewline;
             }
 
-            string newline;
-            switch (SelectedPort.Settings.SendingNewline)
-            {
-                case ESendingNewline.None:
-                    newline = string.Empty;
-                    break;
-                case ESendingNewline.Crlf:
-                    newline = "\r\n";
-                    break;
-                case ESendingNewline.Lf:
-                    newline = "\n";
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-            }
+            text = _commandVariablesResolver.ResolveTextVariables(text);
 
             ConsoleManager.PrintCommand($"Sent command: {text}");
 
-            var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes($"{text}{newline}"));
+            if (!isEolOverridden)
+            {
+                string newline;
+                switch (SelectedPort.Settings.SendingNewline)
+                {
+                    case ESendingNewline.None: newline = string.Empty; break;
+                    case ESendingNewline.Crlf: newline = "\r\n"; break;
+                    case ESendingNewline.Lf: newline = "\n"; break;
+                    case ESendingNewline.Custom: newline = string.Empty; break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+
+                text += newline;
+            }
+
+            text = _commandVariablesResolver.ResolveEolVariables(text);
+
+            var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes(text));
 
             try
             {
@@ -272,7 +278,7 @@ namespace SerialMonitor.Business
             }
             catch (Exception)
             { }
-            
+
             _serialPort = null;
         }
 
@@ -373,7 +379,7 @@ namespace SerialMonitor.Business
         private void UpdatePorts()
         {
             var wasSelectedPortAvailable = SelectedPort?.IsAvailable == true;
-            
+
             foreach (var portName in _availablePortNames)
             {
                 var portInfo = Ports.SingleOrDefault(p => p.Name == portName);
@@ -431,7 +437,7 @@ namespace SerialMonitor.Business
         private bool HandleAutoswitch()
         {
             var oldSelectedPort = SelectedPort;
-            
+
             if (_settingsManager.AutoswitchEnabled && !SelectedPort.IsAvailable)
             {
                 var port = Ports.FirstOrDefault(p => p.IsAvailable);
@@ -455,6 +461,14 @@ namespace SerialMonitor.Business
             Ports.AddSorted(portInfo);
             return portInfo;
         }
+
+        private bool ResolveCommandVariables => _settingsManager.AppSettings.ResolveCommandVariables;
+
+        private bool IsEolOverridden(string text) => ResolveCommandVariables ? _commandVariablesResolver.IsEolOverridden(text) : false;
+
+        private string ResolveTextVariables(string text) => ResolveCommandVariables ? _commandVariablesResolver.ResolveTextVariables(text) : text;
+
+        private string ResolveEolVariables(string text) => ResolveCommandVariables ? _commandVariablesResolver.ResolveEolVariables(text) : text;
 
         private void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)
         {
