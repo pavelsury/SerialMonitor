@@ -61,6 +61,10 @@ namespace SerialMonitor.Business.Data
         public const int DefaultHexFixedColumnsMax = 100;
         public const int DefaultFontSizeMin = 6;
         public const int DefaultFontSizeMax = 72;
+        public const char VariableStartDelimiter = '%';
+        public const char VariableEndDelimiter = '%';
+        public const bool IsVariableCaseSensitive = false;
+        public const char DataAttributeDelimiter = '\\';
         private const int DefaultFontSize = 11;
     }
 }

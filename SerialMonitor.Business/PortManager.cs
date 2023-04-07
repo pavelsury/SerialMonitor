@@ -166,43 +166,15 @@ namespace SerialMonitor.Business
                 ConsoleManager.ClearAll();
             }
 
-            bool isEolOverridden = IsEolOverridden(text);
-
-            if (!isEolOverridden && SelectedPort.Settings.SendingNewline == ESendingNewline.Custom)
-            {
-                text += SelectedPort.Settings.SendingCustomNewline;
-            }
-
-            text = _commandVariablesResolver.ResolveTextVariables(text);
-
-            ConsoleManager.PrintCommand($"Sent command: {text}");
-
-            if (!isEolOverridden)
-            {
-                string newline;
-                switch (SelectedPort.Settings.SendingNewline)
-                {
-                    case ESendingNewline.None: newline = string.Empty; break;
-                    case ESendingNewline.Crlf: newline = "\r\n"; break;
-                    case ESendingNewline.Lf: newline = "\n"; break;
-                    case ESendingNewline.Custom: newline = string.Empty; break;
-                    default: throw new ArgumentOutOfRangeException();
-                }
-
-                text += newline;
-            }
-
-            text = _commandVariablesResolver.ResolveEolVariables(text);
-
-            var data = Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes(text));
-
             try
             {
+                var data = GetDataToSend(text);
                 _serialPort.Write(data, 0, data.Length);
             }
             catch (Exception e)
             {
                 ConsoleManager.PrintWarningMessage(e.Message);
+                ConsoleManager.PrintWarningMessage($"Command: {text}");
             }
         }
 
@@ -462,13 +434,62 @@ namespace SerialMonitor.Business
             return portInfo;
         }
 
-        private bool ResolveCommandVariables => _settingsManager.AppSettings.ResolveCommandVariables;
+        private byte[] GetDataToSend(string command)
+        {
+            if (!_settingsManager.AppSettings.ResolveCommandVariables)
+            {
+                ConsoleManager.PrintCommand($"Sent command: {command}");
+                return ConvertToBytes(command);
+            }
 
-        private bool IsEolOverridden(string text) => ResolveCommandVariables ? _commandVariablesResolver.IsEolOverridden(text) : false;
+            var text = command;
+            bool isEolOverridden = _commandVariablesResolver.IsEolOverridden(text);
 
-        private string ResolveTextVariables(string text) => ResolveCommandVariables ? _commandVariablesResolver.ResolveTextVariables(text) : text;
+            if (!isEolOverridden && SelectedPort.Settings.SendingNewline == ESendingNewline.Custom)
+            {
+                text += SelectedPort.Settings.SendingCustomNewline;
+            }
 
-        private string ResolveEolVariables(string text) => ResolveCommandVariables ? _commandVariablesResolver.ResolveEolVariables(text) : text;
+            text = _commandVariablesResolver.ResolveTextVariables(text);
+            text = _commandVariablesResolver.RemoveEolSkipVariables(text);
+            var evaluatedCommand = text;
+
+            if (!isEolOverridden)
+            {
+                string newline;
+                switch (SelectedPort.Settings.SendingNewline)
+                {
+                    case ESendingNewline.None: newline = string.Empty; break;
+                    case ESendingNewline.Crlf: newline = "\r\n"; break;
+                    case ESendingNewline.Lf: newline = "\n"; break;
+                    case ESendingNewline.Custom: newline = string.Empty; break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+
+                text += newline;
+            }
+
+            var textEolResolved = _commandVariablesResolver.ResolveEolVariables(text);
+            var tokenList = _commandVariablesResolver.ResolveDataVariables(textEolResolved);
+            var data = ConvertToBytes(tokenList);
+
+            foreach (var (token, tokenBytes) in tokenList.Where(p => p.tokenBytes != null))
+            {
+                evaluatedCommand = evaluatedCommand.Replace(token, $"[{tokenBytes.Length}B]");
+            }
+
+            var evaluationLabel = textEolResolved != text ? "Partially evaluated" : "Evaluated";
+            var evaluationMessage = command != evaluatedCommand ? $" ({evaluationLabel}: {evaluatedCommand})" : string.Empty;
+            var consoleOutput = $"Sent command: {command}{evaluationMessage}";
+            ConsoleManager.PrintCommand(consoleOutput);
+            return data;
+        }
+
+        private byte[] ConvertToBytes(string text) => Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes(text));
+
+        private byte[] ConvertToBytes(List<(string token, byte[] tokenBytes)> tokenList) => tokenList
+                .SelectMany(p => p.tokenBytes ?? ConvertToBytes(p.token))
+                .ToArray();
 
         private void OnSettingsManagerChanged(object sender, PropertyChangedEventArgs e)
         {
