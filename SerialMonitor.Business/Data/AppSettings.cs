@@ -13,7 +13,8 @@ namespace SerialMonitor.Business.Data
         public bool AutoswitchEnabled { get; set; }
         public bool WriteMessageToConsole { get; set; } = true;
         public bool WriteCommandToConsole { get; set; } = true;
-        public bool WriteSentBytesToConsole { get; set; } = true;
+        public bool WriteResolvedCommandToConsole { get; set; } = false;
+        public bool WriteSentBytesToConsole { get; set; } = false;
         public bool ClearConsoleBeforeCommandSent { get; set; }
         public bool ResolveCommandVariables { get; set; } = true;
         public bool HexPrefixEnabled { get; set; }

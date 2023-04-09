@@ -65,11 +65,6 @@ namespace SerialMonitor.Business
             return text;
         }
 
-        public string RemoveEolSkipVariables(string text)
-        {
-            return text.Replace(MakeVar("EOL_SKIP"), "", StringComparison);
-        }
-
         public List<(string token, byte[] tokenBytes)> ResolveDataVariables(string text)
         {
             var option = AppSettings.IsVariableCaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase;

@@ -4,6 +4,7 @@
     {
         Data,
         Command,
+        CommandResolved,
         CommandBytes,
         Info,
         Warning,

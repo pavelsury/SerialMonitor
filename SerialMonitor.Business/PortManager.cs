@@ -168,7 +168,10 @@ namespace SerialMonitor.Business
 
             try
             {
-                var data = GetDataToSend(text);
+                ConsoleManager.PrintCommand($"Command: {text}");
+                
+                var (data, resolvedCommand) = GetDataToSend(text);
+                ConsoleManager.PrintMessage($"Resolved command: {resolvedCommand}", EMessageType.CommandResolved);
                 ConsoleManager.PrintCommandBytes("Sent bytes:", data);
                 _serialPort.Write(data, 0, data.Length);
             }
@@ -434,25 +437,24 @@ namespace SerialMonitor.Business
             return portInfo;
         }
 
-        private byte[] GetDataToSend(string command)
+        private (byte[] data, string resolvedCommand) GetDataToSend(string command)
         {
-            if (!_settingsManager.AppSettings.ResolveCommandVariables)
-            {
-                ConsoleManager.PrintCommand($"Command: {command}");
-                return ConvertToBytes(command);
-            }
+            bool isEolOverridden = false;
 
-            var text = command;
-            bool isEolOverridden = _commandVariablesResolver.IsEolOverridden(text);
+            if (ResolveCommandVariables)
+            {
+                isEolOverridden = _commandVariablesResolver.IsEolOverridden(command);
+            }
 
             if (!isEolOverridden && SelectedPort.Settings.SendingNewline == ESendingNewline.Custom)
             {
-                text += SelectedPort.Settings.SendingCustomNewline;
+                command += SelectedPort.Settings.SendingCustomNewline;
             }
 
-            text = _commandVariablesResolver.ResolveTextVariables(text);
-            text = _commandVariablesResolver.RemoveEolSkipVariables(text);
-            var evaluatedCommand = text;
+            if (ResolveCommandVariables)
+            {
+                command = _commandVariablesResolver.ResolveTextVariables(command);
+            }
 
             if (!isEolOverridden)
             {
@@ -466,24 +468,31 @@ namespace SerialMonitor.Business
                     default: throw new ArgumentOutOfRangeException();
                 }
 
-                text += newline;
+                command += newline;
             }
 
-            var textEolResolved = _commandVariablesResolver.ResolveEolVariables(text);
-            var tokenList = _commandVariablesResolver.ResolveDataVariables(textEolResolved);
-            var data = ConvertToBytes(tokenList);
-
-            foreach (var (token, tokenBytes) in tokenList.Where(p => p.tokenBytes != null))
+            if (ResolveCommandVariables)
             {
-                evaluatedCommand = evaluatedCommand.Replace(token, $"[{tokenBytes.Length}B]");
+                command = _commandVariablesResolver.ResolveEolVariables(command);
+            }
+            
+            var resolvedCommand = command.Replace("\n", @"\n").Replace("\r", @"\r");
+
+            if (ResolveCommandVariables)
+            {
+                var tokenList = _commandVariablesResolver.ResolveDataVariables(command);
+                foreach (var (token, tokenBytes) in tokenList.Where(p => p.tokenBytes != null))
+                {
+                    resolvedCommand = resolvedCommand.Replace(token, $"[{tokenBytes.Length}B]");
+                }
+                
+                return (ConvertToBytes(tokenList), resolvedCommand);
             }
 
-            var evaluationLabel = textEolResolved != text ? "Partially evaluated" : "Evaluated";
-            var evaluationMessage = command != evaluatedCommand ? $" ({evaluationLabel}: {evaluatedCommand})" : string.Empty;
-            var consoleOutput = $"Command: {command}{evaluationMessage}";
-            ConsoleManager.PrintCommand(consoleOutput);
-            return data;
+            return (ConvertToBytes(command), resolvedCommand);
         }
+
+        private bool ResolveCommandVariables => _settingsManager.AppSettings.ResolveCommandVariables;
 
         private byte[] ConvertToBytes(string text) => Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes(text));
 

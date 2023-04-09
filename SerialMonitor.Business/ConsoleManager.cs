@@ -103,6 +103,7 @@ namespace SerialMonitor.Business
                 case nameof(SettingsManager.ViewMode):
                 case nameof(SettingsManager.WriteMessageToConsole):
                 case nameof(SettingsManager.WriteCommandToConsole):
+                case nameof(SettingsManager.WriteResolvedCommandToConsole):
                 case nameof(SettingsManager.WriteSentBytesToConsole):
                 case nameof(SettingsManager.FontSize):
                     ReprintAll();
@@ -159,6 +160,14 @@ namespace SerialMonitor.Business
             if (dataItem.MessageType == EMessageType.Command)
             {
                 if (!_settingsManager.AppSettings.WriteCommandToConsole)
+                {
+                    PrintNewlineToConsoleIfNeeded(writeToFile);
+                    return;
+                }
+            }
+            if (dataItem.MessageType == EMessageType.CommandResolved)
+            {
+                if (!_settingsManager.AppSettings.WriteResolvedCommandToConsole)
                 {
                     PrintNewlineToConsoleIfNeeded(writeToFile);
                     return;
