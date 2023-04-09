@@ -169,12 +169,12 @@ namespace SerialMonitor.Business
             try
             {
                 var data = GetDataToSend(text);
+                ConsoleManager.PrintCommandBytes("Sent bytes:", data);
                 _serialPort.Write(data, 0, data.Length);
             }
             catch (Exception e)
             {
                 ConsoleManager.PrintWarningMessage(e.Message);
-                ConsoleManager.PrintWarningMessage($"Command: {text}");
             }
         }
 
@@ -438,7 +438,7 @@ namespace SerialMonitor.Business
         {
             if (!_settingsManager.AppSettings.ResolveCommandVariables)
             {
-                ConsoleManager.PrintCommand($"Sent command: {command}");
+                ConsoleManager.PrintCommand($"Command: {command}");
                 return ConvertToBytes(command);
             }
 
@@ -480,7 +480,7 @@ namespace SerialMonitor.Business
 
             var evaluationLabel = textEolResolved != text ? "Partially evaluated" : "Evaluated";
             var evaluationMessage = command != evaluatedCommand ? $" ({evaluationLabel}: {evaluatedCommand})" : string.Empty;
-            var consoleOutput = $"Sent command: {command}{evaluationMessage}";
+            var consoleOutput = $"Command: {command}{evaluationMessage}";
             ConsoleManager.PrintCommand(consoleOutput);
             return data;
         }

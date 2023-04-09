@@ -60,6 +60,16 @@ namespace SerialMonitor.Business
             }
         }
 
+        public bool WriteSentBytesToConsole
+        {
+            get => _writeSentBytesToConsole;
+            set
+            {
+                AppSettings.WriteSentBytesToConsole = value;
+                SetNotifyingValueProperty(ref _writeSentBytesToConsole, value);
+            }
+        }
+
         public bool HexPrefixEnabled
         {
             get => _hexPrefixEnabled;
@@ -186,6 +196,7 @@ namespace SerialMonitor.Business
             ViewMode = AppSettings.ViewMode;
             WriteMessageToConsole = AppSettings.WriteMessageToConsole;
             WriteCommandToConsole = AppSettings.WriteCommandToConsole;
+            WriteSentBytesToConsole = AppSettings.WriteSentBytesToConsole;
             HexPrefixEnabled = AppSettings.HexPrefixEnabled;
             HexSeparator = AppSettings.HexSeparator;
             HexFixedColumns = AppSettings.HexFixedColumns;
@@ -200,6 +211,7 @@ namespace SerialMonitor.Business
         private EViewMode _viewMode = EViewMode.Text;
         private bool _writeMessageToConsole;
         private bool _writeCommandToConsole;
+        private bool _writeSentBytesToConsole;
         private bool _hexPrefixEnabled;
         private string _hexSeparator;
         private int _hexFixedColumns;

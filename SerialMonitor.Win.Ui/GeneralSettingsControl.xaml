@@ -75,6 +75,18 @@
             </CheckBox.Content>
         </CheckBox>
 
+        <CheckBox IsChecked="{Binding WriteSentBytesToConsole}" VerticalAlignment="Center"
+                  Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
+                  Padding="4,0,0,0"
+                  Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxMarginKey}}">
+            <CheckBox.Content>
+                <Label Content="Write sent bytes to console:"
+                       Padding="0"
+                       Margin="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxTextMarginKey}}"
+                       Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            </CheckBox.Content>
+        </CheckBox>
+
         <CheckBox IsChecked="{Binding AppSettings.ClearConsoleBeforeCommandSent}" VerticalAlignment="Center"
                   Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"
                   Padding="4,0,0,0"

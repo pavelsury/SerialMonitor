@@ -47,7 +47,7 @@ namespace SerialMonitor.Business
             var attributesText = tokens.Length == 2 ? tokens[1] : string.Empty;
 
             var isHexPrefix = false;
-            if (valueText.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
+            if (valueText.StartsWith(AppSettings.HexPrefix, StringComparison.InvariantCultureIgnoreCase))
             {
                 isHexPrefix = true;
                 valueText = text.Remove(0, 2);

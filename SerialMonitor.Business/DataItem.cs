@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SerialMonitor.Business.Enums;
+using SerialMonitor.Business.Helpers;
 
 namespace SerialMonitor.Business
 {
@@ -14,7 +15,7 @@ namespace SerialMonitor.Business
             Data = new List<byte>(data);
             _consoleText = settingsManager.SelectedPort.Settings.Encoding.GetString(data, 0, data.Length);
             _consoleTextDotted = GetDottedText(data, settingsManager);
-            HexData = BitConverter.ToString(data).Split('-').ToList();
+            HexData = data.ToHexStringArray().ToList();
         }
 
         public DataItem(string message, EMessageType messageType)
@@ -26,6 +27,13 @@ namespace SerialMonitor.Business
 
             _consoleText = message;
             MessageType = messageType;
+        }
+
+        public DataItem(string message, byte[] bytes)
+        {
+            _consoleText = message;
+            MessageType = EMessageType.CommandBytes;
+            HexData = bytes.ToHexStringArray().ToList();
         }
 
         public EMessageType MessageType { get; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using SerialMonitor.Business.Data;
 using SerialMonitor.Business.Enums;
 
 namespace SerialMonitor.Business
@@ -43,6 +44,13 @@ namespace SerialMonitor.Business
                 return;
             }
 
+            if (dataItem.MessageType == EMessageType.CommandBytes)
+            {
+                lastDataItem.Freeze();
+                _dataItems.Add(dataItem);
+                return;
+            }
+
             if (lastDataItem.MessageType == dataItem.MessageType)
             {
                 lastDataItem.Append(dataItem);
@@ -63,13 +71,16 @@ namespace SerialMonitor.Business
         }
 
         public void PrintInfoMessage(string message) => PrintMessage(message, EMessageType.Info);
+        
         public void PrintCommand(string message) => PrintMessage(message, EMessageType.Command);
+        
+        public void PrintCommandBytes(string message, byte[] bytes) => Write(new DataItem(message, bytes));
 
         public void PrintWarningMessage(string message) => PrintMessage(message, EMessageType.Warning);
 
         public void PrintErrorMessage(string message) => PrintMessage(message, EMessageType.Error);
 
-        public void EnsureNewline(bool writeToFile)
+        public void PrintNewlineToConsoleIfNeeded(bool writeToFile)
         {
             if (!_isLastNewline)
             {
@@ -92,6 +103,7 @@ namespace SerialMonitor.Business
                 case nameof(SettingsManager.ViewMode):
                 case nameof(SettingsManager.WriteMessageToConsole):
                 case nameof(SettingsManager.WriteCommandToConsole):
+                case nameof(SettingsManager.WriteSentBytesToConsole):
                 case nameof(SettingsManager.FontSize):
                     ReprintAll();
                     return;
@@ -148,22 +160,33 @@ namespace SerialMonitor.Business
             {
                 if (!_settingsManager.AppSettings.WriteCommandToConsole)
                 {
-                    EnsureNewline(writeToFile);
+                    PrintNewlineToConsoleIfNeeded(writeToFile);
                     return;
                 }
+            }
+            else if (dataItem.MessageType == EMessageType.CommandBytes)
+            {
+                if (!_settingsManager.AppSettings.WriteSentBytesToConsole)
+                {
+                    PrintNewlineToConsoleIfNeeded(writeToFile);
+                    return;
+                }
+                PrintCommandBytesToConsole(dataItem.Text, dataItem.HexData, writeToFile);
+                return;
             }
             else
             {
                 if (!_settingsManager.AppSettings.WriteMessageToConsole)
                 {
-                    EnsureNewline(writeToFile);
+                    PrintNewlineToConsoleIfNeeded(writeToFile);
                     return;
                 }
             }
 
-            var text = _isLastNewline ? dataItem.Text : $"{Environment.NewLine}{dataItem.Text}";
-            PrintToConsole(text, dataItem.MessageType, writeToFile);
+            PrintToConsole(AddNewlinePrefixIfNeeded(dataItem.Text), dataItem.MessageType, writeToFile);
         }
+
+        private string AddNewlinePrefixIfNeeded(string text) => _isLastNewline ? text : $"{Environment.NewLine}{text}";
 
         private void PrintHexToConsole(List<string> hexData, bool writeToFile)
         {
@@ -207,6 +230,19 @@ namespace SerialMonitor.Business
             PrintToConsole(_hexStringBuilder.ToString(), EMessageType.Data, writeToFile);
         }
 
+        private void PrintCommandBytesToConsole(string text, List<string> hexData, bool writeToFile)
+        {
+            text = AddNewlinePrefixIfNeeded(text);
+
+            if (hexData.Count != 0)
+            {
+                var prefix = _settingsManager.HexPrefixEnabled ? AppSettings.HexPrefix : string.Empty;
+                var separator = $"{_settingsManager.HexSeparator}{prefix}";
+                text = $"{text} {prefix}{string.Join(separator, hexData)}{Environment.NewLine}";
+            }
+            PrintToConsole(text, EMessageType.CommandBytes, writeToFile);
+        }
+
         private void AppendHex(bool isFirst, string hex)
         {
             if (!isFirst)
@@ -216,7 +252,7 @@ namespace SerialMonitor.Business
 
             if (_settingsManager.HexPrefixEnabled)
             {
-                _hexStringBuilder.Append("0x");
+                _hexStringBuilder.Append(AppSettings.HexPrefix);
             }
 
             _hexStringBuilder.Append(hex);

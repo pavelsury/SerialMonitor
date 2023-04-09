@@ -48,6 +48,7 @@ namespace SerialMonitor.Win.Ui
             {
                 case EMessageType.Data: brush = _dataBrush; break;
                 case EMessageType.Command:
+                case EMessageType.CommandBytes:
                 case EMessageType.Info: brush = Brushes.Green; break;
                 case EMessageType.Warning: brush = Brushes.DarkOrange; break;
                 case EMessageType.Error: brush = Brushes.Red; break;
