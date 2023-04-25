@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using SerialMonitor.Business.Data;
@@ -12,12 +13,12 @@ namespace SerialMonitor.Win.Ui
             InitializeComponent();
         }
 
-        public List<ComboPair> FontSizes { get; } = Enumerable
+        public List<ContentControl> FontSizes { get; } = Enumerable
             .Range(AppSettings.DefaultFontSizeMin, AppSettings.DefaultFontSizeMax - AppSettings.DefaultFontSizeMin + 1)
-            .Select(i => new ComboPair
+            .Select(i => new ContentControl
             {
-                Value = i,
-                Text = i.ToString()
+                Tag = i,
+                Content = i.ToString()
             }).ToList();
     }
 }

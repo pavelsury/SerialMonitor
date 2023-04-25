@@ -26,6 +26,7 @@ namespace SerialMonitor.Business
             ConsoleManager = consoleManager;
             _usbNotification = usbNotification;
 
+            _commandVariablesResolver = new CommandVariablesResolver(settingsManager);
             _serialPort = new SerialPort();
         }
 
@@ -170,8 +171,19 @@ namespace SerialMonitor.Business
             {
                 ConsoleManager.PrintCommand($"Command: {text}");
                 
-                var (data, resolvedCommand) = GetDataToSend(text);
-                ConsoleManager.PrintMessage($"Resolved command: {resolvedCommand}", EMessageType.CommandResolved);
+                byte[] data;
+
+                if (_settingsManager.AppSettings.ResolveCommandVariables)
+                {
+                    string resolvedCommand;
+                    (data, resolvedCommand) = GetResolvedDataToSend(text);
+                    ConsoleManager.PrintMessage($"Resolved command: {resolvedCommand}", EMessageType.CommandResolved);
+                }
+                else
+                {
+                    data = GetDataToSend(text);
+                }
+
                 ConsoleManager.PrintCommandBytes("Sent bytes:", data);
                 _serialPort.Write(data, 0, data.Length);
             }
@@ -437,62 +449,50 @@ namespace SerialMonitor.Business
             return portInfo;
         }
 
-        private (byte[] data, string resolvedCommand) GetDataToSend(string command)
+        private byte[] GetDataToSend(string command)
         {
-            bool isEolOverridden = false;
+            command += GetSendingNewlineText();
+            return ConvertToBytes(command);
+        }
 
-            if (ResolveCommandVariables)
-            {
-                isEolOverridden = _commandVariablesResolver.IsEolOverridden(command);
-            }
+        private (byte[] data, string resolvedCommand) GetResolvedDataToSend(string command)
+        {
+            command = _commandVariablesResolver.ResolveTextVariables(command);
 
-            if (!isEolOverridden && SelectedPort.Settings.SendingNewline == ESendingNewline.Custom)
+            if (!_commandVariablesResolver.IsEolOverridden(command))
             {
-                command += SelectedPort.Settings.SendingCustomNewline;
-            }
-
-            if (ResolveCommandVariables)
-            {
-                command = _commandVariablesResolver.ResolveTextVariables(command);
-            }
-
-            if (!isEolOverridden)
-            {
-                string newline;
-                switch (SelectedPort.Settings.SendingNewline)
+                command += GetSendingNewlineText();
+                if (SelectedPort.Settings.SendingNewline == ESendingNewline.Custom)
                 {
-                    case ESendingNewline.None: newline = string.Empty; break;
-                    case ESendingNewline.Crlf: newline = "\r\n"; break;
-                    case ESendingNewline.Lf: newline = "\n"; break;
-                    case ESendingNewline.Custom: newline = string.Empty; break;
-                    default: throw new ArgumentOutOfRangeException();
+                    command = _commandVariablesResolver.ResolveTextVariables(command);
                 }
-
-                command += newline;
             }
 
-            if (ResolveCommandVariables)
-            {
-                command = _commandVariablesResolver.ResolveEolVariables(command);
-            }
+            command = _commandVariablesResolver.ResolveEolVariables(command);
             
             var resolvedCommand = command.Replace("\n", @"\n").Replace("\r", @"\r");
 
-            if (ResolveCommandVariables)
-            {
-                var tokenList = _commandVariablesResolver.ResolveDataVariables(command);
-                foreach (var (token, tokenBytes) in tokenList.Where(p => p.tokenBytes != null))
-                {
-                    resolvedCommand = resolvedCommand.Replace(token, $"[{tokenBytes.Length}B]");
-                }
-                
-                return (ConvertToBytes(tokenList), resolvedCommand);
-            }
+            var tokenList = _commandVariablesResolver.ResolveDataVariables(command);
 
-            return (ConvertToBytes(command), resolvedCommand);
+            foreach (var (token, tokenBytes) in tokenList.Where(p => p.tokenBytes != null))
+            {
+                resolvedCommand = resolvedCommand.Replace(token, $"[{tokenBytes.Length}B]");
+            }
+                
+            return (ConvertToBytes(tokenList), resolvedCommand);
         }
 
-        private bool ResolveCommandVariables => _settingsManager.AppSettings.ResolveCommandVariables;
+        private string GetSendingNewlineText()
+        {
+            switch (SelectedPort.Settings.SendingNewline)
+            {
+                case ESendingNewline.None: return string.Empty;
+                case ESendingNewline.Crlf: return "\r\n";
+                case ESendingNewline.Lf: return "\n";
+                case ESendingNewline.Custom: return SelectedPort.Settings.SendingCustomNewline;
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
 
         private byte[] ConvertToBytes(string text) => Encoding.Convert(Encoding.Default, SelectedPort.Settings.Encoding, Encoding.Default.GetBytes(text));
 
@@ -520,6 +520,6 @@ namespace SerialMonitor.Business
         private Task _portTask = Task.CompletedTask;
         private bool _isFileSending;
         private HashSet<string> _availablePortNames;
-        private readonly CommandVariablesResolver _commandVariablesResolver = new CommandVariablesResolver();
+        private readonly CommandVariablesResolver _commandVariablesResolver;
     }
 }

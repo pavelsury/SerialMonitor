@@ -30,7 +30,7 @@ namespace SerialMonitor.Business.Data
         
         [JsonConverter(typeof(EncodingJsonConverter))]
         [JsonProperty("EncodingCodePage")]
-        public Encoding Encoding { get; set; } = Encoding.GetEncoding(0);
+        public Encoding Encoding { get; set; } = Encoding.ASCII;
         
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(Parity.None)]
@@ -46,6 +46,9 @@ namespace SerialMonitor.Business.Data
 
         public string OutputFilename { get; set; } = string.Empty;
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public EPortEndianness Endianness { get; set; } = EPortEndianness.Default;
+
         public void Validate()
         {
             if (BaudRate <= 0)
@@ -60,7 +63,7 @@ namespace SerialMonitor.Business.Data
 
             if (Encoding == null)
             {
-                Encoding = Encoding.GetEncoding(0);
+                Encoding = Encoding.ASCII;
             }
 
             if (ReadTimeoutMs < 0)

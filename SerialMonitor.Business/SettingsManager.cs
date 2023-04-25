@@ -8,8 +8,23 @@ using SerialMonitor.Business.Helpers;
 
 namespace SerialMonitor.Business
 {
-    public class SettingsManager : NotifyPropertyChanged
+    public class SettingsManager : NotifyPropertyChanged, IEndiannessProvider
     {
+        public bool IsLittleEndian
+        {
+            get
+            {
+                switch (SelectedPort?.Settings.Endianness)
+                {
+                    case EPortEndianness.Default: return IsDefaultLittleEndian;
+                    case EPortEndianness.Little: return true;
+                    case EPortEndianness.Big: return false;
+                    case null: return true;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         public PortInfo SelectedPort
         {
             get => _selectedPort;
@@ -140,6 +155,16 @@ namespace SerialMonitor.Business
             }
         }
 
+        public EDefaultEndianness DefaultEndianness
+        {
+            get => _defaultEndianness;
+            set
+            {
+                AppSettings.DefaultEndianness = value;
+                SetNotifyingValueProperty(ref _defaultEndianness, value);
+            }
+        }
+
         public AppSettings AppSettings { get; private set; } = new AppSettings();
 
         public PortSettings GetSettings(string portName) => AppSettings.PortsSettingsMap.GetOrCreate(portName);
@@ -214,6 +239,21 @@ namespace SerialMonitor.Business
             PipeEnabled = AppSettings.PipeEnabled;
             ShowDotForNonPrintableAscii = AppSettings.ShowDotForNonPrintableAscii;
             FontSize = AppSettings.FontSize;
+            DefaultEndianness = AppSettings.DefaultEndianness;
+        }
+
+        public bool IsDefaultLittleEndian
+        {
+            get
+            {
+                switch (DefaultEndianness)
+                {
+                    case EDefaultEndianness.System: return BitConverter.IsLittleEndian;
+                    case EDefaultEndianness.Little: return true;
+                    case EDefaultEndianness.Big: return false;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
         }
 
         private string _settingsFilename;
@@ -230,5 +270,6 @@ namespace SerialMonitor.Business
         private bool _pipeEnabled;
         private bool _showDotForNonPrintableAscii;
         private int _fontSize;
+        private EDefaultEndianness _defaultEndianness;
     }
 }

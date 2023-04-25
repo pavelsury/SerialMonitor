@@ -32,11 +32,16 @@ namespace SerialMonitor.Business.Data
 
         [JsonConverter(typeof(StringEnumConverter))]
         public EViewMode ViewMode { get; set; } = EViewMode.Text;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public EDefaultEndianness DefaultEndianness { get; set; } = EDefaultEndianness.System;
+        
         public Dictionary<string, PortSettings> PortsSettingsMap { get; set; } = new Dictionary<string, PortSettings>();
 
         public void Validate()
         {
             PortsSettingsMap?.Values.ForEach(s => s.Validate());
+            
             if (HexSeparator == null)
             {
                 HexSeparator = " ";
@@ -66,7 +71,10 @@ namespace SerialMonitor.Business.Data
         public const char VariableStartDelimiter = '%';
         public const char VariableEndDelimiter = '%';
         public const bool IsVariableCaseSensitive = false;
+        public const char DataDelimiter = ',';
         public const char DataAttributeDelimiter = '\\';
+        public const string BinPrefix = "0b";
+        public const string OctPrefix = "0o";
         public const string HexPrefix = "0x";
         private const int DefaultFontSize = 11;
     }

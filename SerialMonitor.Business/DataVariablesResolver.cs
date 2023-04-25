@@ -6,11 +6,17 @@ using System.Linq;
 
 namespace SerialMonitor.Business
 {
-    public static class DataVariablesResolver
+    public class DataVariablesResolver
     {
-        public static readonly string StartDelimiter = $@"{AppSettings.VariableStartDelimiter}DATA";
+        public DataVariablesResolver(IEndiannessProvider endiannessProvider)
+        {
+            _bitConverter = new EndianBitConverter(endiannessProvider);
+        }
 
-        public static byte[] Resolve(string dataVariable)
+        public const string DataVariableName = "DATA";
+        public static readonly string StartDelimiter = $@"{AppSettings.VariableStartDelimiter}{DataVariableName}";
+
+        public byte[] Resolve(string dataVariable)
         {
             var tokens = dataVariable
                 .ToLower()
@@ -18,7 +24,7 @@ namespace SerialMonitor.Business
                 .Substring(StartDelimiter.Length)
                 .TrimStart(AppSettings.DataAttributeDelimiter)
                 .TrimEnd(AppSettings.VariableEndDelimiter)
-                .Split(',');
+                .Split(AppSettings.DataDelimiter);
 
             if (tokens.Length <= 1)
             {
@@ -35,7 +41,12 @@ namespace SerialMonitor.Business
             return bytes;
         }
 
-        private static byte[] GetBytes(string text, Attributes defaultAttributes)
+        public string MakeVar(params string[] data)
+        {
+            return $"{StartDelimiter}{AppSettings.DataDelimiter}{string.Join(AppSettings.DataDelimiter.ToString(), data)}{AppSettings.VariableEndDelimiter}";
+        }
+
+        private byte[] GetBytes(string text, Attributes defaultAttributes)
         {
             var tokens = text.Split(AppSettings.DataAttributeDelimiter);
             if (tokens.Length > 2)
@@ -46,26 +57,19 @@ namespace SerialMonitor.Business
             var valueText = tokens[0];
             var attributesText = tokens.Length == 2 ? tokens[1] : string.Empty;
 
-            var isHexPrefix = false;
-            if (valueText.StartsWith(AppSettings.HexPrefix, StringComparison.InvariantCultureIgnoreCase))
-            {
-                isHexPrefix = true;
-                valueText = text.Remove(0, 2);
-            }
+            EBase prefixBase;
+            (valueText, prefixBase) = GetPrefixBase(valueText);
 
             var valueAttributes = ParseAttributes(attributesText);
 
-            if (isHexPrefix)
+            if (valueAttributes.Base == EBase.None)
             {
-                if (valueAttributes.Base == EBase.None)
-                {
-                    valueAttributes.Base = EBase.Hex;
-                }
-
-                if (valueAttributes.Base != EBase.Hex)
-                {
-                    throw new Exception($"Invalid data attributes: {text}");
-                }
+                valueAttributes.Base = prefixBase;
+            }
+            
+            if (prefixBase != EBase.None && valueAttributes.Base != prefixBase)
+            {
+                throw new Exception($"Invalid data attributes: {text}");
             }
 
             if (valueAttributes.Width == EWidth.None)
@@ -78,11 +82,30 @@ namespace SerialMonitor.Business
                 valueAttributes.Base = defaultAttributes.Base;
             }
 
-            var bytes = ParseValue(valueText, valueAttributes);
-            return bytes;
+            return ParseValue(valueText, valueAttributes);
         }
 
-        private static byte[] ParseValue(string text, Attributes attributes)
+        private static (string text, EBase prefixBase) GetPrefixBase(string text)
+        {
+            if (text.StartsWith(AppSettings.BinPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return (text.Remove(0, AppSettings.BinPrefix.Length), EBase.Binary);
+            }
+
+            if (text.StartsWith(AppSettings.OctPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return (text.Remove(0, AppSettings.OctPrefix.Length), EBase.Octal);
+            }
+
+            if (text.StartsWith(AppSettings.HexPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return (text.Remove(0, AppSettings.HexPrefix.Length), EBase.Hex);
+            }
+
+            return (text, EBase.None);
+        }
+
+        private byte[] ParseValue(string text, Attributes attributes)
         {
             try
             {
@@ -95,9 +118,9 @@ namespace SerialMonitor.Business
                 {
                     case EWidth.None: return ParsePositiveValueMinWidth(Convert.ToUInt64(text, attributes.BaseNumber));
                     case EWidth.W8: return new[] { Convert.ToByte(text, attributes.BaseNumber) };
-                    case EWidth.W16: return BitConverter.GetBytes(Convert.ToUInt16(text, attributes.BaseNumber));
-                    case EWidth.W32: return BitConverter.GetBytes(Convert.ToUInt32(text, attributes.BaseNumber));
-                    case EWidth.W64: return BitConverter.GetBytes(Convert.ToUInt64(text, attributes.BaseNumber));
+                    case EWidth.W16: return _bitConverter.GetBytes(Convert.ToUInt16(text, attributes.BaseNumber));
+                    case EWidth.W32: return _bitConverter.GetBytes(Convert.ToUInt32(text, attributes.BaseNumber));
+                    case EWidth.W64: return _bitConverter.GetBytes(Convert.ToUInt64(text, attributes.BaseNumber));
                     default: throw new Exception();
                 }
             }
@@ -107,20 +130,20 @@ namespace SerialMonitor.Business
             }
         }
 
-        private static byte[] ParseDecimalValue(string text, EWidth widthAttribute)
+        private byte[] ParseDecimalValue(string text, EWidth widthAttribute)
         {
             switch (widthAttribute)
             {
                 case EWidth.None: return ParseDecimalValueAutoWidth(text);
                 case EWidth.W8: return new[] { sbyte.TryParse(text, out var value8) ? (byte)value8 : byte.Parse(text) };
-                case EWidth.W16: return short.TryParse(text, out var value16) ? BitConverter.GetBytes(value16) : BitConverter.GetBytes(ushort.Parse(text));
-                case EWidth.W32: return int.TryParse(text, out var value32) ? BitConverter.GetBytes(value32) : BitConverter.GetBytes(uint.Parse(text));
-                case EWidth.W64: return long.TryParse(text, out var value64) ? BitConverter.GetBytes(value64) : BitConverter.GetBytes(ulong.Parse(text));
+                case EWidth.W16: return short.TryParse(text, out var value16) ? _bitConverter.GetBytes(value16) : _bitConverter.GetBytes(ushort.Parse(text));
+                case EWidth.W32: return int.TryParse(text, out var value32) ? _bitConverter.GetBytes(value32) : _bitConverter.GetBytes(uint.Parse(text));
+                case EWidth.W64: return long.TryParse(text, out var value64) ? _bitConverter.GetBytes(value64) : _bitConverter.GetBytes(ulong.Parse(text));
                 default: throw new Exception();
             }
         }
 
-        private static byte[] ParseDecimalValueAutoWidth(string text)
+        private byte[] ParseDecimalValueAutoWidth(string text)
         {
             if (!long.TryParse(text, out var value))
             {
@@ -135,7 +158,7 @@ namespace SerialMonitor.Business
             return ParseNegativeValueMinWidth(value);
         }
 
-        private static byte[] ParsePositiveValueMinWidth(ulong value)
+        private byte[] ParsePositiveValueMinWidth(ulong value)
         {
             if (value <= byte.MaxValue)
             {
@@ -144,18 +167,18 @@ namespace SerialMonitor.Business
 
             if (value <= ushort.MaxValue)
             {
-                return BitConverter.GetBytes((ushort)value);
+                return _bitConverter.GetBytes((ushort)value);
             }
 
             if (value <= uint.MaxValue)
             {
-                return BitConverter.GetBytes((uint)value);
+                return _bitConverter.GetBytes((uint)value);
             }
 
-            return BitConverter.GetBytes(value);
+            return _bitConverter.GetBytes(value);
         }
 
-        private static byte[] ParseNegativeValueMinWidth(long value)
+        private byte[] ParseNegativeValueMinWidth(long value)
         {
             if (value >= sbyte.MinValue)
             {
@@ -164,15 +187,15 @@ namespace SerialMonitor.Business
 
             if (value >= short.MinValue)
             {
-                return BitConverter.GetBytes((short)value);
+                return _bitConverter.GetBytes((short)value);
             }
 
             if (value >= int.MinValue)
             {
-                return BitConverter.GetBytes((int)value);
+                return _bitConverter.GetBytes((int)value);
             }
 
-            return BitConverter.GetBytes(value);
+            return _bitConverter.GetBytes(value);
         }
 
         private static Attributes ParseAttributes(string attributesText)
@@ -198,7 +221,7 @@ namespace SerialMonitor.Business
 
             foreach (var (width, widthEnum) in supportedWidths)
             {
-                var index = attributesText.IndexOf(width.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                var index = attributesText.IndexOf(width.ToString(), StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
                     attributes.Width = widthEnum;
@@ -209,7 +232,7 @@ namespace SerialMonitor.Business
 
             foreach (var (name, baseEnum) in supportedBases)
             {
-                var index = attributesText.IndexOf(name.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                var index = attributesText.IndexOf(name.ToString(), StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
                     attributes.Base = baseEnum;
@@ -250,5 +273,7 @@ namespace SerialMonitor.Business
             public EBase Base { get; set; }
             public int BaseNumber => (int)Base;
         }
+
+        private EndianBitConverter _bitConverter;
     }
 }

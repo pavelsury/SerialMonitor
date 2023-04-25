@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
+using SerialMonitor.Business.Enums;
 using SerialMonitor.Win.Business;
 
 namespace SerialMonitor.Win.Ui
@@ -17,11 +18,18 @@ namespace SerialMonitor.Win.Ui
             BaudRateComboBox.Focus();
         }
 
-        public List<ComboPair> Encodings { get; } = Encoding.GetEncodings().Select(e => new ComboPair
+        public List<ContentControl> Encodings { get; } = Encoding.GetEncodings().Select(e => new ContentControl
         {
-            Value = e.GetEncoding(),
-            Text = e.CodePage + " " + e.Name + " - " + e.DisplayName
+            Tag = e.GetEncoding(),
+            Content = e.CodePage + " " + e.Name + " - " + e.DisplayName
         }).ToList();
+
+        public List<EPortEndianness> Endiannesses { get; } = new List<EPortEndianness>()
+        {
+            EPortEndianness.Default,
+            EPortEndianness.Little,
+            EPortEndianness.Big
+        };
 
         private WinSettingsManager WinSettingsManager => (WinSettingsManager)DataContext;
 

@@ -5,9 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:business="clr-namespace:SerialMonitor.Win.Business;assembly=SerialMonitor2.Win.Business"
              xmlns:business1="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
+             xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              xmlns:rules="clr-namespace:SerialMonitor.Win.Ui.Rules"
              xmlns:ui="clr-namespace:SerialMonitor.Win.Ui"
-             mc:Ignorable="d" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance business:WinSettingsManager}"
              x:Name="Control">
@@ -23,6 +25,8 @@
             <rules:HexFixedCountRule x:Key="HexFixedCountRule"/>
             <rules:ColorRule x:Key="ColorRule"/>
             <rules:IntNonnegativeRule x:Key="IntNonnegativeRule"/>
+            <sys:Double x:Key="LabelWidth">150</sys:Double>
+            <sys:Double x:Key="TextBoxWidth">105</sys:Double>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -160,58 +164,76 @@
         </CheckBox>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Hex separator:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <Label Content="Hex separator:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding HexSeparator}"
                           VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Hex columns:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <Label Content="Hex columns:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding HexFixedColumns}"
                           ValidationRule="{StaticResource HexFixedCountRule}"
                           VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Send file batch byte size:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <Label Content="Default endianness:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ComboBox SelectedValue="{Binding DefaultEndianness}" SelectedValuePath="Tag"
+                      VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                <ContentControl Tag="{x:Static enums:EDefaultEndianness.System}">
+                    <ContentControl.Content>
+                        <MultiBinding Converter="{StaticResource BoolToObjectsConverter}">
+                            <Binding Source="{x:Static sys:BitConverter.IsLittleEndian}"/>
+                            <Binding Source="System (Big)"/>
+                            <Binding Source="System (Little)"/>
+                        </MultiBinding>
+                    </ContentControl.Content>
+                </ContentControl>
+                <ContentControl Tag="{x:Static enums:EDefaultEndianness.Little}" Content="Little"/>
+                <ContentControl Tag="{x:Static enums:EDefaultEndianness.Big}" Content="Big"/>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource SettingsStackPanel}">
+            <Label Content="Send file batch byte size:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding AppSettings.SendFileBatchByteSize}"
                           ValidationRule="{StaticResource IntNonnegativeRule}"
                           VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Send file batch delay ms:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <Label Content="Send file batch delay ms:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding AppSettings.SendFileBatchDelayMs}"
                           ValidationRule="{StaticResource IntNonnegativeRule}"
                           VerticalContentAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Console font size:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <Label Content="Console font size:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             <ComboBox ItemsSource="{Binding FontSizes, ElementName=Control}"
                       SelectedValue="{Binding FontSize}"
-                      SelectedValuePath="Value"
-                      VerticalContentAlignment="Center" Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}"/>
+                      SelectedValuePath="Tag"
+                      VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Console font style:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ComboBox SelectedValue="{Binding FontStyle}" SelectedValuePath="Value"
-                      VerticalContentAlignment="Center" Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
-                <ui:ComboPair Value="{x:Static FontStyles.Normal}" Text="Normal"/>
-                <ui:ComboPair Value="{x:Static FontStyles.Italic}" Text="Italic"/>
-                <ui:ComboPair Value="{x:Static FontStyles.Oblique}" Text="Oblique"/>
+            <Label Content="Console font style:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ComboBox SelectedValue="{Binding FontStyle}" SelectedValuePath="Tag"
+                      VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                <ContentControl Tag="{x:Static FontStyles.Normal}" Content="Normal"/>
+                <ContentControl Tag="{x:Static FontStyles.Italic}" Content="Italic"/>
+                <ContentControl Tag="{x:Static FontStyles.Oblique}" Content="Oblique"/>
             </ComboBox>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}"
                     Visibility="{Binding Source={x:Static business1:AppInfo.IsStandaloneApp}, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
-            <Label Content="App background color:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <Label Content="App background color:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding BackgroundColor}"
                           ValidationRule="{StaticResource ColorRule}"
                           VerticalContentAlignment="Center"/>
@@ -219,8 +241,8 @@
 
         <StackPanel Style="{StaticResource SettingsStackPanel}"
                     Visibility="{Binding Source={x:Static business1:AppInfo.IsStandaloneApp}, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
-            <Label Content="App text color:" Width="150" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ui:TextBoxEx Width="80" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
+            <Label Content="App text color:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                           TextEx="{Binding ForegroundColor}"
                           ValidationRule="{StaticResource ColorRule}"
                           VerticalContentAlignment="Center"/>

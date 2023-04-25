@@ -9,6 +9,12 @@ namespace SerialMonitor.Business
 {
     public class CommandVariablesResolver
     {
+        public CommandVariablesResolver(IEndiannessProvider endiannessProvider)
+        {
+            _dataVariableResolver = new DataVariablesResolver(endiannessProvider);
+            _otherVariablesMapping.Add("EOF", $"{_dataVariableResolver.MakeVar(@"4\8x")}{MakeVar(_eolSkipVariableName)}");
+        }
+
         public string ResolveTextVariables(string text)
         {
             if (!ContainsVariableDelimiter(text))
@@ -16,32 +22,13 @@ namespace SerialMonitor.Business
                 return text;
             }
 
-            var localNow = DateTime.Now;
-            var winterNow = GetWinterTime(localNow);
-            var utcNow = localNow.ToUniversalTime();
-
-            foreach (var (localTimeName, winterTimeName, utcTimeName, resolver) in _timeResolvers)
+            text = ResolveTimeVariables(text);
+            if (!ContainsVariableDelimiter(text))
             {
-                text = text.Replace(MakeVar(localTimeName), resolver(localNow), StringComparison);
-                if (!ContainsVariableDelimiter(text))
-                {
-                    return text;
-                }
-
-                text = text.Replace(MakeVar(winterTimeName), resolver(winterNow), StringComparison);
-                if (!ContainsVariableDelimiter(text))
-                {
-                    return text;
-                }
-
-                text = text.Replace(MakeVar(utcTimeName), resolver(utcNow), StringComparison);
-                if (!ContainsVariableDelimiter(text))
-                {
-                    return text;
-                }
+                return text;
             }
 
-            return text;
+            return ReplaceOtherTextVariables(text);
         }
 
         public bool IsEolOverridden(string text)
@@ -84,7 +71,7 @@ namespace SerialMonitor.Business
                     resultList.Add((text.Substring(startIndex, length), null));
                 }
 
-                resultList.Add((match.Value, DataVariablesResolver.Resolve(match.Value)));
+                resultList.Add((match.Value, _dataVariableResolver.Resolve(match.Value)));
                 startIndex = match.Index + match.Length;
             }
 
@@ -112,7 +99,43 @@ namespace SerialMonitor.Business
             return localNow - rule.DaylightDelta;
         }
 
-        private StringComparison StringComparison => AppSettings.IsVariableCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+        private static StringComparison StringComparison => AppSettings.IsVariableCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+
+        private string ResolveTimeVariables(string text)
+        {
+            var localNow = DateTime.Now;
+            var winterNow = GetWinterTime(localNow);
+            var utcNow = localNow.ToUniversalTime();
+
+            foreach (var (localTimeName, winterTimeName, utcTimeName, resolver) in _timeResolvers)
+            {
+                text = text.Replace(MakeVar(localTimeName), resolver(localNow), StringComparison);
+                if (!ContainsVariableDelimiter(text))
+                {
+                    return text;
+                }
+
+                text = text.Replace(MakeVar(winterTimeName), resolver(winterNow), StringComparison);
+                if (!ContainsVariableDelimiter(text))
+                {
+                    return text;
+                }
+
+                text = text.Replace(MakeVar(utcTimeName), resolver(utcNow), StringComparison);
+                if (!ContainsVariableDelimiter(text))
+                {
+                    return text;
+                }
+            }
+
+            return text;
+        }
+
+        private string ReplaceOtherTextVariables(string text)
+        {
+            _otherVariablesMapping.ForEach(p => text = text.Replace(MakeVar(p.Key), p.Value, StringComparison));
+            return text;
+        }
 
         private readonly List<(string localTimeName, string winterTimeName, string utcTimeName, Func<DateTime, string> resolver)> _timeResolvers = new List<(string, string, string, Func<DateTime, string>)>
         {
@@ -127,12 +150,18 @@ namespace SerialMonitor.Business
             ("NOW_SECOND", "WINTER_NOW_SECOND", "UTC_NOW_SECOND", d => d.Second.ToString(System.Globalization.CultureInfo.InvariantCulture))
         };
 
-        private readonly Dictionary<string, string> _eolMapping = new Dictionary<string, string> 
+        private const string _eolSkipVariableName = "EOL_SKIP";
+
+        private readonly Dictionary<string, string> _eolMapping = new Dictionary<string, string>
         {
-            { "EOL_SKIP", "" },
+            { _eolSkipVariableName, "" },
             { "EOL_CR", "\r" },
             { "EOL_LF", "\n" },
             { "EOL_CRLF", "\r\n" },
         };
+
+        private readonly Dictionary<string, string> _otherVariablesMapping = new Dictionary<string, string>();
+
+        private readonly DataVariablesResolver _dataVariableResolver;
     }
 }

@@ -112,7 +112,8 @@ namespace SerialMonitor.Business
                 case nameof(SettingsManager.HexPrefixEnabled):
                 case nameof(SettingsManager.HexSeparator):
                     if (_settingsManager.ViewMode == EViewMode.Hex ||
-                        _settingsManager.ViewMode == EViewMode.HexColumns)
+                        _settingsManager.ViewMode == EViewMode.HexColumns ||
+                        _settingsManager.WriteSentBytesToConsole)
                     {
                         ReprintAll();
                     }

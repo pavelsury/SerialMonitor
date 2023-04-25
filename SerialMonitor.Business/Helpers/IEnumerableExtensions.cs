@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace SerialMonitor.Business.Helpers
 {
@@ -19,12 +17,5 @@ namespace SerialMonitor.Business.Helpers
                 action(element);
             }
         }
-
-        public static byte[] ToEndianArray(this IEnumerable<byte[]> collection, bool useLittleEndian)
-        {
-            
-            return collection.SelectMany(b => b.EndianReverse(useLittleEndian)).ToArray();
-        }
-       
     }
 }
