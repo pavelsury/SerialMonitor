@@ -114,13 +114,75 @@
                 <LineBreak/>
                 <Run>- when sending command, press Ctrl+Enter to send it without erasing</Run>
                 <LineBreak/>
-                <Run>- command variables</Run>
+                <Run>- command variables are case-insensitive</Run>
                 <LineBreak/>
-                <Run xml:space="preserve">  - local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%</Run>
+                <Run>- 'Custom EOL' settings supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' settings checked)</Run>
                 <LineBreak/>
-                <Run xml:space="preserve">  - winter time: %WINTER_NOW%, %WINTER_NOW_DATE%, %WINTER_NOW_TIME%, %WINTER_NOW_YEAR%, %WINTER_NOW_MONTH%, %WINTER_NOW_DAY%, %WINTER_NOW_HOUR%, %WINTER_NOW_MINUTE%, %WINTER_NOW_SECOND%</Run>
                 <LineBreak/>
-                <Run xml:space="preserve">  - utc time: %UTC_NOW%, %UTC_NOW_DATE%, %UTC_NOW_TIME%, %UTC_NOW_YEAR%, %UTC_NOW_MONTH%, %UTC_NOW_DAY%, %UTC_NOW_HOUR%, %UTC_NOW_MINUTE%, %UTC_NOW_SECOND%</Run>
+
+                <Run FontWeight="Bold">EOL command variables</Run>
+                <LineBreak/>
+                <Run>- %EOL_CR%, %EOL_LF%, %EOL_CRLF%, %EOL_SKIP%</Run>
+                <LineBreak/>
+                <Run>- the EOL command variables can be used anywhere in the command but if they are placed at its end then they override the 'Send EOL' settings</Run>
+                <LineBreak/>
+                <LineBreak/>
+
+                <Run FontWeight="Bold">Data command variables</Run>
+                <LineBreak/>
+                <Run>- %DATA[default_bitwidth][default_base],value[\][value_bitwidth][value_base],value[\][value_bitwidth][value_base],...%</Run>
+                <LineBreak/>
+                <Run>- attributes default_bitwidth and value_bitwidth can be: nothing, 8, 16, 32 or 64</Run>
+                <LineBreak/>
+                <Run>- attributes default_base and value_base can be: nothing -> decimal, b -> binary, o -> octal, x -> hexadecimal</Run>
+                <LineBreak/>
+                <Run>- base can also be specified as 0b, 0o or 0x value's prefix, see examples below</Run>
+                <LineBreak/>
+                <Run>- value_bitwidth always overrides default_bitwidth</Run>
+                <LineBreak/>
+                <Run>- value_base always overrides default_base</Run>
+                <LineBreak/>
+                <Run>- if value has no value_bitwidth attribute and there is also no default_bitwidth attribute then the actual bitwidth is calculated automatically as necessary minimum</Run>
+                <LineBreak/>
+                <Run>- if value is resolved with bitwidth 16 or bigger then its endianness is taken from port's Endianness settings (if port's Endianness is set to Default then the endianness is taken from 'Default endianness' settings)</Run>
+                <LineBreak/>
+                <Run>- use 'Write resolved command to console' settings to see how the command was resolved</Run>
+                <LineBreak/>
+                <Run>- use 'Write sent bytes to console' settings to see what bytes were actually sent (shown as hex values)</Run>
+                <LineBreak/>
+                <Run>- Examples</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATA,14,15% -> sent bytes: 0x0E 0x0F</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATA16,14,15% -> sent bytes: 0x0E 0x00 0x0F 0x00</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATA16,14\8,15% -> sent bytes: 0x0E 0x0F 0x00</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATAo,14,15% -> sent bytes: 0x0C 0x0D</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATAb,10,11% -> sent bytes: 0x02 0x03</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATAb,10,11\x% -> sent bytes: 0x02 0x11</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATA,0x10,0b11% -> sent bytes: 0x10 0x03</Run>
+                <LineBreak/>
+                <Run xml:space="preserve">  - %DATAx16,10,11,12\8,12\32,13\64d,0b11\8% -> sent bytes: 0x10 0x00 0x11 0x00 0x12 0x12 0x00 0x00 0x00 0x0D 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x03</Run>
+                <LineBreak/>
+                <LineBreak/>
+
+                <Run FontWeight="Bold">Time command variables</Run>
+                <LineBreak/>
+                <Run>- local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%</Run>
+                <LineBreak/>
+                <Run>- winter time: %WINTER_NOW%, %WINTER_NOW_DATE%, %WINTER_NOW_TIME%, %WINTER_NOW_YEAR%, %WINTER_NOW_MONTH%, %WINTER_NOW_DAY%, %WINTER_NOW_HOUR%, %WINTER_NOW_MINUTE%, %WINTER_NOW_SECOND%</Run>
+                <LineBreak/>
+                <Run>- utc time: %UTC_NOW%, %UTC_NOW_DATE%, %UTC_NOW_TIME%, %UTC_NOW_YEAR%, %UTC_NOW_MONTH%, %UTC_NOW_DAY%, %UTC_NOW_HOUR%, %UTC_NOW_MINUTE%, %UTC_NOW_SECOND%</Run>
+                <LineBreak/>
+                <LineBreak/>
+
+                <Run FontWeight="Bold">Other command variables</Run>
+                <LineBreak/>
+                <Run>- %EOF% - it is defined as %DATA,4%%EOL_SKIP%, which means that it sends just one byte 0x04 and skips any EOL</Run>
 
                 <LineBreak/>
                 <LineBreak/>

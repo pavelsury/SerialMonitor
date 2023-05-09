@@ -12,7 +12,7 @@ namespace SerialMonitor.Business
         public CommandVariablesResolver(IEndiannessProvider endiannessProvider)
         {
             _dataVariableResolver = new DataVariablesResolver(endiannessProvider);
-            _otherVariablesMapping.Add("EOF", $"{_dataVariableResolver.MakeVar(@"4\8x")}{MakeVar(_eolSkipVariableName)}");
+            _otherVariablesMapping.Add("EOF", $"{_dataVariableResolver.MakeVar(@"4")}{MakeVar(_eolSkipVariableName)}");
         }
 
         public string ResolveTextVariables(string text)
