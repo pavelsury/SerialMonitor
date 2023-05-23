@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:business1="clr-namespace:SerialMonitor.Win.Business;assembly=SerialMonitor2.Win.Business"
         mc:Ignorable="d"
-        Title="Serial Monitor Test App" Height="470" Width="800"
+        Title="Serial Monitor 2" Height="470" Width="800"
         d:DataContext="{d:DesignInstance business1:WinSettingsManager}"
         Closed="OnClosed">
 
