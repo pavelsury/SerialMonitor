@@ -8,7 +8,7 @@
              xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              xmlns:rules="clr-namespace:SerialMonitor.Win.Ui.Rules"
              xmlns:ui="clr-namespace:SerialMonitor.Win.Ui"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:helpers="clr-namespace:SerialMonitor.Win.Ui.Helpers"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance business:WinSettingsManager}"
@@ -25,8 +25,8 @@
             <rules:HexFixedCountRule x:Key="HexFixedCountRule"/>
             <rules:ColorRule x:Key="ColorRule"/>
             <rules:IntNonnegativeRule x:Key="IntNonnegativeRule"/>
-            <sys:Double x:Key="LabelWidth">150</sys:Double>
-            <sys:Double x:Key="TextBoxWidth">105</sys:Double>
+            <sys:Double x:Key="LabelWidth">170</sys:Double>
+            <sys:Double x:Key="TextBoxWidth">110</sys:Double>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -180,19 +180,19 @@
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
             <Label Content="Default endianness:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ComboBox SelectedValue="{Binding DefaultEndianness}" SelectedValuePath="Tag"
+            <ComboBox SelectedValue="{Binding DefaultEndianness}" SelectedValuePath="Value" DisplayMemberPath="Text"
                       VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
-                <ContentControl Tag="{x:Static enums:EDefaultEndianness.System}">
-                    <ContentControl.Content>
+                <helpers:ComboPair Value="{x:Static enums:EDefaultEndianness.System}">
+                    <helpers:ComboPair.Text>
                         <MultiBinding Converter="{StaticResource BoolToObjectsConverter}">
                             <Binding Source="{x:Static sys:BitConverter.IsLittleEndian}"/>
                             <Binding Source="System (Big)"/>
                             <Binding Source="System (Little)"/>
                         </MultiBinding>
-                    </ContentControl.Content>
-                </ContentControl>
-                <ContentControl Tag="{x:Static enums:EDefaultEndianness.Little}" Content="Little"/>
-                <ContentControl Tag="{x:Static enums:EDefaultEndianness.Big}" Content="Big"/>
+                    </helpers:ComboPair.Text>
+                </helpers:ComboPair>
+                <helpers:ComboPair Value="{x:Static enums:EDefaultEndianness.Little}" Text="Little"/>
+                <helpers:ComboPair Value="{x:Static enums:EDefaultEndianness.Big}" Text="Big"/>
             </ComboBox>
         </StackPanel>
 
@@ -216,17 +216,17 @@
             <Label Content="Console font size:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
             <ComboBox ItemsSource="{Binding FontSizes, ElementName=Control}"
                       SelectedValue="{Binding FontSize}"
-                      SelectedValuePath="Tag"
+                      SelectedValuePath="Value" DisplayMemberPath="Text"
                       VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}"/>
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsStackPanel}">
-            <Label Content="Console font style:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <ComboBox SelectedValue="{Binding FontStyle}" SelectedValuePath="Tag"
-                      VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
-                <ContentControl Tag="{x:Static FontStyles.Normal}" Content="Normal"/>
-                <ContentControl Tag="{x:Static FontStyles.Italic}" Content="Italic"/>
-                <ContentControl Tag="{x:Static FontStyles.Oblique}" Content="Oblique"/>
+            <Label Content="Console font style:" Width="{StaticResource LabelWidth}" Style="{StaticResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+            <ComboBox SelectedValue="{Binding FontStyle}" SelectedValuePath="Value" DisplayMemberPath="Text"
+                      VerticalContentAlignment="Center" Width="{StaticResource TextBoxWidth}" Style="{StaticResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                <helpers:ComboPair Value="{x:Static FontStyles.Normal}" Text="Normal"/>
+                <helpers:ComboPair Value="{x:Static FontStyles.Normal}" Text="Italic"/>
+                <helpers:ComboPair Value="{x:Static FontStyles.Normal}" Text="Oblique"/>
             </ComboBox>
         </StackPanel>
 

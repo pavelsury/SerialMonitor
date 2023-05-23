@@ -54,6 +54,11 @@ namespace SerialMonitor.Business
                     _data.Clear();
                 }
 
+                if (string.IsNullOrEmpty(_settingsManager.SelectedPort.Settings.OutputFilename))
+                {
+                    continue;
+                }
+
                 try
                 {
                     foreach (var text in data)

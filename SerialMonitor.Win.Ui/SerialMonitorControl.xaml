@@ -6,7 +6,7 @@
              xmlns:business="clr-namespace:SerialMonitor.Business;assembly=SerialMonitor2.Business"
              xmlns:enums="clr-namespace:SerialMonitor.Business.Enums;assembly=SerialMonitor2.Business"
              xmlns:factories="clr-namespace:SerialMonitor.Win.Business.Factories;assembly=SerialMonitor2.Win.Business"
-             xmlns:ui="clr-namespace:SerialMonitor.Win.Ui"
+             xmlns:ui="clr-namespace:SerialMonitor.Win.Ui" xmlns:helpers="clr-namespace:SerialMonitor.Win.Ui.Helpers"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance factories:ModelFactory}"
              Name="Control"
@@ -46,15 +46,24 @@
 
         <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
             <ComboBox Name="PortComboBox" ItemsSource="{Binding PortManager.Ports}"
+                      AutomationProperties.Name="Port selection"
                       SelectedValue="{Binding SettingsManager.SelectedPort}"
                       IsEnabled="{Binding PortManager.IsDisconnected}"
                       Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type business:PortInfo}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}"/>
-                            <TextBlock Text=" (n/a)" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityCollapsedInvertedConverter}}"/>
-                        </StackPanel>
+                        <TextBlock>
+                            <Run Text="{Binding Name}"/>
+                            <Run>
+                                <Run.Text>
+                                    <MultiBinding Converter="{StaticResource BoolToObjectsConverter}" Mode="OneWay">
+                                        <Binding Path="IsAvailable"/>
+                                        <Binding Source="(n/a)"/>
+                                        <Binding Source=""/>
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+                        </TextBlock>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
@@ -80,11 +89,11 @@
 
             <StackPanel Name="ViewStackPanel" Orientation="Horizontal">
                 <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Tag"
+                <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Value" DisplayMemberPath="Text"
                           Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
-                    <ContentControl Tag="{x:Static enums:EViewMode.Text}" Content="Text"/>
-                    <ContentControl Tag="{x:Static enums:EViewMode.Hex}" Content="Hex"/>
-                    <ContentControl Tag="{x:Static enums:EViewMode.HexColumns}" Content="Hex columns"/>
+                    <helpers:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
+                    <helpers:ComboPair Value="{x:Static enums:EViewMode.Hex}" Text="Hex"/>
+                    <helpers:ComboPair Value="{x:Static enums:EViewMode.HexColumns}" Text="Hex columns"/>
                 </ComboBox>
             </StackPanel>
 
