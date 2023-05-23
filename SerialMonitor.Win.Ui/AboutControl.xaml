@@ -34,6 +34,8 @@
             <Paragraph Margin="0,20,0,0" FontSize="12">
                 <Run FontWeight="Bold">Releases</Run>
                 <LineBreak/>
+                <Run>1.14.0 - EOL and DATA command variables</Run>
+                <LineBreak/>
                 <Run>1.13.0 - Winter time command variables</Run>
                 <LineBreak/>
                 <Run>1.12.0 - Command variables (see list below)</Run>
@@ -116,7 +118,7 @@
                 <LineBreak/>
                 <Run>- command variables are case-insensitive</Run>
                 <LineBreak/>
-                <Run>- 'Custom EOL' settings supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' settings checked)</Run>
+                <Run>- 'Custom EOL' setting supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' setting checked)</Run>
                 <LineBreak/>
                 <LineBreak/>
 
@@ -124,7 +126,7 @@
                 <LineBreak/>
                 <Run>- %EOL_CR%, %EOL_LF%, %EOL_CRLF%, %EOL_SKIP%</Run>
                 <LineBreak/>
-                <Run>- the EOL command variables can be used anywhere in the command but if they are placed at its end then they override the 'Send EOL' settings</Run>
+                <Run>- the EOL command variables can be used anywhere in the command but if they are placed at its end then they override the 'Send EOL' setting</Run>
                 <LineBreak/>
                 <LineBreak/>
 
@@ -144,11 +146,11 @@
                 <LineBreak/>
                 <Run>- if value has no value_bitwidth attribute and there is also no default_bitwidth attribute then the actual bitwidth is calculated automatically as necessary minimum</Run>
                 <LineBreak/>
-                <Run>- if value is resolved with bitwidth 16 or bigger then its endianness is taken from port's Endianness settings (if port's Endianness is set to Default then the endianness is taken from 'Default endianness' settings)</Run>
+                <Run>- if value is resolved with bitwidth 16 or bigger then its endianness is taken from port's Endianness setting (if port's Endianness is set to Default then the endianness is taken from 'Default endianness' setting)</Run>
                 <LineBreak/>
-                <Run>- use 'Write resolved command to console' settings to see how the command was resolved</Run>
+                <Run>- use 'Write resolved command to console' setting to see how the command was resolved</Run>
                 <LineBreak/>
-                <Run>- use 'Write sent bytes to console' settings to see what bytes were actually sent (shown as hex values)</Run>
+                <Run>- use 'Write sent bytes to console' setting to see what bytes were actually sent (shown as hex values)</Run>
                 <LineBreak/>
                 <Run>- Examples</Run>
                 <LineBreak/>

@@ -2,6 +2,16 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.14.0 (23.5.2023)
+### Added
+-   EOL command variables (%EOL_CR%, ...)
+-   DATA command variables (%DATA,1,2,3%, ...) with endianness support
+-   New 'Write resolved command to console' setting
+-   New 'Write sent bytes to console' setting
+### Changed
+-   Improved USB event handling
+-   Drop support for VS2017 (it still might work but is not tested anymore)
+
 ## v1.13.0 (6.7.2022)
 ### Added
 -   Winter time command variables (%WINTER_NOW%, %WINTER_NOW_DATE%, ...)
