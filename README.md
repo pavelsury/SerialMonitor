@@ -58,7 +58,7 @@ Command line options:
 - the EOL command variables can be used anywhere in the command but if they are placed at its end then they override the 'Send EOL' setting
 
 ## Data command variables
-- %DATA[default_bitwidth][default_base],value[\][value_bitwidth][value_base],value[\][value_bitwidth][value_base],...%
+- %DATA[default_bitwidth][default_base],value[\\][value_bitwidth][value_base],value[\\][value_bitwidth][value_base],...%
 - attributes default_bitwidth and value_bitwidth can be: nothing, 8, 16, 32 or 64
 - attributes default_base and value_base can be: nothing -> decimal, b -> binary, o -> octal, x -> hexadecimal
 - base can also be specified as 0b, 0o or 0x value's prefix, see examples below
@@ -71,12 +71,12 @@ Command line options:
 - Examples
   - %DATA,14,15% -> sent bytes: 0x0E 0x0F
   - %DATA16,14,15% -> sent bytes: 0x0E 0x00 0x0F 0x00
-  - %DATA16,14\8,15% -> sent bytes: 0x0E 0x0F 0x00
+  - %DATA16,14\\8,15% -> sent bytes: 0x0E 0x0F 0x00
   - %DATAo,14,15% -> sent bytes: 0x0C 0x0D
   - %DATAb,10,11% -> sent bytes: 0x02 0x03
-  - %DATAb,10,11\x% -> sent bytes: 0x02 0x11
+  - %DATAb,10,11\\x% -> sent bytes: 0x02 0x11
   - %DATA,0x10,0b11% -> sent bytes: 0x10 0x03
-  - %DATAx16,10,11,12\8,12\32,13\64d,0b11\8% -> sent bytes: 0x10 0x00 0x11 0x00 0x12 0x12 0x00 0x00 0x00 0x0D 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x03
+  - %DATAx16,10,11,12\\8,12\\32,13\\64d,0b11\\8% -> sent bytes: 0x10 0x00 0x11 0x00 0x12 0x12 0x00 0x00 0x00 0x0D 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x03
 
 ## Time command variables
 - local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%
