@@ -148,6 +148,13 @@ namespace SerialMonitor.Win.Ui
             }
         }
 
+        private void OnCustomButtonClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var customButton = (CustomButton)button.Tag;
+            PortManager.SendText(customButton.Command);
+        }
+
         private readonly SolidColorBrush _dataBrush;
         private readonly Paragraph _paragraph = new Paragraph();
     }

@@ -38,6 +38,10 @@ namespace SerialMonitor.Business.Data
         
         public Dictionary<string, PortSettings> PortsSettingsMap { get; set; } = new Dictionary<string, PortSettings>();
 
+        public List<CustomButtonSettings> CustomButtons { get; set; } = new List<CustomButtonSettings>();
+        
+        public List<CustomCommandVariables> CustomCommandVariables { get; set; } = new List<CustomCommandVariables>();
+
         public void Validate()
         {
             PortsSettingsMap?.Values.ForEach(s => s.Validate());

@@ -136,7 +136,7 @@
             </StackPanel>
 
             <StackPanel Style="{StaticResource SettingsStackPanel}">
-                <Label Content="Custom EOL:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="Custom send EOL:" Width="{StaticResource LabelWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ui:TextBoxEx Width="{StaticResource TextBoxWidth}" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}"
                               TextEx="{Binding SelectedPort.Settings.SendingCustomNewline}"
                               VerticalContentAlignment="Center"

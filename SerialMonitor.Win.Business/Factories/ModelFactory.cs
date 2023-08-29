@@ -7,18 +7,13 @@ namespace SerialMonitor.Win.Business.Factories
 {
     public class ModelFactory
     {
-        public ModelFactory()
-        {
-            Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
-            var fileOutputManager = new FileOutputManager(SettingsManager);
-            ConsoleManager = new WinConsoleManager(SettingsManager, fileOutputManager);
-            PortManager = new PortManager(SettingsManager, ConsoleManager, _mainThreadRunner, _usbNotification);
-            _pipeManager = new PipeManager(PortManager, SettingsManager, ConsoleManager, _mainThreadRunner);
-        }
-
         public async Task InitializeAsync(string settingsFilename, string selectedPort)
         {
             await SettingsManager.LoadAsync(settingsFilename, selectedPort);
+            Dispatcher.CurrentDispatcher.ShutdownStarted += OnShutdownStarted;
+            ConsoleManager = new WinConsoleManager(SettingsManager, new FileOutputManager(SettingsManager));
+            PortManager = new PortManager(SettingsManager, ConsoleManager, _mainThreadRunner, _usbNotification);
+            _pipeManager = new PipeManager(PortManager, SettingsManager, ConsoleManager, _mainThreadRunner);
         }
 
         public void SetConsoleWriter(IConsoleWriter consoleWriter)
@@ -36,10 +31,10 @@ namespace SerialMonitor.Win.Business.Factories
         }
 
         public WinSettingsManager SettingsManager { get; } = new WinSettingsManager();
-        public PortManager PortManager { get; }
-        public WinConsoleManager ConsoleManager { get; }
+        public PortManager PortManager { get; private set; }
+        public WinConsoleManager ConsoleManager { get; private set; }
 
-        private readonly PipeManager _pipeManager;
+        private PipeManager _pipeManager;
         private readonly MainThreadRunner _mainThreadRunner = new MainThreadRunner();
         private readonly UsbNotification _usbNotification = new UsbNotification();
     }

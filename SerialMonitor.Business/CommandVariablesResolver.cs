@@ -9,14 +9,17 @@ namespace SerialMonitor.Business
 {
     public class CommandVariablesResolver
     {
-        public CommandVariablesResolver(IEndiannessProvider endiannessProvider)
+        public CommandVariablesResolver(IEndiannessProvider endiannessProvider, IReadOnlyList<CustomCommandVariables> customVariables)
         {
             _dataVariableResolver = new DataVariablesResolver(endiannessProvider);
             _otherVariablesMapping.Add("EOF", $"{_dataVariableResolver.MakeVar(@"4")}{MakeVar(_eolSkipVariableName)}");
+            _customVariables = customVariables;
         }
 
         public string ResolveTextVariables(string text)
         {
+            text = ResolveCustomVariables(text);
+
             if (!ContainsVariableDelimiter(text))
             {
                 return text;
@@ -28,7 +31,7 @@ namespace SerialMonitor.Business
                 return text;
             }
 
-            return ReplaceOtherTextVariables(text);
+            return ResolveOtherTextVariables(text);
         }
 
         public bool IsEolOverridden(string text)
@@ -101,6 +104,26 @@ namespace SerialMonitor.Business
 
         private static StringComparison StringComparison => AppSettings.IsVariableCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
+        private string ResolveCustomVariables(string text)
+        {
+            var oldText = text;
+
+            while (true)
+            {
+                _customVariables
+                    .Where(v => !string.IsNullOrEmpty(v.CommandVariable))
+                    .ForEach(v => text = text.Replace(v.CommandVariable, v.Content ?? string.Empty, StringComparison));
+                
+                if (text == oldText)
+                {
+                    break;
+                }
+                oldText = text;
+            }
+
+            return text;
+        }
+
         private string ResolveTimeVariables(string text)
         {
             var localNow = DateTime.Now;
@@ -131,7 +154,7 @@ namespace SerialMonitor.Business
             return text;
         }
 
-        private string ReplaceOtherTextVariables(string text)
+        private string ResolveOtherTextVariables(string text)
         {
             _otherVariablesMapping.ForEach(p => text = text.Replace(MakeVar(p.Key), p.Value, StringComparison));
             return text;
@@ -163,5 +186,6 @@ namespace SerialMonitor.Business
         private readonly Dictionary<string, string> _otherVariablesMapping = new Dictionary<string, string>();
 
         private readonly DataVariablesResolver _dataVariableResolver;
+        private readonly IReadOnlyList<CustomCommandVariables> _customVariables;
     }
 }

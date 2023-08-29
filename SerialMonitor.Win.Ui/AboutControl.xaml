@@ -118,7 +118,7 @@
                 <LineBreak/>
                 <Run>- command variables are case-insensitive</Run>
                 <LineBreak/>
-                <Run>- 'Custom EOL' setting supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' setting checked)</Run>
+                <Run>- 'Custom send EOL' setting supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' setting checked)</Run>
                 <LineBreak/>
                 <LineBreak/>
 

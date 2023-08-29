@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/TabStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="CustomersCVS" Source="{Binding SettingsManager.CustomButtons}"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -30,26 +31,65 @@
     </UserControl.Cursor>
 
     <DockPanel LastChildFill="True" IsHitTestVisible="{Binding PortManager.IsConnectionChanging, Converter={StaticResource BoolInverterConverter}}">
-        <DockPanel Margin="5 0 5 10" DockPanel.Dock="Bottom" LastChildFill="True">
-            <DockPanel.IsEnabled>
+        <ItemsControl ItemsSource="{Binding Source={StaticResource CustomersCVS}}" DockPanel.Dock="Bottom" Margin="5,0,5,10">
+            <ItemsControl.IsEnabled>
                 <MultiBinding Converter="{StaticResource AndConverter}">
                     <Binding Path="PortManager.IsConnected"/>
                     <Binding Path="PortManager.IsFileSending" Converter="{StaticResource BoolInverterConverter}"/>
                     <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
                 </MultiBinding>
-            </DockPanel.IsEnabled>
-            <Label Content="Command:" DockPanel.Dock="Left" Padding="5,0,5,0" VerticalAlignment="Center" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-            <Button Content="Send file" DockPanel.Dock="Right" Click="OnSendFileButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
-            <Button Content="Send" DockPanel.Dock="Right" Click="OnSendButtonClick" Margin="5 0 5 0" Padding="10 0 10 0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
-            <TextBox Name="MessageTextBox" KeyDown="OnMessageTextBoxKeyDown" VerticalContentAlignment="Center" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}" Margin="5 0 5 0"/>
-        </DockPanel>
+            </ItemsControl.IsEnabled>
 
-        <WrapPanel Orientation="Horizontal" Margin="5 0 5 0" DockPanel.Dock="Bottom">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type business:CustomButton}">
+                    <Button Content="{Binding Label}" Margin="5,10,5,0" Padding="5,0,5,0" ToolTipService.ShowOnDisabled="True"
+                            Tag="{Binding}"
+                            Click="OnCustomButtonClick">
+                        <Button.ToolTip>
+                            <ToolTip Content="{Binding Command}" ContentStringFormat="Command: {0}"/>
+                        </Button.ToolTip>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <WrapPanel Margin="5,0,5,0" DockPanel.Dock="Bottom">
+            <WrapPanel.IsEnabled>
+                <MultiBinding Converter="{StaticResource AndConverter}">
+                    <Binding Path="PortManager.IsConnected"/>
+                    <Binding Path="PortManager.IsFileSending" Converter="{StaticResource BoolInverterConverter}"/>
+                    <Binding Path="SelectedIndex" ElementName="TabControl" Converter="{StaticResource ObjectToBoolInvertedConverter}"/>
+                </MultiBinding>
+            </WrapPanel.IsEnabled>
+            <StackPanel Orientation="Horizontal">
+                <Label Name="CommandLabel" Content="Command:" Padding="5,10,5,0" VerticalAlignment="Center" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <TextBox Name="MessageTextBox" KeyDown="OnMessageTextBoxKeyDown" VerticalContentAlignment="Center" MinWidth="65" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}" Margin="5,10,5,0">
+                    <TextBox.Width>
+                        <MultiBinding Converter="{StaticResource MasterWidthToWidthConverter}">
+                            <Binding Path="ActualWidth" ElementName="TabControl"/>
+                            <Binding Path="ActualWidth" ElementName="CommandLabel"/>
+                            <Binding Path="ActualWidth" ElementName="SendButton"/>
+                            <Binding Path="ActualWidth" ElementName="SendFileButton"/>
+                            <Binding Source="20"/>
+                        </MultiBinding>
+                    </TextBox.Width>
+                </TextBox>
+            </StackPanel>
+            <Button Name="SendButton" Content="Send" Click="OnSendButtonClick" Margin="5,10,5,0" Padding="5,0,5,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
+            <Button Name="SendFileButton" Content="Send file" Click="OnSendFileButtonClick" Margin="5,10,5,0" Padding="5,0,5,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
+        </WrapPanel>
+
+        <WrapPanel Orientation="Horizontal" Margin="5,0,5,0" DockPanel.Dock="Bottom">
             <ComboBox Name="PortComboBox" ItemsSource="{Binding PortManager.Ports}"
                       AutomationProperties.Name="Port selection"
                       SelectedValue="{Binding SettingsManager.SelectedPort}"
                       IsEnabled="{Binding PortManager.IsDisconnected}"
-                      Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                      Margin="5,10,5,0" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type business:PortInfo}">
                         <TextBlock>
@@ -68,7 +108,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button Name="ConnectButton" Click="OnConnectButtonClick" Margin="5 0 5 10" Padding="10 0 10 0" Width="90"
+            <Button Name="ConnectButton" Click="OnConnectButtonClick" Margin="5,10,5,0" Padding="10,0,10,0" Width="90"
                     Content="{Binding PortManager.ConnectionStatus, Converter={StaticResource ConnectionStateToConnectTextConverter}}"
                     IsEnabled="{Binding SettingsManager.SelectedPort.IsAvailable, FallbackValue=False}"
                     Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
@@ -82,29 +122,29 @@
                         <Binding Path="ActualWidth" ElementName="ViewStackPanel"/>
                         <Binding Path="ActualWidth" ElementName="AutoScrollToggle"/>
                         <Binding Path="ActualWidth" ElementName="ClearConsole"/>
-                        <Binding Source="30"/>
+                        <Binding Source="25"/>
                     </MultiBinding>
                 </Border.Width>
             </Border>
 
             <StackPanel Name="ViewStackPanel" Orientation="Horizontal">
-                <Label Content="View:" VerticalAlignment="Top" Padding="0,3,0,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
+                <Label Content="View:" VerticalAlignment="Top" Margin="5,10,0,0" Padding="0,3,0,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 <ComboBox SelectedValue="{Binding SettingsManager.ViewMode}" SelectedValuePath="Value" DisplayMemberPath="Text"
-                          Margin="5 0 5 10" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                          Margin="5,10,5,0" MinWidth="100" Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
                     <helpers:ComboPair Value="{x:Static enums:EViewMode.Text}" Text="Text"/>
                     <helpers:ComboPair Value="{x:Static enums:EViewMode.Hex}" Text="Hex"/>
                     <helpers:ComboPair Value="{x:Static enums:EViewMode.HexColumns}" Text="Hex columns"/>
                 </ComboBox>
             </StackPanel>
 
-            <CheckBox Name="AutoScrollToggle" Margin="5 0 5 10" Padding="10 0 10 0"
+            <CheckBox Name="AutoScrollToggle" Margin="5,10,0,0" Padding="5,0,5,0"
                       Content="Auto scroll"
                       IsChecked="{Binding IsAutoscrollEnabled, ElementName=Control}"
                       IsEnabled="{Binding SelectedIndex, ElementName=TabControl, Converter={StaticResource ObjectToBoolInvertedConverter}}"
                       VerticalAlignment="Center"
                       Style="{DynamicResource {x:Static ui:ResourceKeys.CheckBoxStyleKey}}"/>
 
-            <Button Name="ClearConsole" Content="Clear" Click="OnClearButtonClick" Margin="5 0 5 10" Padding="10 0 10 0"
+            <Button Name="ClearConsole" Content="Clear" Click="OnClearButtonClick" Margin="5,10,5,0" Padding="5,0,5,0"
                     Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource AndConverter}">
@@ -115,7 +155,7 @@
             </Button>
         </WrapPanel>
 
-        <TabControl Name="TabControl" Margin="10 0 10 10"
+        <TabControl Name="TabControl" DockPanel.Dock="Top" Margin="10,0,10,0"
                     Background="Transparent"
                     BorderBrush="{DynamicResource {x:Static ui:ResourceKeys.ButtonBorderBrushKey}}">
             <TabItem Header="Console">
@@ -137,6 +177,14 @@
 
             <TabItem Header="General settings">
                 <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="5,10,5,5"/>
+            </TabItem>
+
+            <TabItem Header="Buttons">
+                <ui:ButtonsControl DataContext="{Binding SettingsManager}"/>
+            </TabItem>
+
+            <TabItem Header="Commands">
+                <ui:CommandsControl DataContext="{Binding SettingsManager}"/>
             </TabItem>
 
             <TabItem Header="About">

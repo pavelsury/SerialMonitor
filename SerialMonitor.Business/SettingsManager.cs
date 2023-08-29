@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SerialMonitor.Business.Data;
@@ -165,6 +167,10 @@ namespace SerialMonitor.Business
             }
         }
 
+        public ObservableCollection<CustomButton> CustomButtons { get; private set; }
+
+        public ObservableCollection<CustomCommandVariables> CustomCommandVariables { get; private set; }
+
         public AppSettings AppSettings { get; private set; } = new AppSettings();
 
         public PortSettings GetSettings(string portName) => AppSettings.PortsSettingsMap.GetOrCreate(portName);
@@ -176,7 +182,22 @@ namespace SerialMonitor.Business
             SelectedPort.Settings = portSettings;
         }
 
-        public void Save() => FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
+        public void Save()
+        {
+            AppSettings.CustomButtons = CustomButtons.Select(b => new CustomButtonSettings
+            {
+                Label = b.Label,
+                Command = b.Command
+            }).ToList();
+
+            AppSettings.CustomCommandVariables = CustomCommandVariables.Select(c => new CustomCommandVariables
+            {
+                CommandVariable = c.CommandVariable,
+                Content = c.Content
+            }).ToList();
+
+            FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
+        }
 
         public Task LoadAsync(string settingsFilename, string selectedPort)
         {
@@ -240,6 +261,18 @@ namespace SerialMonitor.Business
             ShowDotForNonPrintableAscii = AppSettings.ShowDotForNonPrintableAscii;
             FontSize = AppSettings.FontSize;
             DefaultEndianness = AppSettings.DefaultEndianness;
+
+            CustomButtons = new ObservableCollection<CustomButton>(AppSettings.CustomButtons.Select(b => new CustomButton
+            {
+                Label = b.Label,
+                Command = b.Command
+            }));
+
+            CustomCommandVariables = new ObservableCollection<CustomCommandVariables>(AppSettings.CustomCommandVariables.Select(c => new CustomCommandVariables
+            {
+                CommandVariable = c.CommandVariable,
+                Content = c.Content
+            }));
         }
 
         public bool IsDefaultLittleEndian

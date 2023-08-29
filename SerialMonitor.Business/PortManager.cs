@@ -26,7 +26,7 @@ namespace SerialMonitor.Business
             ConsoleManager = consoleManager;
             _usbNotification = usbNotification;
 
-            _commandVariablesResolver = new CommandVariablesResolver(settingsManager);
+            _commandVariablesResolver = new CommandVariablesResolver(settingsManager, settingsManager.CustomCommandVariables);
             _serialPort = new SerialPort();
         }
 
