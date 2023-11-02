@@ -120,6 +120,8 @@
                 <LineBreak/>
                 <Run>- 'Custom send EOL' setting supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' setting checked)</Run>
                 <LineBreak/>
+                <Run>- custom command variables can be anything. They don't have to be enclosed in %, as is currently the case with predefined variables.</Run>
+                <LineBreak/>
                 <LineBreak/>
 
                 <Run FontWeight="Bold">EOL command variables</Run>

@@ -49,6 +49,7 @@
                 <DataTemplate DataType="{x:Type business:CustomButton}">
                     <Button Content="{Binding Label}" Margin="5,10,5,0" Padding="5,0,5,0" ToolTipService.ShowOnDisabled="True"
                             Tag="{Binding}"
+                            Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"
                             Click="OnCustomButtonClick">
                         <Button.ToolTip>
                             <ToolTip Content="{Binding Command}" ContentStringFormat="Command: {0}"/>
@@ -156,7 +157,7 @@
         </WrapPanel>
 
         <TabControl Name="TabControl" DockPanel.Dock="Top" Margin="10,0,10,0"
-                    Background="Transparent"
+                    Background="Transparent" Padding="0"
                     BorderBrush="{DynamicResource {x:Static ui:ResourceKeys.ButtonBorderBrushKey}}">
             <TabItem Header="Console">
                 <FlowDocumentScrollViewer Name="FlowDocumentScrollViewer" Margin="0,0,0,10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
