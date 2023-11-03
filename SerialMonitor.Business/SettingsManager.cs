@@ -167,6 +167,26 @@ namespace SerialMonitor.Business
             }
         }
 
+        public bool ShowButtonsTab
+        {
+            get => _showButtonsTab;
+            set
+            {
+                AppSettings.ShowButtonsTab = value;
+                SetNotifyingValueProperty(ref _showButtonsTab, value);
+            }
+        }
+
+        public bool ShowCommandsTab
+        {
+            get => _showCommandsTab;
+            set
+            {
+                AppSettings.ShowCommandsTab = value;
+                SetNotifyingValueProperty(ref _showCommandsTab, value);
+            }
+        }
+
         public ObservableCollection<CustomButton> CustomButtons { get; private set; }
 
         public ObservableCollection<CustomCommandVariables> CustomCommandVariables { get; private set; }
@@ -261,6 +281,8 @@ namespace SerialMonitor.Business
             ShowDotForNonPrintableAscii = AppSettings.ShowDotForNonPrintableAscii;
             FontSize = AppSettings.FontSize;
             DefaultEndianness = AppSettings.DefaultEndianness;
+            ShowButtonsTab = AppSettings.ShowButtonsTab;
+            ShowCommandsTab = AppSettings.ShowCommandsTab;
 
             CustomButtons = new ObservableCollection<CustomButton>(AppSettings.CustomButtons.Select(b => new CustomButton
             {
@@ -304,5 +326,7 @@ namespace SerialMonitor.Business
         private bool _showDotForNonPrintableAscii;
         private int _fontSize;
         private EDefaultEndianness _defaultEndianness;
+        private bool _showButtonsTab;
+        private bool _showCommandsTab;
     }
 }

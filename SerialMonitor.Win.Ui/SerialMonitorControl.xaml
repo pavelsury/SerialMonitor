@@ -180,11 +180,11 @@
                 <ui:GeneralSettingsControl DataContext="{Binding SettingsManager}" Margin="5,10,5,5"/>
             </TabItem>
 
-            <TabItem Header="Buttons">
+            <TabItem Header="Buttons" Visibility="{Binding SettingsManager.ShowButtonsTab, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
                 <ui:ButtonsControl DataContext="{Binding SettingsManager}"/>
             </TabItem>
 
-            <TabItem Header="Commands">
+            <TabItem Header="Commands" Visibility="{Binding SettingsManager.ShowCommandsTab, Converter={StaticResource BoolToVisibilityCollapsedConverter}}">
                 <ui:CommandsControl DataContext="{Binding SettingsManager}"/>
             </TabItem>
 

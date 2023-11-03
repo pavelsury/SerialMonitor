@@ -27,6 +27,8 @@ namespace SerialMonitor.Business.Data
         public string SendFileLastFolder { get; set; }
         public int SendFileBatchByteSize { get; set; }
         public int SendFileBatchDelayMs { get; set; }
+        public bool ShowButtonsTab { get; set; } = true;
+        public bool ShowCommandsTab { get; set; } = true;
 
         public StandaloneAppSettings StandaloneAppSettings { get; set; } = new StandaloneAppSettings();
 
