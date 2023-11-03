@@ -2,6 +2,13 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.15.0 (3.11.2023)
+### Added
+-   Custom send buttons
+-   Custom command variables
+-   New 'Show Buttons tab' setting
+-   New 'Show Commands tab' setting
+
 ## v1.14.0 (23.5.2023)
 ### Added
 -   EOL command variables (%EOL_CR%, ...)

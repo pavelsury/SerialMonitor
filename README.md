@@ -19,10 +19,11 @@ It can be also downloaded as a standalone application.
 - VS2022 support
 - Send file
 - Command variables
-
-## What's coming next
 - Custom send buttons
 - Custom command variables
+
+## What's coming next
+- Command history
 - Text color settings
 - Make the standalone app cross-platform
 
@@ -30,7 +31,7 @@ It can be also downloaded as a standalone application.
 Pipe IPC stands for "Pipe Inter Process Communication".\
 Here it means that you can easily open/close given port from cmd, python or any other script or app.\
 \
-To give it a try, first download file [PipeScripts.zip](https://github.com/pavelsury/SerialMonitor2/releases/latest/download/PipeScripts_v1.14.0.zip) and unzip.\
+To give it a try, first download file [PipeScripts.zip](https://github.com/pavelsury/SerialMonitor2/releases/latest/download/PipeScripts_v1.15.0.zip) and unzip.\
 Then open command line and type 'OpenSerialPort COM3' or 'CloseSerialPort COM3' where COM3 is an example of a port which is currently selected in this Serial Monitor 2 extension.\
 \
 This Pipe IPC feature comes in handy when you are developing for Arduino or other similar device and you need to close the port temporarily in order to upload new firmware into the device.
@@ -39,8 +40,8 @@ This Pipe IPC feature comes in handy when you are developing for Arduino or othe
 Serial Monitor 2 can now be run as a standalone application.
 \
 You can choose from two versions:
-- [**SerialMonitor2.exe**](https://github.com/pavelsury/SerialMonitor2/releases/latest/download/SerialMonitor2_v1.14.0.exe) contains everything to run the app but is little bit bigger.
-- [**SerialMonitor2_without_framework.exe**](https://github.com/pavelsury/SerialMonitor2/releases/latest/download/SerialMonitor2_v1.14.0_without_framework.exe) is pretty small but it doesn't contain .NET framework. Means, you can be asked to download and install .NET framework in case your Windows doesn't have it installed yet.
+- [**SerialMonitor2.exe**](https://github.com/pavelsury/SerialMonitor2/releases/latest/download/SerialMonitor2_v1.15.0.exe) contains everything to run the app but is little bit bigger.
+- [**SerialMonitor2_without_framework.exe**](https://github.com/pavelsury/SerialMonitor2/releases/latest/download/SerialMonitor2_v1.15.0_without_framework.exe) is pretty small but it doesn't contain .NET framework. Means, you can be asked to download and install .NET framework in case your Windows doesn't have it installed yet.
 
 Command line options:
 \
@@ -52,6 +53,7 @@ Command line options:
 - when sending command, press Ctrl+Enter to send it without erasing
 - command variables are case-insensitive
 - 'Custom EOL' setting supports command variables. If for example you want to send byte 0x00 at the end of each command then use %DATA,0% (and keep 'Resolve command variables' setting checked)
+- custom command variables can be anything. They don't have to be enclosed in %, as is the case with predefined variables.
 
 ## EOL command variables
 - %EOL_CR%, %EOL_LF%, %EOL_CRLF%, %EOL_SKIP%
