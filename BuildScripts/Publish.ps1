@@ -18,11 +18,7 @@ $vsixSrcFilename = $SolutionDir + 'SerialMonitor.VS2022\bin\Publish\SerialMonito
 $vsixDstFilename = $publishDir + 'SerialMonitor2_v' + $version + '_VS2022.vsix'
 Copy-Item $vsixSrcFilename -Destination $vsixDstFilename
 
-$appSrcFilename = $SolutionDir + 'SerialMonitor.Win.App\bin\Publish\net6.0-windows\publish\framework_dependent\SerialMonitor2.exe'
-$appDstFilename = $publishDir + 'SerialMonitor2_v' + $version + '_without_framework.exe'
-Copy-Item $appSrcFilename -Destination $appDstFilename
-
-$appSrcFilename = $SolutionDir + 'SerialMonitor.Win.App\bin\Publish\net6.0-windows\publish\self_contained\SerialMonitor2.exe'
+$appSrcFilename = $SolutionDir + 'SerialMonitor.Win.App\bin\Publish\net8.0-windows\publish\framework_dependent\SerialMonitor2.exe'
 $appDstFilename = $publishDir + 'SerialMonitor2_v' + $version + '.exe'
 Copy-Item $appSrcFilename -Destination $appDstFilename
 
