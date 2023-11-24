@@ -9,7 +9,7 @@ namespace SerialMonitor.Business
 {
     public class CommandVariablesResolver
     {
-        public CommandVariablesResolver(IEndiannessProvider endiannessProvider, IReadOnlyList<CustomCommandVariables> customVariables)
+        public CommandVariablesResolver(IEndiannessProvider endiannessProvider, IReadOnlyList<CustomCommandVariable> customVariables)
         {
             _dataVariableResolver = new DataVariablesResolver(endiannessProvider);
             _otherVariablesMapping.Add("EOF", $"{_dataVariableResolver.MakeVar(@"4")}{MakeVar(_eolSkipVariableName)}");
@@ -186,6 +186,6 @@ namespace SerialMonitor.Business
         private readonly Dictionary<string, string> _otherVariablesMapping = new Dictionary<string, string>();
 
         private readonly DataVariablesResolver _dataVariableResolver;
-        private readonly IReadOnlyList<CustomCommandVariables> _customVariables;
+        private readonly IReadOnlyList<CustomCommandVariable> _customVariables;
     }
 }

@@ -160,8 +160,10 @@ namespace SerialMonitor.Business
 
         public void Disconnect() => Disconnect(false);
 
-        public void SendText(string text)
+        public void SendCommand(string command)
         {
+            _settingsManager.AddSentCommand(command);
+
             if (_settingsManager.AppSettings.ClearConsoleBeforeCommandSent)
             {
                 ConsoleManager.ClearAll();
@@ -169,19 +171,19 @@ namespace SerialMonitor.Business
 
             try
             {
-                ConsoleManager.PrintCommand($"Command: {text}");
+                ConsoleManager.PrintCommand($"Command: {command}");
                 
                 byte[] data;
 
                 if (_settingsManager.AppSettings.ResolveCommandVariables)
                 {
                     string resolvedCommand;
-                    (data, resolvedCommand) = GetResolvedDataToSend(text);
+                    (data, resolvedCommand) = GetResolvedDataToSend(command);
                     ConsoleManager.PrintMessage($"Resolved command: {resolvedCommand}", EMessageType.CommandResolved);
                 }
                 else
                 {
-                    data = GetDataToSend(text);
+                    data = GetDataToSend(command);
                 }
 
                 ConsoleManager.PrintCommandBytes("Sent bytes:", data);

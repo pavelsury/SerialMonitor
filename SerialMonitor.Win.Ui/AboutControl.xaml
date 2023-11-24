@@ -114,9 +114,13 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">Other notes</Run>
+                <Run FontWeight="Bold">Other notes and tips</Run>
                 <LineBreak/>
                 <Run>- when sending command, press Ctrl+Enter to send it without erasing</Run>
+                <LineBreak/>
+                <Run>- when in command edit box, press Alt+Down to open the command history</Run>
+                <LineBreak/>
+                <Run>- when in command edit box, press Ctrl+E to erase the command history</Run>
                 <LineBreak/>
                 <Run>- command variables are case-insensitive</Run>
                 <LineBreak/>

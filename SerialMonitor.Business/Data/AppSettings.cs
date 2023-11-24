@@ -40,9 +40,11 @@ namespace SerialMonitor.Business.Data
         
         public Dictionary<string, PortSettings> PortsSettingsMap { get; set; } = new Dictionary<string, PortSettings>();
 
-        public List<CustomButtonSettings> CustomButtons { get; set; } = new List<CustomButtonSettings>();
+        public List<CustomButtonSetting> CustomButtons { get; set; } = new List<CustomButtonSetting>();
         
-        public List<CustomCommandVariables> CustomCommandVariables { get; set; } = new List<CustomCommandVariables>();
+        public List<CustomCommandVariable> CustomCommandVariables { get; set; } = new List<CustomCommandVariable>();
+
+        public List<string> CommandHistory { get; set; } = new List<string>();
 
         public void Validate()
         {

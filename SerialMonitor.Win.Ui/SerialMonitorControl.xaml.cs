@@ -92,12 +92,12 @@ namespace SerialMonitor.Win.Ui
 
         private void OnClearButtonClick(object sender, RoutedEventArgs e) => PortManager.ConsoleManager.ClearAll();
 
-        private void OnSendButtonClick(object sender, RoutedEventArgs e) => PortManager.SendText(MessageTextBox.Text);
+        private void OnSendButtonClick(object sender, RoutedEventArgs e) => PortManager.SendCommand(CommandComboBox.Text);
 
         private void OnSendFileButtonClick(object sender, RoutedEventArgs e)
         {
             string filename = null;
-            var text = MessageTextBox.Text;
+            var text = CommandComboBox.Text;
             
             if (!string.IsNullOrWhiteSpace(text) && File.Exists(text))
             {
@@ -123,14 +123,22 @@ namespace SerialMonitor.Win.Ui
             }
         }
 
-        private void OnMessageTextBoxKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void OnCommandTextBoxKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                PortManager.SendText(MessageTextBox.Text);
+                PortManager.SendCommand(CommandComboBox.Text);
+
                 if (e.KeyboardDevice.Modifiers != ModifierKeys.Control)
                 {
-                    MessageTextBox.Text = string.Empty;
+                    CommandComboBox.Text = string.Empty;
+                }
+            }
+            else if (e.Key == Key.E)
+            {
+                if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                {
+                    ModelFactory.SettingsManager.ClearCommandHistory();
                 }
             }
         }
@@ -152,7 +160,7 @@ namespace SerialMonitor.Win.Ui
         {
             var button = (Button)sender;
             var customButton = (CustomButton)button.Tag;
-            PortManager.SendText(customButton.Command);
+            PortManager.SendCommand(customButton.Command);
         }
 
         private readonly SolidColorBrush _dataBrush;

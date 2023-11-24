@@ -189,11 +189,36 @@ namespace SerialMonitor.Business
 
         public ObservableCollection<CustomButton> CustomButtons { get; private set; }
 
-        public ObservableCollection<CustomCommandVariables> CustomCommandVariables { get; private set; }
+        public ObservableCollection<CustomCommandVariable> CustomCommandVariables { get; private set; }
+
+        public ObservableCollection<string> CommandHistory { get; private set; }
 
         public AppSettings AppSettings { get; private set; } = new AppSettings();
 
         public PortSettings GetSettings(string portName) => AppSettings.PortsSettingsMap.GetOrCreate(portName);
+
+        public void AddSentCommand(string command)
+        {
+            var index = CommandHistory.IndexOf(command);
+            if (index == 0)
+            {
+                return;
+            }
+            
+            if (index > 0)
+            {
+                CommandHistory.Move(index, 0);
+                return;
+            }
+
+            if (CommandHistory.Count == MaxCommandHistoryCount)
+            {
+                CommandHistory.RemoveAt(MaxCommandHistoryCount - 1);
+            }
+
+            CommandHistory.Insert(0, command);
+        }
+        public void ClearCommandHistory() => CommandHistory.Clear();
 
         public void ResetSelectedPortSettings()
         {
@@ -204,17 +229,19 @@ namespace SerialMonitor.Business
 
         public void Save()
         {
-            AppSettings.CustomButtons = CustomButtons.Select(b => new CustomButtonSettings
+            AppSettings.CustomButtons = CustomButtons.Select(b => new CustomButtonSetting
             {
                 Label = b.Label,
                 Command = b.Command
             }).ToList();
 
-            AppSettings.CustomCommandVariables = CustomCommandVariables.Select(c => new CustomCommandVariables
+            AppSettings.CustomCommandVariables = CustomCommandVariables.Select(c => new CustomCommandVariable
             {
                 CommandVariable = c.CommandVariable,
                 Content = c.Content
             }).ToList();
+
+            AppSettings.CommandHistory = CommandHistory.ToList();
 
             FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
         }
@@ -290,11 +317,13 @@ namespace SerialMonitor.Business
                 Command = b.Command
             }));
 
-            CustomCommandVariables = new ObservableCollection<CustomCommandVariables>(AppSettings.CustomCommandVariables.Select(c => new CustomCommandVariables
+            CustomCommandVariables = new ObservableCollection<CustomCommandVariable>(AppSettings.CustomCommandVariables.Select(c => new CustomCommandVariable
             {
                 CommandVariable = c.CommandVariable,
                 Content = c.Content
             }));
+
+            CommandHistory = new ObservableCollection<string>(AppSettings.CommandHistory.Distinct().Take(MaxCommandHistoryCount));
         }
 
         public bool IsDefaultLittleEndian
@@ -311,6 +340,7 @@ namespace SerialMonitor.Business
             }
         }
 
+        private const int MaxCommandHistoryCount = 20;
         private string _settingsFilename;
         private PortInfo _selectedPort;
         private bool _autoswitchEnabled;

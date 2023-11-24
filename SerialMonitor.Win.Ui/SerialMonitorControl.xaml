@@ -18,7 +18,7 @@
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/TabStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <CollectionViewSource x:Key="CustomersCVS" Source="{Binding SettingsManager.CustomButtons}"/>
+            <CollectionViewSource x:Key="CustomButtonsCVS" Source="{Binding SettingsManager.CustomButtons}"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -31,7 +31,7 @@
     </UserControl.Cursor>
 
     <DockPanel LastChildFill="True" IsHitTestVisible="{Binding PortManager.IsConnectionChanging, Converter={StaticResource BoolInverterConverter}}">
-        <ItemsControl ItemsSource="{Binding Source={StaticResource CustomersCVS}}" DockPanel.Dock="Bottom" Margin="5,0,5,10">
+        <ItemsControl ItemsSource="{Binding Source={StaticResource CustomButtonsCVS}}" DockPanel.Dock="Bottom" Margin="5,0,5,10">
             <ItemsControl.IsEnabled>
                 <MultiBinding Converter="{StaticResource AndConverter}">
                     <Binding Path="PortManager.IsConnected"/>
@@ -69,8 +69,15 @@
             </WrapPanel.IsEnabled>
             <StackPanel Orientation="Horizontal">
                 <Label Name="CommandLabel" Content="Command:" Padding="5,10,5,0" VerticalAlignment="Center" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
-                <TextBox Name="MessageTextBox" KeyDown="OnMessageTextBoxKeyDown" VerticalContentAlignment="Center" MinWidth="65" Style="{DynamicResource {x:Static ui:ResourceKeys.TextBoxStyleKey}}" Margin="5,10,5,0">
-                    <TextBox.Width>
+
+                <ComboBox Name="CommandComboBox" IsEditable="True"
+                          ItemsSource="{Binding SettingsManager.CommandHistory}"
+                          KeyDown="OnCommandTextBoxKeyDown"
+                          VerticalContentAlignment="Center"
+                          MinWidth="65"
+                          Margin="5,10,5,0"
+                          Style="{DynamicResource {x:Static ui:ResourceKeys.ComboBoxStyleKey}}">
+                    <ComboBox.Width>
                         <MultiBinding Converter="{StaticResource MasterWidthToWidthConverter}">
                             <Binding Path="ActualWidth" ElementName="TabControl"/>
                             <Binding Path="ActualWidth" ElementName="CommandLabel"/>
@@ -78,8 +85,8 @@
                             <Binding Path="ActualWidth" ElementName="SendFileButton"/>
                             <Binding Source="20"/>
                         </MultiBinding>
-                    </TextBox.Width>
-                </TextBox>
+                    </ComboBox.Width>
+                </ComboBox>
             </StackPanel>
             <Button Name="SendButton" Content="Send" Click="OnSendButtonClick" Margin="5,10,5,0" Padding="5,0,5,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
             <Button Name="SendFileButton" Content="Send file" Click="OnSendFileButtonClick" Margin="5,10,5,0" Padding="5,0,5,0" Style="{DynamicResource {x:Static ui:ResourceKeys.ButtonStyleKey}}"/>
