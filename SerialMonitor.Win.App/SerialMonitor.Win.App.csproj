@@ -8,10 +8,17 @@
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="SerialMonitorIcon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SerialMonitor.Business\SerialMonitor.Business.csproj" />
     <ProjectReference Include="..\SerialMonitor.Win.Business\SerialMonitor.Win.Business.csproj" />
     <ProjectReference Include="..\SerialMonitor.Win.Ui\SerialMonitor.Win.Ui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="SerialMonitorIcon.ico" />
   </ItemGroup>
 </Project>
