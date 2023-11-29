@@ -17,7 +17,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Converters/Converters.xaml"/>
                 <ResourceDictionary Source="/SerialMonitor2.Ui;component/Styles/TabStyle.xaml"/>
+                <ResourceDictionary Source="/SerialMonitor2.Ui;component/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
             <CollectionViewSource x:Key="CustomButtonsCVS" Source="{Binding SettingsManager.CustomButtons}"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -195,8 +197,22 @@
                 <ui:CommandsControl DataContext="{Binding SettingsManager}"/>
             </TabItem>
 
-            <TabItem Header="About">
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Name="AboutTextBlock" Text="About"/>
+                </TabItem.Header>
+                
                 <ui:AboutControl Margin="5"/>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <Viewbox Height="{Binding ActualHeight, ElementName=AboutTextBlock}" Margin="10,0,10,0">
+                        <ContentPresenter ContentTemplate="{StaticResource CoffeeIcon}"/>
+                    </Viewbox>
+                </TabItem.Header>
+
+                <ui:CoffeeControl/>
             </TabItem>
         </TabControl>
     </DockPanel>
