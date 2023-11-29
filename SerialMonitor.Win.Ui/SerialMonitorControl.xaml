@@ -199,7 +199,7 @@
 
             <TabItem>
                 <TabItem.Header>
-                    <TextBlock Name="AboutTextBlock" Text="About"/>
+                    <Label Name="AboutTextBlock" Content="About" Margin="0" Padding="0" Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogLabelStyleKey}}"/>
                 </TabItem.Header>
                 
                 <ui:AboutControl Margin="5"/>
