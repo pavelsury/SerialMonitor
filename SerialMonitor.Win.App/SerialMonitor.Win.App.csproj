@@ -7,7 +7,9 @@
     <AssemblyName>SerialMonitor2</AssemblyName>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Configurations>Debug;Release</Configurations>
+    <ApplicationIcon>SerialMonitorIcon.ico</ApplicationIcon>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="SerialMonitorIcon.ico" />
   </ItemGroup>
