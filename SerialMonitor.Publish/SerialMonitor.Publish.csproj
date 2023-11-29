@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <Configurations>Debug;Release;Publish</Configurations>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if $(ConfigurationName) == Publish (&#xD;&#xA;dotnet publish $(SolutionDir)SerialMonitor.Win.App\SerialMonitor.Win.App.csproj /p:TargetFramework=net8.0-windows /p:PublishProfile=FolderProfile_Framework_Dependent.pubxml&#xD;&#xA;powershell -ExecutionPolicy Bypass -File $(SolutionDir)BuildScripts\Publish.ps1 $(SolutionDir)&#xD;&#xA;)" />
+    <Exec Command="if $(ConfigurationName) == Publish (
+          dotnet publish $(SolutionDir)SerialMonitor.Win.App\SerialMonitor.Win.App.csproj /p:TargetFramework=net8.0-windows /p:PublishProfile=FolderProfile_net_latest.pubxml
+          powershell -ExecutionPolicy Bypass -File $(SolutionDir)BuildScripts\Publish.ps1 $(SolutionDir))"/>
   </Target>
-
 </Project>
