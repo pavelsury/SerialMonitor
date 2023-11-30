@@ -2,8 +2,8 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using SerialMonitor.Business.Data;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
@@ -243,7 +243,7 @@ namespace SerialMonitor.Business
 
             AppSettings.CommandHistory = CommandHistory.ToList();
 
-            FileHelper.WriteAllTextNoShare(_settingsFilename, JsonConvert.SerializeObject(AppSettings, Formatting.Indented));
+            FileHelper.WriteAllTextNoShare(_settingsFilename, JsonSerializer.Serialize(AppSettings, _jsonSerializerOptions));
         }
 
         public Task LoadAsync(string settingsFilename, string selectedPort)
@@ -265,15 +265,7 @@ namespace SerialMonitor.Business
                         return;
                     }
 
-                    var serializationSettings = new JsonSerializerSettings
-                    {
-                        Error = (s, e) => e.ErrorContext.Handled =
-                            e.CurrentObject is AppSettings ||
-                            e.CurrentObject is StandaloneAppSettings ||
-                            e.CurrentObject is PortSettings
-                    };
-
-                    var appSettings = JsonConvert.DeserializeObject<AppSettings>(FileHelper.ReadAllText(_settingsFilename), serializationSettings);
+                    var appSettings = JsonSerializer.Deserialize<AppSettings>(FileHelper.ReadAllText(_settingsFilename), _jsonSerializerOptions);
                     if (appSettings != null)
                     {
                         AppSettings = appSettings;
@@ -290,6 +282,20 @@ namespace SerialMonitor.Business
                     OnSettingsLoaded();
                 }
             });
+        }
+
+        public bool IsDefaultLittleEndian
+        {
+            get
+            {
+                switch (DefaultEndianness)
+                {
+                    case EDefaultEndianness.System: return BitConverter.IsLittleEndian;
+                    case EDefaultEndianness.Little: return true;
+                    case EDefaultEndianness.Big: return false;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
         }
 
         protected virtual void OnSettingsLoaded()
@@ -326,20 +332,6 @@ namespace SerialMonitor.Business
             CommandHistory = new ObservableCollection<string>(AppSettings.CommandHistory.Distinct().Take(MaxCommandHistoryCount));
         }
 
-        public bool IsDefaultLittleEndian
-        {
-            get
-            {
-                switch (DefaultEndianness)
-                {
-                    case EDefaultEndianness.System: return BitConverter.IsLittleEndian;
-                    case EDefaultEndianness.Little: return true;
-                    case EDefaultEndianness.Big: return false;
-                    default: throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
         private const int MaxCommandHistoryCount = 20;
         private string _settingsFilename;
         private PortInfo _selectedPort;
@@ -358,5 +350,10 @@ namespace SerialMonitor.Business
         private EDefaultEndianness _defaultEndianness;
         private bool _showButtonsTab;
         private bool _showCommandsTab;
+        private JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Converters = { new EncodingJsonConverter() }
+        };
     }
 }

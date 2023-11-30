@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
@@ -32,10 +31,10 @@ namespace SerialMonitor.Business.Data
 
         public StandaloneAppSettings StandaloneAppSettings { get; set; } = new StandaloneAppSettings();
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public EViewMode ViewMode { get; set; } = EViewMode.Text;
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public EDefaultEndianness DefaultEndianness { get; set; } = EDefaultEndianness.System;
         
         public Dictionary<string, PortSettings> PortsSettingsMap { get; set; } = new Dictionary<string, PortSettings>();

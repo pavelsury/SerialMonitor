@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO.Ports;
 using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 using SerialMonitor.Business.Enums;
 using SerialMonitor.Business.Helpers;
 
@@ -12,27 +11,26 @@ namespace SerialMonitor.Business.Data
     {
         public int BaudRate { get; set; } = DefaultBaudRate;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public EReceivingNewline ReceivingNewline { get; set; } = EReceivingNewline.Crlf;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ESendingNewline SendingNewline { get; set; } = ESendingNewline.None;
 
         public string SendingCustomNewline { get; set; } = string.Empty;
         
         public int DataBits { get; set; } = DefaultDataBits;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public StopBits StopBits { get; set; } = StopBits.One;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Handshake Handshake { get; set; } = Handshake.None;
         
-        [JsonConverter(typeof(EncodingJsonConverter))]
-        [JsonProperty("EncodingCodePage")]
+        [JsonPropertyName("EncodingCodePage")]
         public Encoding Encoding { get; set; } = Encoding.ASCII;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         [DefaultValue(Parity.None)]
         public Parity Parity { get; set; } = Parity.None;
         
@@ -46,7 +44,7 @@ namespace SerialMonitor.Business.Data
 
         public string OutputFilename { get; set; } = string.Empty;
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public EPortEndianness Endianness { get; set; } = EPortEndianness.Default;
 
         public void Validate()

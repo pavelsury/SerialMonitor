@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SerialMonitor.Business.Helpers
 {
-    public class EncodingJsonConverter : JsonConverter
+    public class EncodingJsonConverter : JsonConverter<Encoding>
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override Encoding Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            writer.WriteValue(((Encoding)value).CodePage);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            switch (reader.Value)
+            if (typeToConvert != typeof(Encoding))
             {
-                case int v: return GetEncoding(v);
-                case long v: return GetEncoding((int)v);
-                case string s: return int.TryParse(s, out var p) ? GetEncoding(p) : null;
-                default: return null;
+                return null;
             }
+
+            switch (reader.TokenType)
+            {
+                case JsonTokenType.String: return int.TryParse(reader.GetString(), out var v) ? GetEncoding(v) : null;
+                case JsonTokenType.Number: return reader.TryGetInt32(out v) ? GetEncoding(v) : null;
+            }
+            return null;
         }
 
-        public override bool CanConvert(Type objectType)
+        public override void Write(Utf8JsonWriter writer, Encoding value, JsonSerializerOptions options)
         {
-            return objectType == typeof(Encoding);
+            writer.WriteNumberValue(value.CodePage);
         }
 
         private static Encoding GetEncoding(int codePage)
