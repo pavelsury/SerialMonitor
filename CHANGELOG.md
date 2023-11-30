@@ -2,6 +2,14 @@
 
 All notable changes to SerialMonitor2 are documented in this file.
 
+## v1.16.0 (30.11.2023)
+### Added
+-   Command history
+-   New Coffee tab
+### Changed
+-   Standalone application targets .NET 8
+-   Drop support for self-contained application
+
 ## v1.15.0 (3.11.2023)
 ### Added
 -   Custom send buttons

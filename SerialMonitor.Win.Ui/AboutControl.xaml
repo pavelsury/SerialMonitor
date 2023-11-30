@@ -17,7 +17,7 @@
                       PagePadding="0,0,10,0"
                       TextAlignment="Left">
             <Paragraph Margin="0">
-                <Run FontSize="16">Serial Monitor 2</Run>
+                <Run FontWeight="Bold" FontSize="16">Serial Monitor 2</Run>
             </Paragraph>
             
             <Paragraph Margin="0,6,0,0" FontSize="12">
@@ -32,7 +32,9 @@
             </Paragraph>
 
             <Paragraph Margin="0,20,0,0" FontSize="12">
-                <Run FontWeight="Bold">Releases</Run>
+                <Run FontWeight="Bold" FontSize="14">Releases</Run>
+                <LineBreak/>
+                <Run>1.16.0 - Command history</Run>
                 <LineBreak/>
                 <Run>1.15.0 - Custom buttons and command variables</Run>
                 <LineBreak/>
@@ -64,7 +66,7 @@
             </Paragraph>
             
             <Paragraph Margin="0,20,0,0" FontSize="12">
-                <Run FontWeight="Bold">Notes on Pipe IPC</Run>
+                <Run FontWeight="Bold" FontSize="14">Notes on Pipe IPC</Run>
                 <LineBreak/>
                 <Run>Pipe IPC stands for "Pipe Inter Process Communication"</Run>
                 <LineBreak/>
@@ -72,8 +74,8 @@
                 <LineBreak/>
                 <LineBreak/>
                 <Run>To give it a try, first download all scripts from</Run>
-                <Hyperlink NavigateUri="{Binding ScriptsLink, ElementName=Control}"
-                           ToolTip="{Binding ScriptsLink, ElementName=Control}"
+                <Hyperlink NavigateUri="{Binding ScriptsDownloadLink, ElementName=Control}"
+                           ToolTip="{Binding ScriptsDownloadLink, ElementName=Control}"
                            Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                            RequestNavigate="OnRequestNavigate">here</Hyperlink><Run>.</Run>
                 <LineBreak/>
@@ -84,26 +86,13 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">Notes on standalone app</Run>
+                <Run FontWeight="Bold" FontSize="14">Notes on standalone app</Run>
                 <LineBreak/>
-                <Run>Serial Monitor 2 can now be run as a standalone application.</Run>
-                <LineBreak/>
-                <LineBreak/>
-                <Run>You can choose from two versions:</Run>
-                <LineBreak/>
-                <Run>-</Run>
-                <Hyperlink NavigateUri="{Binding DownloadLink, ElementName=Control}"
-                           ToolTip="{Binding DownloadLink, ElementName=Control}"
+                <Run>Serial Monitor 2 can also be run as a standalone application:</Run>
+                <Hyperlink NavigateUri="{Binding AppDownloadLink, ElementName=Control}"
+                           ToolTip="{Binding AppDownloadLink, ElementName=Control}"
                            Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
                            RequestNavigate="OnRequestNavigate">SerialMonitor2.exe</Hyperlink>
-                <Run>contains everything to run the app but is little bit bigger.</Run>
-                <LineBreak/>
-                <Run>-</Run>
-                <Hyperlink NavigateUri="{Binding DownloadNoFrameworkLink, ElementName=Control}"
-                           ToolTip="{Binding DownloadNoFrameworkLink, ElementName=Control}"
-                           Style="{DynamicResource {x:Static ui:ResourceKeys.ThemedDialogHyperlinkStyleKey}}"
-                           RequestNavigate="OnRequestNavigate">SerialMonitor2_without_framework.exe</Hyperlink>
-                <Run>is pretty small but it doesn't contain .NET framework. Means, you can be asked to download and install .NET framework in case your Windows doesn't have it installed yet.</Run>
                 <LineBreak/>
                 <LineBreak/>
                 <Run>Command line options:</Run>
@@ -114,7 +103,7 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">Other notes and tips</Run>
+                <Run FontWeight="Bold" FontSize="14">Other notes and tips</Run>
                 <LineBreak/>
                 <Run>- when sending command, press Ctrl+Enter to send it without erasing</Run>
                 <LineBreak/>
@@ -130,7 +119,7 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">EOL command variables</Run>
+                <Run FontWeight="Bold" FontSize="14">EOL command variables</Run>
                 <LineBreak/>
                 <Run>- %EOL_CR%, %EOL_LF%, %EOL_CRLF%, %EOL_SKIP%</Run>
                 <LineBreak/>
@@ -138,7 +127,7 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">Data command variables</Run>
+                <Run FontWeight="Bold" FontSize="14">Data command variables</Run>
                 <LineBreak/>
                 <Run>- %DATA[default_bitwidth][default_base],value[\][value_bitwidth][value_base],value[\][value_bitwidth][value_base],...%</Run>
                 <LineBreak/>
@@ -180,7 +169,7 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">Time command variables</Run>
+                <Run FontWeight="Bold" FontSize="14">Time command variables</Run>
                 <LineBreak/>
                 <Run>- local time: %NOW%, %NOW_DATE%, %NOW_TIME%, %NOW_YEAR%, %NOW_MONTH%, %NOW_DAY%, %NOW_HOUR%, %NOW_MINUTE%, %NOW_SECOND%</Run>
                 <LineBreak/>
@@ -190,13 +179,14 @@
                 <LineBreak/>
                 <LineBreak/>
 
-                <Run FontWeight="Bold">Other command variables</Run>
+                <Run FontWeight="Bold" FontSize="14">Other command variables</Run>
                 <LineBreak/>
                 <Run>- %EOF% - it is defined as %DATA,4%%EOL_SKIP%, which means that it sends just one byte 0x04 and skips any EOL</Run>
 
                 <LineBreak/>
                 <LineBreak/>
-                <Run Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat='Copyright © {0:yyyy} Pavel Surý &amp; Egor Grushko', Mode=OneWay}"/>
+                <LineBreak/>
+                <Run FontStyle="Italic" Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat='Copyright © {0:yyyy} Pavel Surý &amp; Egor Grushko', Mode=OneWay}"/>
             </Paragraph>
         </FlowDocument>
     </FlowDocumentScrollViewer>
